@@ -1,11 +1,11 @@
-.. pyiron_module_template documentation master file
+.. pyiron_ontology documentation master file
 
 .. _index:
 
 
-======================
-pyiron_module_template
-======================
+===============
+pyiron_ontology
+===============
 
 .. toctree::
    :hidden:
