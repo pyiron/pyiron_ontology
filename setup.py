@@ -12,7 +12,7 @@ setup(
 
     url='https://github.com/pyiron/pyiron_ontology',
     author='Max-Planck-Institut für Eisenforschung GmbH - Computational Materials Design (CM) Department',
-    author_email='@mpie.de',
+    author_email='liamhuber@greyhavensolutions.com',
     license='BSD',
 
     classifiers=['Development Status :: 3 - Alpha',
@@ -27,7 +27,10 @@ setup(
     keywords='pyiron',
     packages=find_packages(exclude=["*tests*", "*docs*", "*binder*", "*conda*", "*notebooks*", "*.ci_support*"]),
     install_requires=[
-        'pyiron_base'
+        'numpy',
+        'owlready2',
+        'pandas',
+        'pyiron_atomistics',
     ],
     cmdclass=versioneer.get_cmdclass(),
 
