@@ -28,6 +28,7 @@ setup(
     packages=find_packages(exclude=["*tests*", "*docs*", "*binder*", "*conda*", "*notebooks*", "*.ci_support*"]),
     install_requires=[
         'numpy',
+        'openjdk',
         'owlready2',
         'pandas',
         'pyiron_atomistics',

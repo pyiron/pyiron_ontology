@@ -2,6 +2,7 @@ channels:
   - conda-forge
 dependencies:
   - numpy
+  - openjdk
   - owlready2
   - pandas
   - pyiron_atomistics
