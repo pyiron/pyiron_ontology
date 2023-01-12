@@ -139,37 +139,37 @@
   <rdfs:subClassOf>
     <owl:Class>
       <owl:oneOf rdf:parseType="Collection">
-        <rdf:Description rdf:about="#AtomicStructure"/>
-        <rdf:Description rdf:about="#ChemicalElement"/>
-        <rdf:Description rdf:about="#LAMMPS"/>
-        <rdf:Description rdf:about="#AtomisticEnergyCalculator"/>
-        <rdf:Description rdf:about="#Atomistic"/>
-        <rdf:Description rdf:about="#Executable"/>
-        <rdf:Description rdf:about="#LAMMPS/input/structure"/>
-        <rdf:Description rdf:about="#ENCUT"/>
-        <rdf:Description rdf:about="#CreateStructureBulk"/>
-        <rdf:Description rdf:about="#CreateStructureBulk/input/element"/>
-        <rdf:Description rdf:about="#CreateSurface/input/element"/>
-        <rdf:Description rdf:about="#CreateSurface"/>
+        <rdf:Description rdf:about="#IBRAV"/>
         <rdf:Description rdf:about="#CreateStructureBulk/output/structure"/>
         <rdf:Description rdf:about="#ETOT"/>
-        <rdf:Description rdf:about="#IBRAV"/>
         <rdf:Description rdf:about="#Murnaghan"/>
-        <rdf:Description rdf:about="#Murnaghan/ref_job"/>
-        <rdf:Description rdf:about="#CreateSurface/output/structure"/>
-        <rdf:Description rdf:about="#Bulk_modulus"/>
-        <rdf:Description rdf:about="#B_prime"/>
-        <rdf:Description rdf:about="#Murnaghan/output/equilibrium_b_prime"/>
-        <rdf:Description rdf:about="#Murnaghan/output/equilibrium_bulk_modulus"/>
-        <rdf:Description rdf:about="#EnergyCutoff"/>
         <rdf:Description rdf:about="#VASP/input/structure"/>
-        <rdf:Description rdf:about="#lCode"/>
-        <rdf:Description rdf:about="#VASP"/>
+        <rdf:Description rdf:about="#LAMMPS"/>
+        <rdf:Description rdf:about="#Murnaghan/output/equilibrium_b_prime"/>
+        <rdf:Description rdf:about="#CreateSurface/output/structure"/>
+        <rdf:Description rdf:about="#MaterialProperty"/>
+        <rdf:Description rdf:about="#LAMMPS/input/structure"/>
         <rdf:Description rdf:about="#DFT"/>
         <rdf:Description rdf:about="#PeriodicBoundaryConditions"/>
-        <rdf:Description rdf:about="#MaterialProperty"/>
         <rdf:Description rdf:about="#UserInput"/>
         <rdf:Description rdf:about="#Bulk3dStructure"/>
+        <rdf:Description rdf:about="#AtomisticEnergyCalculator"/>
+        <rdf:Description rdf:about="#ChemicalElement"/>
+        <rdf:Description rdf:about="#lCode"/>
+        <rdf:Description rdf:about="#Bulk_modulus"/>
+        <rdf:Description rdf:about="#AtomicStructure"/>
+        <rdf:Description rdf:about="#EnergyCutoff"/>
+        <rdf:Description rdf:about="#CreateSurface"/>
+        <rdf:Description rdf:about="#Atomistic"/>
+        <rdf:Description rdf:about="#B_prime"/>
+        <rdf:Description rdf:about="#Executable"/>
+        <rdf:Description rdf:about="#Murnaghan/output/equilibrium_bulk_modulus"/>
+        <rdf:Description rdf:about="#ENCUT"/>
+        <rdf:Description rdf:about="#CreateSurface/input/element"/>
+        <rdf:Description rdf:about="#CreateStructureBulk"/>
+        <rdf:Description rdf:about="#Murnaghan/ref_job"/>
+        <rdf:Description rdf:about="#CreateStructureBulk/input/element"/>
+        <rdf:Description rdf:about="#VASP"/>
       </owl:oneOf>
     </owl:Class>
   </rdfs:subClassOf>
@@ -181,28 +181,28 @@
   <rdfs:subClassOf>
     <owl:Class>
       <owl:oneOf rdf:parseType="Collection">
-        <rdf:Description rdf:about="#AtomicStructure"/>
-        <rdf:Description rdf:about="#ChemicalElement"/>
-        <rdf:Description rdf:about="#LAMMPS"/>
-        <rdf:Description rdf:about="#Executable"/>
-        <rdf:Description rdf:about="#LAMMPS/input/structure"/>
-        <rdf:Description rdf:about="#ENCUT"/>
-        <rdf:Description rdf:about="#CreateStructureBulk"/>
-        <rdf:Description rdf:about="#CreateStructureBulk/input/element"/>
-        <rdf:Description rdf:about="#CreateSurface/input/element"/>
-        <rdf:Description rdf:about="#CreateSurface"/>
+        <rdf:Description rdf:about="#IBRAV"/>
         <rdf:Description rdf:about="#CreateStructureBulk/output/structure"/>
         <rdf:Description rdf:about="#ETOT"/>
-        <rdf:Description rdf:about="#IBRAV"/>
         <rdf:Description rdf:about="#Murnaghan"/>
-        <rdf:Description rdf:about="#Murnaghan/ref_job"/>
-        <rdf:Description rdf:about="#CreateSurface/output/structure"/>
-        <rdf:Description rdf:about="#Bulk_modulus"/>
-        <rdf:Description rdf:about="#B_prime"/>
-        <rdf:Description rdf:about="#Murnaghan/output/equilibrium_b_prime"/>
-        <rdf:Description rdf:about="#Murnaghan/output/equilibrium_bulk_modulus"/>
-        <rdf:Description rdf:about="#EnergyCutoff"/>
         <rdf:Description rdf:about="#VASP/input/structure"/>
+        <rdf:Description rdf:about="#LAMMPS"/>
+        <rdf:Description rdf:about="#Murnaghan/output/equilibrium_b_prime"/>
+        <rdf:Description rdf:about="#CreateSurface/output/structure"/>
+        <rdf:Description rdf:about="#LAMMPS/input/structure"/>
+        <rdf:Description rdf:about="#ChemicalElement"/>
+        <rdf:Description rdf:about="#Bulk_modulus"/>
+        <rdf:Description rdf:about="#AtomicStructure"/>
+        <rdf:Description rdf:about="#EnergyCutoff"/>
+        <rdf:Description rdf:about="#CreateSurface"/>
+        <rdf:Description rdf:about="#B_prime"/>
+        <rdf:Description rdf:about="#Executable"/>
+        <rdf:Description rdf:about="#Murnaghan/output/equilibrium_bulk_modulus"/>
+        <rdf:Description rdf:about="#ENCUT"/>
+        <rdf:Description rdf:about="#CreateSurface/input/element"/>
+        <rdf:Description rdf:about="#CreateStructureBulk"/>
+        <rdf:Description rdf:about="#Murnaghan/ref_job"/>
+        <rdf:Description rdf:about="#CreateStructureBulk/input/element"/>
         <rdf:Description rdf:about="#VASP"/>
       </owl:oneOf>
     </owl:Class>
@@ -240,8 +240,8 @@
         <owl:Class>
           <owl:oneOf rdf:parseType="Collection">
             <rdf:Description rdf:about="#Bulk3dStructure"/>
-            <rdf:Description rdf:about="#AtomisticEnergyCalculator"/>
             <rdf:Description rdf:about="#Bulk3dStructure"/>
+            <rdf:Description rdf:about="#AtomisticEnergyCalculator"/>
             <rdf:Description rdf:about="#Bulk3dStructure"/>
             <rdf:Description rdf:about="#AtomisticEnergyCalculator"/>
           </owl:oneOf>
@@ -256,18 +256,18 @@
         <owl:Class>
           <owl:oneOf rdf:parseType="Collection">
             <rdf:Description rdf:about="#Atomistic"/>
+            <rdf:Description rdf:about="#lCode"/>
+            <rdf:Description rdf:about="#Atomistic"/>
+            <rdf:Description rdf:about="#lCode"/>
             <rdf:Description rdf:about="#Atomistic"/>
             <rdf:Description rdf:about="#UserInput"/>
+            <rdf:Description rdf:about="#MaterialProperty"/>
             <rdf:Description rdf:about="#Atomistic"/>
-            <rdf:Description rdf:about="#lCode"/>
-            <rdf:Description rdf:about="#Atomistic"/>
-            <rdf:Description rdf:about="#lCode"/>
-            <rdf:Description rdf:about="#Atomistic"/>
-            <rdf:Description rdf:about="#lCode"/>
             <rdf:Description rdf:about="#Atomistic"/>
             <rdf:Description rdf:about="#lCode"/>
             <rdf:Description rdf:about="#MaterialProperty"/>
-            <rdf:Description rdf:about="#MaterialProperty"/>
+            <rdf:Description rdf:about="#Atomistic"/>
+            <rdf:Description rdf:about="#lCode"/>
             <rdf:Description rdf:about="#Atomistic"/>
             <rdf:Description rdf:about="#lCode"/>
             <rdf:Description rdf:about="#DFT"/>
@@ -282,20 +282,20 @@
       <owl:allValuesFrom>
         <owl:Class>
           <owl:oneOf rdf:parseType="Collection">
-            <rdf:Description rdf:about="#Executable"/>
             <rdf:Description rdf:about="#AtomicStructure"/>
-            <rdf:Description rdf:about="#EnergyCutoff"/>
-            <rdf:Description rdf:about="#Executable"/>
-            <rdf:Description rdf:about="#ChemicalElement"/>
-            <rdf:Description rdf:about="#ChemicalElement"/>
             <rdf:Description rdf:about="#Executable"/>
             <rdf:Description rdf:about="#AtomicStructure"/>
             <rdf:Description rdf:about="#Executable"/>
-            <rdf:Description rdf:about="#Executable"/>
-            <rdf:Description rdf:about="#AtomicStructure"/>
             <rdf:Description rdf:about="#B_prime"/>
-            <rdf:Description rdf:about="#Bulk_modulus"/>
             <rdf:Description rdf:about="#AtomicStructure"/>
+            <rdf:Description rdf:about="#AtomicStructure"/>
+            <rdf:Description rdf:about="#Executable"/>
+            <rdf:Description rdf:about="#Bulk_modulus"/>
+            <rdf:Description rdf:about="#EnergyCutoff"/>
+            <rdf:Description rdf:about="#ChemicalElement"/>
+            <rdf:Description rdf:about="#Executable"/>
+            <rdf:Description rdf:about="#Executable"/>
+            <rdf:Description rdf:about="#ChemicalElement"/>
             <rdf:Description rdf:about="#Executable"/>
           </owl:oneOf>
         </owl:Class>
@@ -309,12 +309,12 @@
   <rdfs:subClassOf>
     <owl:Class>
       <owl:oneOf rdf:parseType="Collection">
-        <rdf:Description rdf:about="#CreateSurface/input/element"/>
         <rdf:Description rdf:about="#IBRAV"/>
-        <rdf:Description rdf:about="#Murnaghan/ref_job"/>
-        <rdf:Description rdf:about="#VASP/input/structure"/>
         <rdf:Description rdf:about="#LAMMPS/input/structure"/>
         <rdf:Description rdf:about="#ENCUT"/>
+        <rdf:Description rdf:about="#VASP/input/structure"/>
+        <rdf:Description rdf:about="#CreateSurface/input/element"/>
+        <rdf:Description rdf:about="#Murnaghan/ref_job"/>
         <rdf:Description rdf:about="#CreateStructureBulk/input/element"/>
       </owl:oneOf>
     </owl:Class>
@@ -363,11 +363,11 @@
       <owl:allValuesFrom>
         <owl:Class>
           <owl:oneOf rdf:parseType="Collection">
-            <rdf:Description rdf:about="#ChemicalElement"/>
-            <rdf:Description rdf:about="#Executable"/>
-            <rdf:Description rdf:about="#AtomicStructure"/>
             <rdf:Description rdf:about="#AtomicStructure"/>
             <rdf:Description rdf:about="#EnergyCutoff"/>
+            <rdf:Description rdf:about="#AtomicStructure"/>
+            <rdf:Description rdf:about="#ChemicalElement"/>
+            <rdf:Description rdf:about="#Executable"/>
             <rdf:Description rdf:about="#ChemicalElement"/>
           </owl:oneOf>
         </owl:Class>
@@ -393,10 +393,10 @@
       <owl:allValuesFrom>
         <owl:Class>
           <owl:oneOf rdf:parseType="Collection">
+            <rdf:Description rdf:about="#LAMMPS"/>
+            <rdf:Description rdf:about="#VASP"/>
             <rdf:Description rdf:about="#CreateSurface"/>
             <rdf:Description rdf:about="#Murnaghan"/>
-            <rdf:Description rdf:about="#VASP"/>
-            <rdf:Description rdf:about="#LAMMPS"/>
             <rdf:Description rdf:about="#CreateStructureBulk"/>
           </owl:oneOf>
         </owl:Class>
@@ -410,11 +410,11 @@
   <rdfs:subClassOf>
     <owl:Class>
       <owl:oneOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Murnaghan/output/equilibrium_bulk_modulus"/>
         <rdf:Description rdf:about="#CreateStructureBulk/output/structure"/>
         <rdf:Description rdf:about="#ETOT"/>
-        <rdf:Description rdf:about="#CreateSurface/output/structure"/>
         <rdf:Description rdf:about="#Murnaghan/output/equilibrium_b_prime"/>
-        <rdf:Description rdf:about="#Murnaghan/output/equilibrium_bulk_modulus"/>
+        <rdf:Description rdf:about="#CreateSurface/output/structure"/>
       </owl:oneOf>
     </owl:Class>
   </rdfs:subClassOf>
@@ -454,10 +454,10 @@
       <owl:allValuesFrom>
         <owl:Class>
           <owl:oneOf rdf:parseType="Collection">
-            <rdf:Description rdf:about="#AtomicStructure"/>
+            <rdf:Description rdf:about="#Bulk_modulus"/>
             <rdf:Description rdf:about="#AtomicStructure"/>
             <rdf:Description rdf:about="#B_prime"/>
-            <rdf:Description rdf:about="#Bulk_modulus"/>
+            <rdf:Description rdf:about="#AtomicStructure"/>
           </owl:oneOf>
         </owl:Class>
       </owl:allValuesFrom>
@@ -469,11 +469,11 @@
       <owl:allValuesFrom>
         <owl:Class>
           <owl:oneOf rdf:parseType="Collection">
+            <rdf:Description rdf:about="#Murnaghan"/>
             <rdf:Description rdf:about="#CreateStructureBulk"/>
             <rdf:Description rdf:about="#LAMMPS"/>
+            <rdf:Description rdf:about="#Murnaghan"/>
             <rdf:Description rdf:about="#CreateSurface"/>
-            <rdf:Description rdf:about="#Murnaghan"/>
-            <rdf:Description rdf:about="#Murnaghan"/>
           </owl:oneOf>
         </owl:Class>
       </owl:allValuesFrom>
@@ -486,11 +486,11 @@
   <rdfs:subClassOf>
     <owl:Class>
       <owl:oneOf rdf:parseType="Collection">
-        <rdf:Description rdf:about="#EnergyCutoff"/>
-        <rdf:Description rdf:about="#AtomicStructure"/>
-        <rdf:Description rdf:about="#ChemicalElement"/>
         <rdf:Description rdf:about="#Executable"/>
+        <rdf:Description rdf:about="#ChemicalElement"/>
         <rdf:Description rdf:about="#Bulk_modulus"/>
+        <rdf:Description rdf:about="#AtomicStructure"/>
+        <rdf:Description rdf:about="#EnergyCutoff"/>
         <rdf:Description rdf:about="#B_prime"/>
       </owl:oneOf>
     </owl:Class>
@@ -520,9 +520,9 @@
         <owl:Class>
           <owl:oneOf rdf:parseType="Collection">
             <rdf:Description rdf:about="#Atomistic"/>
-            <rdf:Description rdf:about="#Atomistic"/>
             <rdf:Description rdf:about="#UserInput"/>
             <rdf:Description rdf:about="#MaterialProperty"/>
+            <rdf:Description rdf:about="#Atomistic"/>
             <rdf:Description rdf:about="#MaterialProperty"/>
           </owl:oneOf>
         </owl:Class>
@@ -541,20 +541,20 @@
       <owl:allValuesFrom>
         <owl:Class>
           <owl:oneOf rdf:parseType="Collection">
-            <rdf:Description rdf:about="#ENCUT"/>
-            <rdf:Description rdf:about="#CreateStructureBulk/output/structure"/>
-            <rdf:Description rdf:about="#CreateSurface/output/structure"/>
-            <rdf:Description rdf:about="#VASP/input/structure"/>
-            <rdf:Description rdf:about="#LAMMPS/input/structure"/>
-            <rdf:Description rdf:about="#CreateStructureBulk/input/element"/>
-            <rdf:Description rdf:about="#CreateSurface/input/element"/>
             <rdf:Description rdf:about="#CreateStructureBulk"/>
             <rdf:Description rdf:about="#CreateSurface"/>
             <rdf:Description rdf:about="#Murnaghan"/>
             <rdf:Description rdf:about="#Murnaghan/ref_job"/>
             <rdf:Description rdf:about="#VASP"/>
             <rdf:Description rdf:about="#LAMMPS"/>
+            <rdf:Description rdf:about="#CreateStructureBulk/input/element"/>
+            <rdf:Description rdf:about="#CreateSurface/input/element"/>
             <rdf:Description rdf:about="#Murnaghan/output/equilibrium_bulk_modulus"/>
+            <rdf:Description rdf:about="#CreateStructureBulk/output/structure"/>
+            <rdf:Description rdf:about="#CreateSurface/output/structure"/>
+            <rdf:Description rdf:about="#VASP/input/structure"/>
+            <rdf:Description rdf:about="#LAMMPS/input/structure"/>
+            <rdf:Description rdf:about="#ENCUT"/>
             <rdf:Description rdf:about="#Murnaghan/output/equilibrium_b_prime"/>
           </owl:oneOf>
         </owl:Class>
@@ -568,11 +568,11 @@
   <rdfs:subClassOf>
     <owl:Class>
       <owl:oneOf rdf:parseType="Collection">
-        <rdf:Description rdf:about="#CreateSurface"/>
-        <rdf:Description rdf:about="#LAMMPS"/>
         <rdf:Description rdf:about="#Murnaghan"/>
-        <rdf:Description rdf:about="#VASP"/>
         <rdf:Description rdf:about="#CreateStructureBulk"/>
+        <rdf:Description rdf:about="#LAMMPS"/>
+        <rdf:Description rdf:about="#VASP"/>
+        <rdf:Description rdf:about="#CreateSurface"/>
       </owl:oneOf>
     </owl:Class>
   </rdfs:subClassOf>
@@ -660,11 +660,11 @@
       <owl:allValuesFrom>
         <owl:Class>
           <owl:oneOf rdf:parseType="Collection">
-            <rdf:Description rdf:about="#CreateSurface/input/element"/>
-            <rdf:Description rdf:about="#LAMMPS/input/structure"/>
             <rdf:Description rdf:about="#Murnaghan/ref_job"/>
-            <rdf:Description rdf:about="#VASP/input/structure"/>
             <rdf:Description rdf:about="#CreateStructureBulk/input/element"/>
+            <rdf:Description rdf:about="#LAMMPS/input/structure"/>
+            <rdf:Description rdf:about="#VASP/input/structure"/>
+            <rdf:Description rdf:about="#CreateSurface/input/element"/>
           </owl:oneOf>
         </owl:Class>
       </owl:allValuesFrom>
@@ -676,11 +676,11 @@
       <owl:allValuesFrom>
         <owl:Class>
           <owl:oneOf rdf:parseType="Collection">
-            <rdf:Description rdf:about="#CreateSurface/output/structure"/>
-            <rdf:Description rdf:about="#ETOT"/>
             <rdf:Description rdf:about="#Murnaghan/output/equilibrium_bulk_modulus"/>
             <rdf:Description rdf:about="#Murnaghan/output/equilibrium_b_prime"/>
             <rdf:Description rdf:about="#CreateStructureBulk/output/structure"/>
+            <rdf:Description rdf:about="#ETOT"/>
+            <rdf:Description rdf:about="#CreateSurface/output/structure"/>
           </owl:oneOf>
         </owl:Class>
       </owl:allValuesFrom>
@@ -693,14 +693,14 @@
   <rdfs:subClassOf>
     <owl:Class>
       <owl:oneOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Bulk3dStructure"/>
+        <rdf:Description rdf:about="#AtomisticEnergyCalculator"/>
         <rdf:Description rdf:about="#DFT"/>
         <rdf:Description rdf:about="#PeriodicBoundaryConditions"/>
-        <rdf:Description rdf:about="#AtomisticEnergyCalculator"/>
-        <rdf:Description rdf:about="#Atomistic"/>
-        <rdf:Description rdf:about="#MaterialProperty"/>
         <rdf:Description rdf:about="#lCode"/>
         <rdf:Description rdf:about="#UserInput"/>
-        <rdf:Description rdf:about="#Bulk3dStructure"/>
+        <rdf:Description rdf:about="#MaterialProperty"/>
+        <rdf:Description rdf:about="#Atomistic"/>
       </owl:oneOf>
     </owl:Class>
   </rdfs:subClassOf>
@@ -736,9 +736,9 @@
       <owl:allValuesFrom>
         <owl:Class>
           <owl:oneOf rdf:parseType="Collection">
+            <rdf:Description rdf:about="#CreateStructureBulk/output/structure"/>
             <rdf:Description rdf:about="#VASP"/>
             <rdf:Description rdf:about="#LAMMPS"/>
-            <rdf:Description rdf:about="#CreateStructureBulk/output/structure"/>
             <rdf:Description rdf:about="#VASP"/>
             <rdf:Description rdf:about="#LAMMPS"/>
           </owl:oneOf>
@@ -753,6 +753,14 @@
         <owl:Class>
           <owl:oneOf rdf:parseType="Collection">
             <rdf:Description rdf:about="#VASP"/>
+            <rdf:Description rdf:about="#CreateStructureBulk"/>
+            <rdf:Description rdf:about="#CreateSurface"/>
+            <rdf:Description rdf:about="#Murnaghan"/>
+            <rdf:Description rdf:about="#VASP"/>
+            <rdf:Description rdf:about="#LAMMPS"/>
+            <rdf:Description rdf:about="#ChemicalElement"/>
+            <rdf:Description rdf:about="#Bulk_modulus"/>
+            <rdf:Description rdf:about="#B_prime"/>
             <rdf:Description rdf:about="#ChemicalElement"/>
             <rdf:Description rdf:about="#AtomicStructure"/>
             <rdf:Description rdf:about="#CreateStructureBulk"/>
@@ -760,14 +768,6 @@
             <rdf:Description rdf:about="#Murnaghan"/>
             <rdf:Description rdf:about="#VASP"/>
             <rdf:Description rdf:about="#LAMMPS"/>
-            <rdf:Description rdf:about="#Bulk_modulus"/>
-            <rdf:Description rdf:about="#B_prime"/>
-            <rdf:Description rdf:about="#CreateStructureBulk"/>
-            <rdf:Description rdf:about="#CreateSurface"/>
-            <rdf:Description rdf:about="#Murnaghan"/>
-            <rdf:Description rdf:about="#VASP"/>
-            <rdf:Description rdf:about="#LAMMPS"/>
-            <rdf:Description rdf:about="#ChemicalElement"/>
           </owl:oneOf>
         </owl:Class>
       </owl:allValuesFrom>
@@ -1079,6 +1079,8 @@
 
 <GenericParameter rdf:about="#ChemicalElement">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_in_domains rdf:resource="#Atomistic"/>
+  <is_in_domains rdf:resource="#UserInput"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -1129,12 +1131,11 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <is_in_domains rdf:resource="#Atomistic"/>
-  <is_in_domains rdf:resource="#UserInput"/>
 </GenericParameter>
 
 <GenericParameter rdf:about="#AtomicStructure">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_in_domains rdf:resource="#Atomistic"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -1186,7 +1187,6 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <is_in_domains rdf:resource="#Atomistic"/>
 </GenericParameter>
 
 <GenericParameter rdf:about="#Executable">
@@ -1242,6 +1242,9 @@
 
 <Code rdf:about="#CreateStructureBulk">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_in_domains rdf:resource="#Atomistic"/>
+  <is_in_domains rdf:resource="#lCode"/>
+  <has_generic_parameter rdf:resource="#Executable"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -1315,13 +1318,12 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <is_in_domains rdf:resource="#Atomistic"/>
-  <is_in_domains rdf:resource="#lCode"/>
-  <has_generic_parameter rdf:resource="#Executable"/>
 </Code>
 
 <InputParameter rdf:about="#CreateStructureBulk/input/element">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_mandatory_input_of rdf:resource="#CreateStructureBulk"/>
+  <has_generic_parameter rdf:resource="#ChemicalElement"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -1376,12 +1378,13 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <has_generic_parameter rdf:resource="#ChemicalElement"/>
-  <is_mandatory_input_of rdf:resource="#CreateStructureBulk"/>
 </InputParameter>
 
 <OutputParameter rdf:about="#CreateStructureBulk/output/structure">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_output_of rdf:resource="#CreateStructureBulk"/>
+  <has_generic_parameter rdf:resource="#AtomicStructure"/>
+  <has_options rdf:resource="#Bulk3dStructure"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -1436,13 +1439,13 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <has_options rdf:resource="#Bulk3dStructure"/>
-  <has_generic_parameter rdf:resource="#AtomicStructure"/>
-  <is_output_of rdf:resource="#CreateStructureBulk"/>
 </OutputParameter>
 
 <Code rdf:about="#CreateSurface">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_in_domains rdf:resource="#Atomistic"/>
+  <is_in_domains rdf:resource="#lCode"/>
+  <has_generic_parameter rdf:resource="#Executable"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -1516,13 +1519,12 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <is_in_domains rdf:resource="#Atomistic"/>
-  <is_in_domains rdf:resource="#lCode"/>
-  <has_generic_parameter rdf:resource="#Executable"/>
 </Code>
 
 <InputParameter rdf:about="#CreateSurface/input/element">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_mandatory_input_of rdf:resource="#CreateSurface"/>
+  <has_generic_parameter rdf:resource="#ChemicalElement"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -1577,12 +1579,12 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <has_generic_parameter rdf:resource="#ChemicalElement"/>
-  <is_mandatory_input_of rdf:resource="#CreateSurface"/>
 </InputParameter>
 
 <OutputParameter rdf:about="#CreateSurface/output/structure">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_output_of rdf:resource="#CreateSurface"/>
+  <has_generic_parameter rdf:resource="#AtomicStructure"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -1631,12 +1633,11 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <has_generic_parameter rdf:resource="#AtomicStructure"/>
-  <is_output_of rdf:resource="#CreateSurface"/>
 </OutputParameter>
 
 <GenericParameter rdf:about="#Bulk_modulus">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_in_domains rdf:resource="#MaterialProperty"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -1685,14 +1686,14 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <is_in_domains rdf:resource="#MaterialProperty"/>
-  <has_symbol rdf:datatype="http://www.w3.org/2001/XMLSchema#string">K</has_symbol>
   <has_symbol rdf:datatype="http://www.w3.org/2001/XMLSchema#string">B</has_symbol>
+  <has_symbol rdf:datatype="http://www.w3.org/2001/XMLSchema#string">K</has_symbol>
   <has_unit rdf:datatype="http://www.w3.org/2001/XMLSchema#string">MPa</has_unit>
 </GenericParameter>
 
 <GenericParameter rdf:about="#B_prime">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_in_domains rdf:resource="#MaterialProperty"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -1741,13 +1742,15 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <is_in_domains rdf:resource="#MaterialProperty"/>
   <has_symbol rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Bprime</has_symbol>
   <has_unit rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1</has_unit>
 </GenericParameter>
 
 <Code rdf:about="#Murnaghan">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_in_domains rdf:resource="#Atomistic"/>
+  <is_in_domains rdf:resource="#lCode"/>
+  <has_generic_parameter rdf:resource="#Executable"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -1822,13 +1825,12 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <is_in_domains rdf:resource="#Atomistic"/>
-  <is_in_domains rdf:resource="#lCode"/>
-  <has_generic_parameter rdf:resource="#Executable"/>
 </Code>
 
 <OutputParameter rdf:about="#Murnaghan/output/equilibrium_bulk_modulus">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_output_of rdf:resource="#Murnaghan"/>
+  <has_generic_parameter rdf:resource="#Bulk_modulus"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -1877,13 +1879,13 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <has_generic_parameter rdf:resource="#Bulk_modulus"/>
-  <is_output_of rdf:resource="#Murnaghan"/>
   <has_unit rdf:datatype="http://www.w3.org/2001/XMLSchema#string">GPa</has_unit>
 </OutputParameter>
 
 <OutputParameter rdf:about="#Murnaghan/output/equilibrium_b_prime">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_output_of rdf:resource="#Murnaghan"/>
+  <has_generic_parameter rdf:resource="#B_prime"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -1932,12 +1934,14 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <has_generic_parameter rdf:resource="#B_prime"/>
-  <is_output_of rdf:resource="#Murnaghan"/>
 </OutputParameter>
 
 <InputParameter rdf:about="#Murnaghan/ref_job">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_mandatory_input_of rdf:resource="#Murnaghan"/>
+  <has_generic_parameter rdf:resource="#Executable"/>
+  <has_conditions rdf:resource="#Bulk3dStructure"/>
+  <has_conditions rdf:resource="#AtomisticEnergyCalculator"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -1999,10 +2003,6 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <has_conditions rdf:resource="#Bulk3dStructure"/>
-  <has_conditions rdf:resource="#AtomisticEnergyCalculator"/>
-  <has_generic_parameter rdf:resource="#Executable"/>
-  <is_mandatory_input_of rdf:resource="#Murnaghan"/>
 </InputParameter>
 
 <GenericParameter rdf:about="#EnergyCutoff">
@@ -2053,6 +2053,12 @@
 
 <Code rdf:about="#VASP">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_in_domains rdf:resource="#Atomistic"/>
+  <is_in_domains rdf:resource="#lCode"/>
+  <is_in_domains rdf:resource="#DFT"/>
+  <has_options rdf:resource="#Bulk3dStructure"/>
+  <has_options rdf:resource="#AtomisticEnergyCalculator"/>
+  <has_generic_parameter rdf:resource="#Executable"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -2135,16 +2141,12 @@
       <owl:allValuesFrom rdf:resource="http://www.w3.org/2002/07/owl#Nothing"/>
     </owl:Restriction>
   </rdf:type>
-  <has_options rdf:resource="#Bulk3dStructure"/>
-  <has_options rdf:resource="#AtomisticEnergyCalculator"/>
-  <is_in_domains rdf:resource="#Atomistic"/>
-  <is_in_domains rdf:resource="#lCode"/>
-  <is_in_domains rdf:resource="#DFT"/>
-  <has_generic_parameter rdf:resource="#Executable"/>
 </Code>
 
 <InputParameter rdf:about="#ENCUT">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_input_of rdf:resource="#VASP"/>
+  <has_generic_parameter rdf:resource="#EnergyCutoff"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -2199,13 +2201,12 @@
       <owl:allValuesFrom rdf:resource="http://www.w3.org/2002/07/owl#Nothing"/>
     </owl:Restriction>
   </rdf:type>
-  <has_generic_parameter rdf:resource="#EnergyCutoff"/>
-  <is_input_of rdf:resource="#VASP"/>
   <has_unit rdf:datatype="http://www.w3.org/2001/XMLSchema#string">eV</has_unit>
 </InputParameter>
 
 <InputParameter rdf:about="#IBRAV">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_input_of rdf:resource="#VASP"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -2254,11 +2255,13 @@
       <owl:allValuesFrom rdf:resource="http://www.w3.org/2002/07/owl#Nothing"/>
     </owl:Restriction>
   </rdf:type>
-  <is_input_of rdf:resource="#VASP"/>
 </InputParameter>
 
 <InputParameter rdf:about="#VASP/input/structure">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_mandatory_input_of rdf:resource="#VASP"/>
+  <has_generic_parameter rdf:resource="#AtomicStructure"/>
+  <has_transitive_conditions rdf:resource="#Bulk3dStructure"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -2319,13 +2322,11 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <has_transitive_conditions rdf:resource="#Bulk3dStructure"/>
-  <has_generic_parameter rdf:resource="#AtomicStructure"/>
-  <is_mandatory_input_of rdf:resource="#VASP"/>
 </InputParameter>
 
 <OutputParameter rdf:about="#ETOT">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_output_of rdf:resource="#LAMMPS"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -2368,11 +2369,15 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <is_output_of rdf:resource="#LAMMPS"/>
 </OutputParameter>
 
 <Code rdf:about="#LAMMPS">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_in_domains rdf:resource="#Atomistic"/>
+  <is_in_domains rdf:resource="#lCode"/>
+  <has_options rdf:resource="#Bulk3dStructure"/>
+  <has_options rdf:resource="#AtomisticEnergyCalculator"/>
+  <has_generic_parameter rdf:resource="#Executable"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -2453,15 +2458,13 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <has_options rdf:resource="#Bulk3dStructure"/>
-  <has_options rdf:resource="#AtomisticEnergyCalculator"/>
-  <is_in_domains rdf:resource="#Atomistic"/>
-  <is_in_domains rdf:resource="#lCode"/>
-  <has_generic_parameter rdf:resource="#Executable"/>
 </Code>
 
 <InputParameter rdf:about="#LAMMPS/input/structure">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <is_mandatory_input_of rdf:resource="#LAMMPS"/>
+  <has_generic_parameter rdf:resource="#AtomicStructure"/>
+  <has_transitive_conditions rdf:resource="#Bulk3dStructure"/>
   <rdf:type>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#has_conditions"/>
@@ -2522,9 +2525,6 @@
       </owl:allValuesFrom>
     </owl:Restriction>
   </rdf:type>
-  <has_transitive_conditions rdf:resource="#Bulk3dStructure"/>
-  <has_generic_parameter rdf:resource="#AtomicStructure"/>
-  <is_mandatory_input_of rdf:resource="#LAMMPS"/>
 </InputParameter>
 
 <owl:AllDisjointClasses>
