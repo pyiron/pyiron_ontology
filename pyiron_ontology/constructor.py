@@ -73,10 +73,10 @@ class AtomisticsOntology:
                 pass
 
             class has_conditions(Parameter >> Label):
-                python_name = "conditions"
+                pass
 
             class has_transitive_conditions(Parameter >> Label):
-                python_name = "transitive_conditions"
+                pass  # condition to fulfill to fulfill option in code
 
             class has_options(Parameter >> Label):
                 pass
