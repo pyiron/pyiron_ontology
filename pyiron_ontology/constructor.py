@@ -19,28 +19,15 @@ class AtomisticsOntology:
         onto = owl.get_ontology(f"file://{filename}.owl")
         self.declare_classes(onto)
         df = self.generate_df(onto)
+        self.declare_more_individuals(onto, df)
         # TODO: Introduce a "from_csv" option for constructing, and leverage
         #       `all_classes=False` in `declare_classes`?
-
-
-        # TODO: Extract to method
-        for index, row in df.iterrows():
-            if isinstance(row['class'], str):
-                parent = onto[row['class']]
-                if parent is None:
-                    # print('Invalid class:', parent)
-                    # Raise warning??
-                    continue
-
-                qwargs = self.get_args(index, df, onto)
-                individuum = parent(**qwargs)
 
         owl.close_world(onto.PyObject)
         with onto:
             owl.sync_reasoner_pellet(
                 infer_property_values=True, infer_data_property_values=True, debug=0
             )
-        # What impact do these lines actually have? They are not changing query results
 
         self.onto = onto
         self.df = df
@@ -327,3 +314,15 @@ class AtomisticsOntology:
                         qwargs[key] = val
 
         return qwargs
+
+    def declare_more_individuals(self, onto, df):
+        for index, row in df.iterrows():
+            if isinstance(row['class'], str):
+                parent = onto[row['class']]
+                if parent is None:
+                    # print('Invalid class:', parent)
+                    # Raise warning??
+                    continue
+
+                qwargs = self.get_args(index, df, onto)
+                individuum = parent(**qwargs)
