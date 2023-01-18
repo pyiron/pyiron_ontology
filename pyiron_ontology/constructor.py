@@ -37,7 +37,6 @@ class AtomisticsOntology:
                     # Seems to still work without the `with onto`, but why??
                     individuum = parent(**qwargs)
 
-        # Should close and sync be inside or outside with `with onto`?
         # owl.close_world(self.root_object)
         # owl.sync_reasoner_pellet(infer_property_values=True,
         #                          infer_data_property_values=True, debug=0)
