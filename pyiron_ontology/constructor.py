@@ -17,9 +17,9 @@ def is_subset(a, b):
 class AtomisticsOntology:
     def __init__(self, filename: str = "pyiron"):
         onto = owl.get_ontology(f"file://{filename}.owl")
-        self.declare_classes(onto)
-        df = self.generate_df(onto)
-        self.declare_more_individuals(onto, df)
+        self._declare_classes(onto)
+        df = self._generate_df(onto)
+        self._declare_more_individuals(onto, df)
         # TODO: Introduce a "from_csv" option for constructing, and leverage
         #       `all_classes=False` in `declare_classes`?
 
@@ -35,7 +35,7 @@ class AtomisticsOntology:
     def save(self):
         self.onto.save()
 
-    def declare_classes(self, onto, all_classes=True):
+    def _declare_classes(self, onto, all_classes=True):
         with onto:
             class PyObject(owl.Thing):
                 comment = 'my pyiron object'
@@ -252,7 +252,7 @@ class AtomisticsOntology:
 
             LAMMPS_ETOT = OutputParameter(name='ETOT', output_of=[LAMMPS])
 
-    def generate_df(self, onto):
+    def _generate_df(self, onto):
         inverse_list = ['has_objects', 'has_transitive_objects',
                         'has_conditional_objects',
                         'has_optional_objects', 'has_parameters', 'output',
@@ -288,7 +288,7 @@ class AtomisticsOntology:
         df = df.reset_index(drop=True)
         return df
 
-    def get_args(self, i_0, df, onto):
+    def _get_args(self, i_0, df, onto):
         non_ontology_keys = ['symbols', 'unit']
         qwargs = {}
         # print ('class: ', df.iloc[i_0]['class'])
@@ -315,7 +315,7 @@ class AtomisticsOntology:
 
         return qwargs
 
-    def declare_more_individuals(self, onto, df):
+    def _declare_more_individuals(self, onto, df):
         for index, row in df.iterrows():
             if isinstance(row['class'], str):
                 parent = onto[row['class']]
@@ -324,5 +324,5 @@ class AtomisticsOntology:
                     # Raise warning??
                     continue
 
-                qwargs = self.get_args(index, df, onto)
+                qwargs = self._get_args(index, df, onto)
                 individuum = parent(**qwargs)
