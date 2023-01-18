@@ -38,8 +38,10 @@ class AtomisticsOntology:
                     individuum = parent(**qwargs)
 
         owl.close_world(onto.PyObject)
-        # owl.sync_reasoner_pellet(infer_property_values=True,
-        #                          infer_data_property_values=True, debug=0)
+        with onto:
+            owl.sync_reasoner_pellet(
+                infer_property_values=True, infer_data_property_values=True, debug=0
+            )
         # What impact do these lines actually have? They are not changing query results
 
         self.onto = onto
