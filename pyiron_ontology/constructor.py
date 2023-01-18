@@ -37,7 +37,7 @@ class AtomisticsOntology:
                     # Seems to still work without the `with onto`, but why??
                     individuum = parent(**qwargs)
 
-        # owl.close_world(self.root_object)
+        owl.close_world(onto.PyObject)
         # owl.sync_reasoner_pellet(infer_property_values=True,
         #                          infer_data_property_values=True, debug=0)
         # What impact do these lines actually have? They are not changing query results
@@ -52,7 +52,6 @@ class AtomisticsOntology:
         with onto:
             class PyObject(owl.Thing):
                 comment = 'my pyiron object'
-            self.root_object = PyObject
 
             class Parameter(PyObject):
                 @property
