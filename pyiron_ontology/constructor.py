@@ -33,9 +33,7 @@ class AtomisticsOntology:
                     continue
 
                 qwargs = self.get_args(index, df, onto)
-                with onto:
-                    # Seems to still work without the `with onto`, but why??
-                    individuum = parent(**qwargs)
+                individuum = parent(**qwargs)
 
         owl.close_world(onto.PyObject)
         with onto:
