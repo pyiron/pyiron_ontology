@@ -3,4 +3,8 @@ channels:
 dependencies:
 - ipykernel
 - nbsphinx
-- pyiron_base
+- numpy
+- openjdk
+- owlready2
+- pandas
+- pyiron_atomistics
