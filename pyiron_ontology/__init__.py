@@ -10,3 +10,4 @@ del get_versions
 
 from pyiron_ontology.atomistics.constructor import AtomisticsOntology
 atomistics_onto = AtomisticsOntology().onto
+from pyiron_ontology.atomistics.reasoning import AtomisticsReasoner
