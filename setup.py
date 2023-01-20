@@ -31,6 +31,7 @@ setup(
         'openjdk',
         'owlready2',
         'pandas',
+        'pint',
         'pyiron_atomistics',
     ],
     cmdclass=versioneer.get_cmdclass(),
