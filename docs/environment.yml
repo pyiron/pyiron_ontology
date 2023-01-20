@@ -7,4 +7,5 @@ dependencies:
 - openjdk
 - owlready2
 - pandas
+- pint
 - pyiron_atomistics
