@@ -1,5 +1,7 @@
 # pyiron_ontology
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/pyiron/pyiron_ontology/HEAD?labpath=example.ipynb)
+
 ## Overview
 
 `pyiron_ontology` is a new pyiron project built on top of `owlready2` for ontologically-guided workflow design.
