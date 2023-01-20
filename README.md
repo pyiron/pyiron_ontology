@@ -2,5 +2,23 @@
 
 ## Overview
 
-pyiron_ontology is a new pyiron project for combining owlready2 and other ontologically-oriented python libraries with pyiron for ontologically-guided workflow design.
+`pyiron_ontology` is a new pyiron project built on top of `owlready2` for ontologically-guided workflow design.
 This project is currently in alpha-stage and subject to rapid change.
+Right now, there is only an ontology for pyiron-atomistics, and it is quite limited in scope.
+However, at present you are already able to automatically generate a tree of workflows for any of the properties defined, e.g.:
+
+```python
+from pyiron_ontology import AtomisticsReasoner, atomistics_onto as onto
+reasoner = AtomisticsReasoner(onto) 
+bulk_modulus_worflows = reasoner.build_tree(onto.Bulk_modulus)
+bulk_modulus_worflows.render()  # Still very ugly! Graphviz rendering forthcoming...
+```
+
+Or leverage the ontology to search over your existing pyiron data for instances of a particular property, e.g.:
+
+```python
+from pyiron_atomistics import Project
+pr = Project('my_project')
+
+reasoner.search_database_for_property(onto.B_prime, pr, select_alloy="Cu")
+```
