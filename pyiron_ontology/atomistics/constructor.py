@@ -15,7 +15,7 @@ def is_subset(a, b):
 
 
 class AtomisticsOntology:
-    def __init__(self, filename: str = "pyiron"):
+    def __init__(self, filename: str = "pyiron_atomistics"):
         onto = owl.get_ontology(f"file://{filename}.owl")
         self._declare_classes(onto)
         df = self._generate_df(onto)
