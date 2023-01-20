@@ -121,6 +121,7 @@ class AtomisticsReasoner:
 
     def build_tree(self, thing, parent=None):
         triples = self.get_triples(thing)
+        node = None
         for triple in triples:
             node = Node(triple, parent=parent)
             for next_ in triple[2]:
