@@ -148,10 +148,12 @@ class AtomisticsReasoner:
         if len(ref_job_name) == 1:
             return ref_job_name[0]
 
-    def _get_ref_job_type(self, job):
+    def _get_job_type(self, job):
         ref_job_name = self._get_ref_job(job)
         if ref_job_name is not None:
             return job[f'{ref_job_name}/TYPE'].split('.')[-1][:-2]
+        else:
+            return job["TYPE"]
 
     @staticmethod
     def _alloy_sql(el):
@@ -191,22 +193,31 @@ class AtomisticsReasoner:
 
         """
         specific_property = my_property.has_parameters[0]
-        job_type = specific_property.output_of[0].name
         property_hdf_path = '/'.join(specific_property.name.split('/')[1:])
 
-        pd_header = ['Chemical Formula', f'{my_property.name} [{my_property.unit[0]}]',
-                     'Engine']
+        pd_header = [
+            'Chemical Formula',
+            f'{my_property.name} [{my_property.unit[0]}]',
+            'Engine'
+        ]
         pd_dic = {k: [] for k in pd_header}
-        sql_formula_str = self._alloy_sql(select_alloy)
-        df_murn = pd.DataFrame(project.db.get_items_dict(
-            {'hamilton': job_type, 'chemicalformula': sql_formula_str}))
+
+        df_murn = pd.DataFrame(
+            project.db.get_items_dict(
+                {
+                    'hamilton': specific_property.output_of[0].name,
+                    'chemicalformula': self._alloy_sql(select_alloy),
+                    'project': f"%{project.path}%"
+                }
+            )
+        )
+
         for _, row in df_murn.iterrows():
-            if row.project[-1] == '/':
-                job_hdf = project.inspect(row.id)
-                pd_dic['Chemical Formula'].append(row.chemicalformula)
-                cv = self.convert_unit(specific_property)
-                output_property = job_hdf[property_hdf_path]
-                value = cv * output_property if output_property is not None else None
-                pd_dic[pd_header[1]].append(value)
-                pd_dic['Engine'].append(self._get_ref_job_type(job_hdf))
+            job_hdf = project.inspect(row.id)
+            pd_dic['Chemical Formula'].append(row.chemicalformula)
+            cv = self.convert_unit(specific_property)
+            output_property = job_hdf[property_hdf_path]
+            value = cv * output_property if output_property is not None else None
+            pd_dic[pd_header[1]].append(value)
+            pd_dic['Engine'].append(self._get_job_type(job_hdf))
         return pd.DataFrame(pd_dic)
