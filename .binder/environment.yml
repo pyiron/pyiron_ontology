@@ -1,4 +1,9 @@
 channels:
 - conda-forge
 dependencies:
-- pyiron_base
+- numpy
+- openjdk
+- owlready2
+- pandas
+- pint
+- pyiron_atomistics
