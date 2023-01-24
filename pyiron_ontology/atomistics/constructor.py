@@ -5,6 +5,8 @@
 A constructor for building the atomistics ontology from python classes.
 """
 
+from warnings import warn
+
 import numpy as np
 import owlready2 as owl
 import pandas
@@ -15,7 +17,7 @@ def is_subset(a, b):
 
 
 class AtomisticsOntology:
-    def __init__(self, filename: str = "pyiron_atomistics"):
+    def __init__(self, filename: str = "pyiron_atomistics", strict=False):
         onto = owl.get_ontology(f"file://{filename}.owl")
         self._declare_classes(onto)
         df = self._generate_df(onto)
@@ -28,6 +30,14 @@ class AtomisticsOntology:
             owl.sync_reasoner_pellet(
                 infer_property_values=True, infer_data_property_values=True, debug=0
             )
+
+        inconsistent = list(onto.inconsistent_classes())
+        if len(inconsistent) > 0:
+            msg = f"Inconsistent classes were found in the ontology: {inconsistent}"
+            if strict:
+                raise RuntimeError(msg)
+            else:
+                warn(msg)
 
         self.onto = onto
         self.df = df
