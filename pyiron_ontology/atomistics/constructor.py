@@ -75,7 +75,7 @@ class AtomisticsOntology:
                 ):
                     return [i for i in items if is_subset(conditions, i.has_options)]
 
-                def _get_all_conditions(
+                def get_all_conditions(
                         self, additional_conditions: list[Label] | None
                 ):
                     additional_conditions = [] if additional_conditions is None \
@@ -96,7 +96,7 @@ class AtomisticsOntology:
                 def get_sources(
                         self, additional_conditions: list[Label] = None
                 ) -> list[OutputParameter | Code]:
-                    conditions = self._get_all_conditions(additional_conditions)
+                    conditions = self.get_all_conditions(additional_conditions)
 
                     matching_parameters = self._filter_by_conditions(
                         self.generic_parameter[0].has_parameters, conditions
