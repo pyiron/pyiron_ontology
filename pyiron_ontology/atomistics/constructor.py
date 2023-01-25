@@ -286,7 +286,11 @@ class AtomisticsOntology:
                 generic_parameter=[EnergyCutoff],
                 unit=["eV"],
             )
-            VASP_IBRAV = InputParameter(name="IBRAV", input_in=[VASP])
+            VASP_IBRION = InputParameter(
+                name="IBRION",
+                generic_parameter=[Flag],
+                input_in=[VASP],
+            )
             VASP_Structure = InputParameter(
                 name=f"{VASP.name}/input/structure",
                 mandatory_input_in=[VASP],
