@@ -313,7 +313,7 @@ class AtomisticsOntology:
                 name=f"{LAMMPS.name}/input/structure",
                 mandatory_input_in=[LAMMPS],
                 generic_parameter=[AtomicStructure],
-                has_transitive_conditions=[lblBulk3DCrystal],
+                has_transitive_conditions=[],
             )
 
             LAMMPS_ETOT = OutputParameter(name="ETOT", output_of=[LAMMPS])
