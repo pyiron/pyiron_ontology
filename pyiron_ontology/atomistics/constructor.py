@@ -8,6 +8,7 @@ A constructor for building the atomistics ontology from python classes.
 from __future__ import annotations
 
 from abc import abstractmethod
+from typing import Optional
 from warnings import warn
 
 import numpy as np
@@ -76,7 +77,7 @@ class AtomisticsOntology:
                     return [i for i in items if is_subset(conditions, i.has_options)]
 
                 def get_all_conditions(
-                        self, additional_conditions: list[Label] | None
+                        self, additional_conditions: Optional[list[Label]] = None
                 ):
                     additional_conditions = [] if additional_conditions is None \
                         else additional_conditions
