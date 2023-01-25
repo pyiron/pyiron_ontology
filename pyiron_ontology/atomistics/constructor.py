@@ -5,6 +5,10 @@
 A constructor for building the atomistics ontology from python classes.
 """
 
+from __future__ import annotations
+
+from abc import abstractmethod
+from typing import Optional
 from warnings import warn
 
 import numpy as np
@@ -57,31 +61,76 @@ class AtomisticsOntology:
                     if len(self.generic_parameter) > 0:
                         return self.generic_parameter[0].description
 
-            class InputParameter(Parameter):
-                # @property
-                def consistent_output(self, additional_conditions=None):
-                    if additional_conditions is None:
-                        conditions = self.has_conditions
-                    else:
-                        conditions = additional_conditions
-                    if len(conditions) > 0:
-                        return [
-                            p
-                            for p in self.generic_parameter[0].has_parameters
-                            if is_subset(conditions, p.has_options)
-                        ]
-                    return self.generic_parameter[0].has_parameters
+                @abstractmethod
+                def get_sources(
+                    self, additional_conditions: list[Label] = None
+                ) -> list:
+                    # Note: We aren't actually enforcing the abstractmethod with ABC
+                    #       because of metaclass conflicts with owlready
+                    #       It just functions as a behaviour hint to devs.
+                    pass
 
-            # class MandatoryInputParameter(InputParameter): pass
+                @staticmethod
+                def _filter_by_conditions(
+                    items: list[Parameter], conditions: list[Label]
+                ):
+                    return [i for i in items if is_subset(conditions, i.has_options)]
+
+                def get_all_conditions(
+                    self, additional_conditions: Optional[list[Label]] = None
+                ):
+                    additional_conditions = (
+                        [] if additional_conditions is None else additional_conditions
+                    )
+                    return (
+                        self.has_conditions
+                        + self.has_transitive_conditions
+                        + additional_conditions
+                    )
+
+                @staticmethod
+                def _filter_by_class(
+                    items: list[Parameter],
+                    valid_classes: type[Parameter] | tuple[type[Parameter], ...],
+                ):
+                    return [i for i in items if isinstance(i, valid_classes)]
+
+            class InputParameter(Parameter):
+                def get_sources(
+                    self, additional_conditions: list[Label] = None
+                ) -> list[OutputParameter | Code]:
+                    conditions = self.get_all_conditions(additional_conditions)
+
+                    matching_parameters = self._filter_by_conditions(
+                        self.generic_parameter[0].has_parameters, conditions
+                    )
+
+                    return self._filter_by_class(
+                        matching_parameters, (OutputParameter, Code)
+                    )
 
             class OutputParameter(Parameter):
-                pass
+                def get_sources(
+                    self, additional_conditions: list[Label] = None
+                ) -> list[Code]:
+                    conditions = (
+                        [] if additional_conditions is None else additional_conditions
+                    )
+                    return self._filter_by_conditions(self.output_of, conditions)
 
             class GenericParameter(Parameter):
                 description = ""
 
+                def get_sources(
+                    self, additional_conditions: list[Label] = None
+                ) -> list[OutputParameter]:
+                    return self._filter_by_class(self.has_parameters, OutputParameter)
+
             class Code(Parameter):
-                pass
+                def get_sources(
+                    self, additional_conditions: list[Label] = None
+                ) -> list[InputParameter]:
+                    return self.mandatory_input
 
             class Label(PyObject):
                 pass
@@ -188,6 +237,11 @@ class AtomisticsOntology:
                 description="Code that requires input and produces output",
                 domain=[],
             )
+            Flag = GenericParameter(
+                name="Flag",
+                description="Input that selects a choice for a particular code",
+                domain=[lblUserInput],
+            )
 
             # Structure
             CreateStructureBulk = Code(
@@ -281,7 +335,11 @@ class AtomisticsOntology:
                 generic_parameter=[EnergyCutoff],
                 unit=["eV"],
             )
-            VASP_IBRAV = InputParameter(name="IBRAV", input_in=[VASP])
+            VASP_IBRION = InputParameter(
+                name="IBRION",
+                generic_parameter=[Flag],
+                input_in=[VASP],
+            )
             VASP_Structure = InputParameter(
                 name=f"{VASP.name}/input/structure",
                 mandatory_input_in=[VASP],
@@ -304,7 +362,7 @@ class AtomisticsOntology:
                 name=f"{LAMMPS.name}/input/structure",
                 mandatory_input_in=[LAMMPS],
                 generic_parameter=[AtomicStructure],
-                has_transitive_conditions=[lblBulk3DCrystal],
+                has_transitive_conditions=[],
             )
 
             LAMMPS_ETOT = OutputParameter(name="ETOT", output_of=[LAMMPS])
