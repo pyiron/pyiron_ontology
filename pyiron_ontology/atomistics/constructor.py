@@ -63,7 +63,7 @@ class AtomisticsOntology:
 
                 @abstractmethod
                 def get_sources(
-                        self, additional_conditions: list[Label] = None
+                    self, additional_conditions: list[Label] = None
                 ) -> list:
                     # Note: We aren't actually enforcing the abstractmethod with ABC
                     #       because of metaclass conflicts with owlready
@@ -72,30 +72,32 @@ class AtomisticsOntology:
 
                 @staticmethod
                 def _filter_by_conditions(
-                        items: list[Parameter], conditions: list[Label]
+                    items: list[Parameter], conditions: list[Label]
                 ):
                     return [i for i in items if is_subset(conditions, i.has_options)]
 
                 def get_all_conditions(
-                        self, additional_conditions: Optional[list[Label]] = None
+                    self, additional_conditions: Optional[list[Label]] = None
                 ):
-                    additional_conditions = [] if additional_conditions is None \
-                        else additional_conditions
-                    return self.has_conditions \
-                        + self.has_transitive_conditions \
+                    additional_conditions = (
+                        [] if additional_conditions is None else additional_conditions
+                    )
+                    return (
+                        self.has_conditions
+                        + self.has_transitive_conditions
                         + additional_conditions
+                    )
 
                 @staticmethod
                 def _filter_by_class(
-                        items: list[Parameter],
-                        valid_classes: type[Parameter] | tuple[type[Parameter], ...]
+                    items: list[Parameter],
+                    valid_classes: type[Parameter] | tuple[type[Parameter], ...],
                 ):
                     return [i for i in items if isinstance(i, valid_classes)]
 
             class InputParameter(Parameter):
-
                 def get_sources(
-                        self, additional_conditions: list[Label] = None
+                    self, additional_conditions: list[Label] = None
                 ) -> list[OutputParameter | Code]:
                     conditions = self.get_all_conditions(additional_conditions)
 
@@ -104,31 +106,29 @@ class AtomisticsOntology:
                     )
 
                     return self._filter_by_class(
-                        matching_parameters,
-                        (OutputParameter, Code)
+                        matching_parameters, (OutputParameter, Code)
                     )
 
             class OutputParameter(Parameter):
-
                 def get_sources(
-                        self, additional_conditions: list[Label] = None
+                    self, additional_conditions: list[Label] = None
                 ) -> list[Code]:
-                    conditions = [] if additional_conditions is None \
-                        else additional_conditions
+                    conditions = (
+                        [] if additional_conditions is None else additional_conditions
+                    )
                     return self._filter_by_conditions(self.output_of, conditions)
 
             class GenericParameter(Parameter):
                 description = ""
 
                 def get_sources(
-                        self, additional_conditions: list[Label] = None
+                    self, additional_conditions: list[Label] = None
                 ) -> list[OutputParameter]:
                     return self._filter_by_class(self.has_parameters, OutputParameter)
 
             class Code(Parameter):
-
                 def get_sources(
-                        self, additional_conditions: list[Label] = None
+                    self, additional_conditions: list[Label] = None
                 ) -> list[InputParameter]:
                     return self.mandatory_input
 
@@ -240,7 +240,7 @@ class AtomisticsOntology:
             Flag = GenericParameter(
                 name="Flag",
                 description="Input that selects a choice for a particular code",
-                domain=[lblUserInput]
+                domain=[lblUserInput],
             )
 
             # Structure
