@@ -188,6 +188,11 @@ class AtomisticsOntology:
                 description="Code that requires input and produces output",
                 domain=[],
             )
+            Flag = GenericParameter(
+                name="Flag",
+                description="Input that selects a choice for a particular code",
+                domain=[lblUserInput]
+            )
 
             # Structure
             CreateStructureBulk = Code(
