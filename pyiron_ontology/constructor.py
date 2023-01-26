@@ -24,7 +24,7 @@ class Constructor(ABC):
     def __init__(self, name: str, closed: bool = True, strict: bool = False):
         onto = owl.get_ontology(f"file://{name}.owl")
         self._declare_classes(onto)
-        self._declare_individuals()
+        self._declare_individuals(onto)
         df = self._generate_df(onto)
         self._declare_dynamic_individuals(onto, df)
         # TODO: Introduce a "from_csv" option for constructing, and leverage
