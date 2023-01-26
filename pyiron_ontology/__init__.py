@@ -3,14 +3,8 @@ from ._version import get_versions
 __version__ = get_versions()["version"]
 del get_versions
 
-from ._version import get_versions
-
-__version__ = get_versions()["version"]
-del get_versions
-
-
 from pyiron_ontology.atomistics.constructor import AtomisticsOntology
-from pyiron_ontology.atomistics.tree import build_tree as build_atomistics_tree
+from pyiron_ontology.workflow import build_tree, build_path
+from pyiron_ontology.dynamic import DynamicOntologies as dynamic
 
-atomistics_onto = AtomisticsOntology().onto
 from pyiron_ontology.atomistics.reasoning import AtomisticsReasoner
