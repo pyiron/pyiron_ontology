@@ -175,7 +175,7 @@ class AtomisticsOntology(Constructor):
             name=f"{LAMMPS.name}/input/structure",
             mandatory_input_in=[LAMMPS],
             generic_parameter=[AtomicStructure],
-            has_transitive_conditions=[],
+            has_transitive_conditions=[lblBulk3DCrystal],
         )
 
         LAMMPS_ETOT = onto.OutputParameter(name="ETOT", output_of=[LAMMPS])
