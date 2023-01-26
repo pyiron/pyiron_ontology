@@ -71,6 +71,14 @@ class Constructor(ABC):
                     if len(self.generic_parameter) > 0:
                         return self.generic_parameter[0].description
 
+                def get_conditions(
+                    self, additional_conditions: Optional[list[Label]] = None
+                ):
+                    additional_conditions = (
+                        [] if additional_conditions is None else additional_conditions
+                    )
+                    return additional_conditions
+
                 @abstractmethod
                 def get_sources(
                     self, additional_conditions: list[Label] = None
@@ -86,18 +94,6 @@ class Constructor(ABC):
                 ):
                     return [i for i in items if is_subset(conditions, i.has_options)]
 
-                def get_all_conditions(
-                    self, additional_conditions: Optional[list[Label]] = None
-                ):
-                    additional_conditions = (
-                        [] if additional_conditions is None else additional_conditions
-                    )
-                    return (
-                        self.has_conditions
-                        + self.has_transitive_conditions
-                        + additional_conditions
-                    )
-
                 @staticmethod
                 def _filter_by_class(
                     items: list[Parameter],
@@ -106,10 +102,23 @@ class Constructor(ABC):
                     return [i for i in items if isinstance(i, valid_classes)]
 
             class InputParameter(Parameter):
+                def get_conditions(
+                    self, additional_conditions: Optional[list[Label]] = None
+                ):
+                    additional_conditions = super().get_conditions(
+                        additional_conditions
+                    )
+                    receivable_conditions = list(
+                        set(additional_conditions).intersection(
+                            self.has_transitive_conditions
+                        )
+                    )
+                    return list(set(self.has_conditions).union(receivable_conditions))
+
                 def get_sources(
                     self, additional_conditions: list[Label] = None
                 ) -> list[OutputParameter | Code]:
-                    conditions = self.get_all_conditions(additional_conditions)
+                    conditions = self.get_conditions(additional_conditions)
 
                     matching_parameters = self._filter_by_conditions(
                         self.generic_parameter[0].has_parameters, conditions
@@ -123,9 +132,7 @@ class Constructor(ABC):
                 def get_sources(
                     self, additional_conditions: list[Label] = None
                 ) -> list[Code]:
-                    conditions = (
-                        [] if additional_conditions is None else additional_conditions
-                    )
+                    conditions = self.get_conditions(additional_conditions)
                     return self._filter_by_conditions(self.output_of, conditions)
 
             class GenericParameter(Parameter):
@@ -134,7 +141,11 @@ class Constructor(ABC):
                 def get_sources(
                     self, additional_conditions: list[Label] = None
                 ) -> list[OutputParameter]:
-                    return self._filter_by_class(self.has_parameters, OutputParameter)
+                    conditions = self.get_conditions(additional_conditions)
+                    candidates = self._filter_by_class(
+                        self.has_parameters, OutputParameter
+                    )
+                    return self._filter_by_conditions(candidates, conditions)
 
             class Code(Parameter):
                 def get_sources(
@@ -149,7 +160,7 @@ class Constructor(ABC):
                 pass
 
             class has_transitive_conditions(Parameter >> Label):
-                pass  # condition to fulfill to fulfill option in code
+                pass  # condition to fulfill option in code
 
             class has_options(Parameter >> Label):
                 pass
