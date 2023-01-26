@@ -24,6 +24,7 @@ class Constructor(ABC):
     def __init__(self, name: str, closed: bool = True, strict: bool = False):
         onto = owl.get_ontology(f"file://{name}.owl")
         self._declare_classes(onto)
+        self._declare_additional_classes(onto)
         self._declare_individuals(onto)
         df = self._generate_df(onto)
         self._declare_dynamic_individuals(onto, df)
@@ -53,6 +54,9 @@ class Constructor(ABC):
 
     @abstractmethod
     def _declare_individuals(self, onto):
+        pass
+
+    def _declare_additional_classes(self, onto):
         pass
 
     def _declare_classes(self, onto):
