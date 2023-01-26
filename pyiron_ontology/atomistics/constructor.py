@@ -12,9 +12,7 @@ from pyiron_ontology.constructor import Constructor
 
 class AtomisticsOntology(Constructor):
     def __init__(
-            self, name: str = "atomistics",
-            closed: bool = True,
-            strict: bool = False
+        self, name: str = "atomistics", closed: bool = True, strict: bool = False
     ):
         super().__init__(name=name, closed=closed, strict=strict)
 
