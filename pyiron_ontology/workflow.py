@@ -21,27 +21,27 @@ class NodeTree:
             child.render(depth=depth + 1)
 
 
-def build_tree(parameter, parent=None, transitive_conditions=None) -> NodeTree:
+def build_tree(parameter, parent=None, additional_conditions=None) -> NodeTree:
     node = NodeTree(parameter, parent=parent)
 
-    conditions = parameter.get_all_conditions(transitive_conditions)
+    conditions = parameter.get_all_conditions(additional_conditions)
 
     for source in parameter.get_sources(conditions):
-        build_tree(source, parent=node, transitive_conditions=conditions)
+        build_tree(source, parent=node, additional_conditions=conditions)
 
     return node
 
 
-def build_path(parameter, *path_indices: int, parent=None, transitive_conditions=None):
+def build_path(parameter, *path_indices: int, parent=None, additional_conditions=None):
     node = NodeTree(parameter, parent=parent)
-    conditions = parameter.get_all_conditions(transitive_conditions)
+    conditions = parameter.get_all_conditions(additional_conditions)
     sources = parameter.get_sources(conditions)
 
     if len(path_indices) > 0:
         i, path_indices = path_indices[0], path_indices[1:]
         source = sources[i]
         _, sources = build_path(
-            source, *path_indices, parent=node, transitive_conditions=conditions
+            source, *path_indices, parent=node, additional_conditions=conditions
         )
 
     return node, sources
