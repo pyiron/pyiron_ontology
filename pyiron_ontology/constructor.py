@@ -72,10 +72,11 @@ class Constructor(ABC):
                         return self.generic_parameter[0].description
 
                 def get_conditions(
-                        self, additional_conditions: Optional[list[Label]] = None
+                    self, additional_conditions: Optional[list[Label]] = None
                 ):
-                    additional_conditions = [] if additional_conditions is None \
-                        else additional_conditions
+                    additional_conditions = (
+                        [] if additional_conditions is None else additional_conditions
+                    )
                     return additional_conditions
 
                 @abstractmethod
@@ -102,7 +103,7 @@ class Constructor(ABC):
 
             class InputParameter(Parameter):
                 def get_conditions(
-                        self, additional_conditions: Optional[list[Label]] = None
+                    self, additional_conditions: Optional[list[Label]] = None
                 ):
                     additional_conditions = super().get_conditions(
                         additional_conditions
