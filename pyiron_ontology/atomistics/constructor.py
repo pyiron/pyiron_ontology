@@ -34,6 +34,10 @@ class AtomisticsOntology(Constructor):
             name="AtomisticEnergyCalculator",
             comment="Code to compute the energy of an atomic structure",
         )
+        lblProject = onto.Label(
+            name="lblProject",
+            comment="An object that can create other pyiron objects"
+        )
 
         ChemicalElement = onto.GenericParameter(
             name="ChemicalElement",
@@ -54,6 +58,14 @@ class AtomisticsOntology(Constructor):
             name="Flag",
             description="Input that selects a choice for a particular code",
             domain=[lblUserInput],
+        )
+
+        # Project
+        Project = onto.Code(
+            name="Project",
+            domain=[lblCode],
+            generic_parameter=[Executable],
+            has_options=[lblProject],
         )
 
         # Structure
@@ -123,6 +135,12 @@ class AtomisticsOntology(Constructor):
             output_of=[Murnaghan],
             generic_parameter=[Bprime],
         )
+        Murnaghan_Project = onto.InputParameter(
+            name=f"{Murnaghan.name}/input/project",
+            mandatory_input_in=[Murnaghan],
+            generic_parameter=[Executable],
+            has_conditions=[lblProject],
+        )
         Murnaghan_Ref_Job = onto.InputParameter(
             name=f"{Murnaghan.name}/ref_job",
             mandatory_input_in=[Murnaghan],
@@ -176,6 +194,12 @@ class AtomisticsOntology(Constructor):
             mandatory_input_in=[LAMMPS],
             generic_parameter=[AtomicStructure],
             has_transitive_conditions=[lblBulk3DCrystal],
+        )
+        LAMMPS_Project = onto.InputParameter(
+            name=f"{LAMMPS.name}/input/project",
+            mandatory_input_in=[LAMMPS],
+            generic_parameter=[Executable],
+            has_conditions=[lblProject],
         )
 
         LAMMPS_ETOT = onto.OutputParameter(name="ETOT", output_of=[LAMMPS])
