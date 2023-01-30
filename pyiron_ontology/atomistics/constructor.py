@@ -30,6 +30,11 @@ class AtomisticsOntology(Constructor):
             name="Bulk3dStructure",
             comment="Bulk 3d structure generated/needed. Has a well defined volume.",
         )
+        lblSlab3DCrystal = onto.Label(
+            name="Slab3dStructure",
+            comment="Slab 3d structure generated/needed. Nominally 3d, but vacuum "
+                    "creates effective aperiodicity in one dimension.",
+        )
         lblAtomisticEnergyCalculator = onto.Label(
             name="AtomisticEnergyCalculator",
             comment="Code to compute the energy of an atomic structure",
@@ -100,7 +105,7 @@ class AtomisticsOntology(Constructor):
             name=f"{CreateSurface.name}/output/structure",
             output_of=[CreateSurface],
             generic_parameter=[AtomicStructure],
-            has_options=[],
+            has_options=[lblSlab3DCrystal],
         )
 
         # Murnaghan
