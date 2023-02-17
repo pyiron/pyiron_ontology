@@ -61,168 +61,209 @@ class Constructor(ABC):
 
     def _declare_classes(self, onto):
         with onto:
+            class PyironThing(owl.Thing):
+                pass
 
-            class PyObject(owl.Thing):
-                comment = "my pyiron object"
+            class Generic(PyironThing):
+                @staticmethod
+                def only_get_thing_classes(things):
+                    return [
+                        is_a_class for is_a_class in things
+                        if isinstance(is_a_class, owl.ThingClass)
+                    ]
 
-            class Parameter(PyObject):
                 @property
-                def description(self):
-                    if len(self.generic_parameter) > 0:
-                        return self.generic_parameter[0].description
+                def INDIRECT_things(self):
+                    return self.only_get_thing_classes(self.INDIRECT_is_a)
 
-                def get_conditions(
-                    self, additional_conditions: Optional[list[Label]] = None
-                ):
-                    additional_conditions = (
-                        [] if additional_conditions is None else additional_conditions
-                    )
-                    return additional_conditions
-
-                @abstractmethod
-                def get_sources(
-                    self, additional_conditions: list[Label] = None
-                ) -> list:
-                    # Note: We aren't actually enforcing the abstractmethod with ABC
-                    #       because of metaclass conflicts with owlready
-                    #       It just functions as a behaviour hint to devs.
-                    pass
-
-                @staticmethod
-                def _filter_by_conditions(
-                    items: list[Parameter], conditions: list[Label]
-                ):
-                    return [i for i in items if is_subset(conditions, i.has_options)]
-
-                @staticmethod
-                def _filter_by_class(
-                    items: list[Parameter],
-                    valid_classes: type[Parameter] | tuple[type[Parameter], ...],
-                ):
-                    return [i for i in items if isinstance(i, valid_classes)]
-
-            class InputParameter(Parameter):
-                def get_conditions(
-                    self, additional_conditions: Optional[list[Label]] = None
-                ):
-                    additional_conditions = super().get_conditions(
-                        additional_conditions
-                    )
-                    receivable_conditions = list(
-                        set(additional_conditions).intersection(
-                            self.has_transitive_conditions
+                @property
+                def INDIRECT_parameters(self) -> list[Parameter]:
+                    generic_classes = self.only_get_thing_classes(self.is_a)
+                    unique_instances = list(
+                        set(generic_classes[0].instances()).union(
+                            *[gc.instances() for gc in generic_classes[1:]]
                         )
                     )
-                    return list(set(self.has_conditions).union(receivable_conditions))
+                    return [
+                        p for ui in unique_instances for p in ui.parameters
+                    ]
 
-                def get_sources(
-                    self, additional_conditions: list[Label] = None
-                ) -> list[OutputParameter | Code]:
-                    conditions = self.get_conditions(additional_conditions)
+                @property
+                def INDIRECT_outputs(self) -> list[Output]:
+                    return [p for p in self.INDIRECT_parameters if Output in p.is_a]
 
-                    matching_parameters = self._filter_by_conditions(
-                        self.generic_parameter[0].has_parameters, conditions
+                @classmethod
+                def _get_disjoints_set(cls, classes: list[owl.ThingClass]):
+                    disjoints = []
+                    for thing in classes:
+                        if thing == owl.Thing:
+                            continue
+                        thing_disjoints = []
+                        for dj in thing.disjoints():
+                            entities = list(
+                                dj.entities)  # Don't modify entities in place!
+                            entities.remove(thing)
+                            thing_disjoints += entities
+                        disjoints += thing_disjoints
+                    return set(disjoints)
+
+                @property
+                def INDIRECT_disjoints_set(self) -> set[Generic]:
+                    return self._get_disjoints_set(self.INDIRECT_things)
+
+                @classmethod
+                def class_is_indirectly_disjoint_with(cls, other: owl.ThingClass):
+                    ancestors1 = list(cls.ancestors())
+                    ancestors2 = list(other.ancestors())
+                    combined_disjoints = cls._get_disjoints_set(ancestors1).union(
+                        cls._get_disjoints_set(ancestors2)
+                    )
+                    combined_ancestors = set(ancestors1).union(ancestors2)
+                    return len(combined_disjoints.intersection(combined_ancestors)) > 0
+
+                def is_representable_by(self, other: Generic) -> bool:
+                    """
+                    Checks for disjointness among all indirect thing classes.
+                    """
+                    my_things = self.INDIRECT_things
+                    others_things = other.INDIRECT_things
+
+                    exclusively_mine = set(my_things).difference(others_things)
+                    exclusively_others = set(others_things).difference(my_things)
+
+                    my_disjoints = self.INDIRECT_disjoints_set
+                    others_disjoints = other.INDIRECT_disjoints_set
+
+                    any_of_mine_are_disjoint = any(
+                        [my_thing in others_disjoints for my_thing in exclusively_mine]
+                    )
+                    any_of_others_are_disjoint = any(
+                        [others_thing in my_disjoints for others_thing in
+                         exclusively_others]
                     )
 
-                    return self._filter_by_class(
-                        matching_parameters, (OutputParameter, Code)
+                    return not any_of_mine_are_disjoint and not any_of_others_are_disjoint
+
+                def is_more_specific_than(self, other: Generic) -> bool:
+                    """
+                    Only has extra classes compared to other, and non of them are disjoint
+                    """
+                    my_things_set = set(self.INDIRECT_things)
+                    others_things_set = set(other.INDIRECT_things)
+
+                    exclusively_mine = my_things_set.difference(others_things_set)
+                    any_of_mine_are_disjoint = any(
+                        [
+                            my_thing in other.INDIRECT_disjoints_set
+                            for my_thing in exclusively_mine
+                        ]
+                    )
+                    return others_things_set < my_things_set and not any_of_mine_are_disjoint
+
+            class WorkflowThing(PyironThing):
+                pass
+
+            class Function(WorkflowThing):
+                @property
+                def inputs(self):
+                    return self.mandatory_inputs + self.optional_inputs
+
+                @property
+                def options(self):
+                    options = []
+                    for inp in self.inputs:
+                        options.append(inp.generic)
+                        options += inp.requirements
+                    return options
+
+            class Parameter(PyironThing):
+                # Think about renaming this IO and creating a new `Parameter` common ancestor
+                # to Generic _and_ IO that has a field for units
+                pass
+
+            class has_generic(Parameter >> Generic, owl.FunctionalProperty):
+                python_name = "generic"
+
+            class has_for_parameter(Generic >> Parameter,
+                                    owl.InverseFunctionalProperty):
+                python_name = "parameters"
+                inverse_property = has_generic
+
+            class Output(Parameter):
+                @property
+                def options(self):
+                    return self.output_of.options
+
+                def satisfies(self, requirements: list[Generic]) -> bool:
+                    return all(
+                        [
+                            any(
+                                [
+                                    requirement.is_representable_by(option)
+                                    for option in self.options + [self.generic]
+                                ]
+                            )
+                            for requirement in requirements
+                        ]
                     )
 
-            class OutputParameter(Parameter):
-                def get_sources(
-                    self, additional_conditions: list[Label] = None
-                ) -> list[Code]:
-                    conditions = self.get_conditions(additional_conditions)
-                    return self._filter_by_conditions(self.output_of, conditions)
+            class is_output_of(Output >> Function, owl.FunctionalProperty):
+                python_name = "output_of"
 
-            class GenericParameter(Parameter):
-                description = ""
-
-                def get_sources(
-                    self, additional_conditions: list[Label] = None
-                ) -> list[OutputParameter]:
-                    conditions = self.get_conditions(additional_conditions)
-                    candidates = self._filter_by_class(
-                        self.has_parameters, OutputParameter
-                    )
-                    return self._filter_by_conditions(candidates, conditions)
-
-            class Code(Parameter):
-                def get_sources(
-                    self, additional_conditions: list[Label] = None
-                ) -> list[InputParameter]:
-                    return self.mandatory_input
-
-            class Label(PyObject):
-                pass
-
-            class has_conditions(Parameter >> Label):
-                pass
-
-            class has_transitive_conditions(Parameter >> Label):
-                pass  # condition to fulfill option in code
-
-            class has_options(Parameter >> Label):
-                pass
-
-            class has_transitive_objects(Label >> Parameter):
-                inverse_property = has_transitive_conditions
-
-            class has_conditional_objects(Label >> Parameter):
-                inverse_property = has_conditions
-
-            class has_optional_objects(Label >> Parameter):
-                inverse_property = has_options
-
-            class has_symbol(GenericParameter >> str):
-                class_property_type = ["some"]
-                python_name = "symbols"
-
-            class has_unit(Parameter >> str):
-                class_property_type = ["some"]
-                python_name = "unit"
-
-            class is_in_domains(Parameter >> Label):
-                class_property_type = ["some"]
-                python_name = "domain"
-
-            class domain_has_codes(Label >> Parameter):
-                python_name = "has_objects"
-                inverse_property = is_in_domains
-
-            class has_generic_parameter(Parameter >> GenericParameter):
-                class_property_type = ["some"]
-                python_name = "generic_parameter"
-
-            class generic_parameter_has(GenericParameter >> Parameter):
-                python_name = "has_parameters"
-                inverse_property = has_generic_parameter
-
-            class is_input_of(InputParameter >> Code):
-                class_property_type = ["some"]
-                python_name = "input_in"
-
-            class has_input(Code >> InputParameter):
-                python_name = "input"
-                inverse_property = is_input_of
-
-            class is_mandatory_input_of(InputParameter >> Code):
-                class_property_type = ["some"]
-                python_name = "mandatory_input_in"
-
-            class has_mandatory_input(Code >> InputParameter):
-                python_name = "mandatory_input"
-                inverse_property = is_mandatory_input_of
-
-            class is_output_of(OutputParameter >> Code):
-                class_property_type = ["some"]
-                python_name = "output_of"  # python name has to be unique (even for different class)
-
-            class has_output(Code >> OutputParameter):
-                python_name = "output"
+            class has_for_output(Function >> Output, owl.InverseFunctionalProperty):
+                python_name = "outputs"
                 inverse_property = is_output_of
 
-            owl.AllDisjoint([InputParameter, OutputParameter, Label])
+            class Input(Parameter):
+                def get_sources(self, additional_requirements=None) -> list[Output]:
+                    requirements = self._more_specific_union(
+                        self.requirements,
+                        additional_requirements
+                    ) if additional_requirements is not None else self.requirements
+                    return [
+                        out for out in self.generic.INDIRECT_outputs
+                        if out.satisfies(requirements + [self.generic])
+                    ]
+
+                @staticmethod
+                def _more_specific_union(
+                        requirements1: list[Generic], requirements2: list[Generic]
+                ) -> list[Generic]:
+                    """
+                    A union of two lists of Generics that throws away any less-specific items.
+                    """
+                    union = list(set(requirements1).union(requirements2))
+                    to_remove = [
+                        i for i, req_i in enumerate(union)
+                        if any([req_j.is_more_specific_than(req_i) for req_j in union])
+                    ]
+                    return [req for i, req in enumerate(union) if i not in to_remove]
+
+            class is_optional_input_of(Input >> Function, owl.FunctionalProperty):
+                python_name = "optional_input_of"
+
+            class has_for_optional_input(Function >> Input,
+                                         owl.InverseFunctionalProperty):
+                python_name = "optional_inputs"
+                inverse_property = is_optional_input_of
+
+            class is_mandatory_input_of(Input >> Function, owl.FunctionalProperty):
+                python_name = "mandatory_input_of"
+
+            class has_for_mandatory_input(Function >> Input,
+                                          owl.InverseFunctionalProperty):
+                python_name = "mandatory_inputs"
+                inverse_property = is_mandatory_input_of
+
+            class has_for_requirement(Input >> Generic):
+                python_name = "requirements"
+
+            class is_requirement_of(Generic >> Input):
+                python_name = "requirement_of"
+                inverse_property = has_for_requirement
+
+            owl.AllDisjoint([is_optional_input_of, is_mandatory_input_of])
+            owl.AllDisjoint([Input, Function, Output, Generic])
 
     def _generate_df(self, onto):
         inverse_list = [
