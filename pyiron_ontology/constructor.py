@@ -53,10 +53,10 @@ class Constructor(ABC):
 
     def _make_universal_declarations(self, onto):
         with onto:
-            class PyironThing(owl.Thing):
+            class PyironOntoThing(owl.Thing):
                 pass
 
-            class Parameter(PyironThing):
+            class Parameter(PyironOntoThing):
                 pass
 
             class Generic(Parameter):
@@ -155,7 +155,7 @@ class Constructor(ABC):
                     )
                     return others_things_set < my_things_set and not any_of_mine_are_disjoint
 
-            class WorkflowThing(PyironThing):
+            class WorkflowThing(PyironOntoThing):
                 pass
 
             class Function(WorkflowThing):
