@@ -56,7 +56,10 @@ class Constructor(ABC):
             class PyironThing(owl.Thing):
                 pass
 
-            class Generic(PyironThing):
+            class Parameter(PyironThing):
+                pass
+
+            class Generic(Parameter):
                 @staticmethod
                 def only_get_thing_classes(things):
                     return [
@@ -65,11 +68,11 @@ class Constructor(ABC):
                     ]
 
                 @property
-                def INDIRECT_things(self):
+                def indirect_things(self):
                     return self.only_get_thing_classes(self.INDIRECT_is_a)
 
                 @property
-                def INDIRECT_parameters(self) -> list[Parameter]:
+                def indirect_io(self) -> list[Parameter]:
                     generic_classes = self.only_get_thing_classes(self.is_a)
                     unique_instances = list(
                         set(generic_classes[0].instances()).union(
@@ -81,8 +84,8 @@ class Constructor(ABC):
                     ]
 
                 @property
-                def INDIRECT_outputs(self) -> list[Output]:
-                    return [p for p in self.INDIRECT_parameters if Output in p.is_a]
+                def indirect_outputs(self) -> list[Output]:
+                    return [p for p in self.indirect_io if Output in p.is_a]
 
                 @classmethod
                 def _get_disjoints_set(cls, classes: list[owl.ThingClass]):
@@ -101,7 +104,7 @@ class Constructor(ABC):
 
                 @property
                 def INDIRECT_disjoints_set(self) -> set[Generic]:
-                    return self._get_disjoints_set(self.INDIRECT_things)
+                    return self._get_disjoints_set(self.indirect_things)
 
                 @classmethod
                 def class_is_indirectly_disjoint_with(cls, other: owl.ThingClass):
@@ -117,8 +120,8 @@ class Constructor(ABC):
                     """
                     Checks for disjointness among all indirect thing classes.
                     """
-                    my_things = self.INDIRECT_things
-                    others_things = other.INDIRECT_things
+                    my_things = self.indirect_things
+                    others_things = other.indirect_things
 
                     exclusively_mine = set(my_things).difference(others_things)
                     exclusively_others = set(others_things).difference(my_things)
@@ -140,8 +143,8 @@ class Constructor(ABC):
                     """
                     Only has extra classes compared to other, and non of them are disjoint
                     """
-                    my_things_set = set(self.INDIRECT_things)
-                    others_things_set = set(other.INDIRECT_things)
+                    my_things_set = set(self.indirect_things)
+                    others_things_set = set(other.indirect_things)
 
                     exclusively_mine = my_things_set.difference(others_things_set)
                     any_of_mine_are_disjoint = any(
@@ -213,7 +216,7 @@ class Constructor(ABC):
                         additional_requirements
                     ) if additional_requirements is not None else self.requirements
                     return [
-                        out for out in self.generic.INDIRECT_outputs
+                        out for out in self.generic.indirect_outputs
                         if out.satisfies(requirements + [self.generic])
                     ]
 
