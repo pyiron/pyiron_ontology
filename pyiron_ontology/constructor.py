@@ -13,7 +13,6 @@ from warnings import warn
 
 import numpy as np
 import owlready2 as owl
-import pandas
 
 
 def is_subset(a, b):
@@ -26,8 +25,6 @@ class Constructor(ABC):
         self._declare_classes(onto)
         self._declare_additional_classes(onto)
         self._declare_individuals(onto)
-        df = self._generate_df(onto)
-        self._declare_dynamic_individuals(onto, df)
         # TODO: Introduce a "from_csv" option for constructing, and leverage
         #       `all_classes=False` in `declare_classes`?
 
@@ -47,7 +44,6 @@ class Constructor(ABC):
                 warn(msg)
 
         self.onto = onto
-        self.df = df
 
     def save(self):
         self.onto.save()
@@ -264,89 +260,3 @@ class Constructor(ABC):
 
             owl.AllDisjoint([is_optional_input_of, is_mandatory_input_of])
             owl.AllDisjoint([Input, Function, Output, Generic])
-
-    def _generate_df(self, onto):
-        inverse_list = [
-            "has_objects",
-            "has_transitive_objects",
-            "has_conditional_objects",
-            "has_optional_objects",
-            "has_parameters",
-            "output",
-            "mandatory_input",
-            "input",
-        ]
-
-        obj_lst = []
-        individuals = list(onto.individuals())
-        for i in individuals:
-            obj_dict = {}
-            # print (i.is_instance_of[0], i.name)
-            obj_dict["class"] = i.is_instance_of[0].name
-            obj_dict["name"] = i.name
-            for p in list(i.get_properties()):
-                if p.python_name in inverse_list:
-                    continue
-                # print ("   ", p.python_name, getattr(i, p.python_name))
-                new_item_lst = []
-                item_lst = getattr(i, p.python_name)
-                for item in item_lst:
-                    if hasattr(item, "name"):
-                        new_item_lst.append(item.name)
-                    else:
-                        new_item_lst.append(item)
-
-                obj_dict[p.python_name] = new_item_lst
-            obj_lst.append(obj_dict)
-        df = pandas.DataFrame(obj_lst)
-
-        sorter = [
-            "Label",
-            "GenericParameter",
-            "Code",
-            "InputParameter",
-            "OutputParameter",
-        ]
-        df["class"] = pandas.Categorical(df["class"], sorter)
-        df = df.sort_values(by="class")
-        df = df.reset_index(drop=True)
-        return df
-
-    def _get_args(self, i_0, df, onto):
-        non_ontology_keys = ["symbols", "unit"]
-        qwargs = {}
-        # print ('class: ', df.iloc[i_0]['class'])
-        for key in df.keys():
-            if key in ["class"]:
-                continue
-            val = df.iloc[i_0][key]
-            if val is not np.nan:
-                # print (key, val)
-                if isinstance(val, str):
-                    val = val.strip()
-                    if key == "comment":
-                        val = val[2:-2]
-                    # print (key, val)
-                    if len(val) == 0:
-                        continue
-                    elif val[0] == "[":  # list
-                        val_lst = eval(val)
-                        if key not in non_ontology_keys:
-                            val_lst = [onto[d.strip()] for d in val_lst]
-                        qwargs[key] = val_lst
-                    else:
-                        qwargs[key] = val
-
-        return qwargs
-
-    def _declare_dynamic_individuals(self, onto, df):
-        for index, row in df.iterrows():
-            if isinstance(row["class"], str):
-                parent = onto[row["class"]]
-                if parent is None:
-                    # print('Invalid class:', parent)
-                    # Raise warning??
-                    continue
-
-                qwargs = self._get_args(index, df, onto)
-                individuum = parent(**qwargs)
