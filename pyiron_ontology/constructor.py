@@ -171,20 +171,20 @@ class Constructor(ABC):
                         options += inp.requirements
                     return options
 
-            class Parameter(PyironThing):
+            class IO(Parameter, WorkflowThing):
                 # Think about renaming this IO and creating a new `Parameter` common ancestor
                 # to Generic _and_ IO that has a field for units
                 pass
 
-            class has_generic(Parameter >> Generic, owl.FunctionalProperty):
+            class has_generic(IO >> Generic, owl.FunctionalProperty):
                 python_name = "generic"
 
-            class has_for_parameter(Generic >> Parameter,
+            class has_for_parameter(Generic >> IO,
                                     owl.InverseFunctionalProperty):
                 python_name = "parameters"
                 inverse_property = has_generic
 
-            class Output(Parameter):
+            class Output(IO):
                 @property
                 def options(self):
                     return self.output_of.options
@@ -209,7 +209,7 @@ class Constructor(ABC):
                 python_name = "outputs"
                 inverse_property = is_output_of
 
-            class Input(Parameter):
+            class Input(IO):
                 def get_sources(self, additional_requirements=None) -> list[Output]:
                     requirements = self._more_specific_union(
                         self.requirements,
