@@ -103,7 +103,7 @@ class Constructor(ABC):
                     return set(disjoints)
 
                 @property
-                def INDIRECT_disjoints_set(self) -> set[Generic]:
+                def indirect_disjoints_set(self) -> set[Generic]:
                     return self._get_disjoints_set(self.indirect_things)
 
                 @classmethod
@@ -126,8 +126,8 @@ class Constructor(ABC):
                     exclusively_mine = set(my_things).difference(others_things)
                     exclusively_others = set(others_things).difference(my_things)
 
-                    my_disjoints = self.INDIRECT_disjoints_set
-                    others_disjoints = other.INDIRECT_disjoints_set
+                    my_disjoints = self.indirect_disjoints_set
+                    others_disjoints = other.indirect_disjoints_set
 
                     any_of_mine_are_disjoint = any(
                         [my_thing in others_disjoints for my_thing in exclusively_mine]
@@ -149,7 +149,7 @@ class Constructor(ABC):
                     exclusively_mine = my_things_set.difference(others_things_set)
                     any_of_mine_are_disjoint = any(
                         [
-                            my_thing in other.INDIRECT_disjoints_set
+                            my_thing in other.indirect_disjoints_set
                             for my_thing in exclusively_mine
                         ]
                     )
