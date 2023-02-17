@@ -22,9 +22,8 @@ def is_subset(a, b):
 class Constructor(ABC):
     def __init__(self, name: str, closed: bool = True, strict: bool = False):
         onto = owl.get_ontology(f"file://{name}.owl")
-        self._declare_classes(onto)
-        self._declare_additional_classes(onto)
-        self._declare_individuals(onto)
+        self._make_universal_declarations(onto)
+        self._make_specific_declarations(onto)
         # TODO: Introduce a "from_csv" option for constructing, and leverage
         #       `all_classes=False` in `declare_classes`?
 
@@ -49,13 +48,10 @@ class Constructor(ABC):
         self.onto.save()
 
     @abstractmethod
-    def _declare_individuals(self, onto):
+    def _make_specific_declarations(self, onto):
         pass
 
-    def _declare_additional_classes(self, onto):
-        pass
-
-    def _declare_classes(self, onto):
+    def _make_universal_declarations(self, onto):
         with onto:
             class PyironThing(owl.Thing):
                 pass
