@@ -169,6 +169,7 @@ class Constructor(ABC):
                     for inp in self.inputs:
                         options.append(inp.generic)
                         options += inp.requirements
+                        options += inp.transitive_requirements
                     return options
 
             class IO(Parameter, WorkflowThing):
@@ -256,6 +257,13 @@ class Constructor(ABC):
             class is_requirement_of(Generic >> Input):
                 python_name = "requirement_of"
                 inverse_property = has_for_requirement
+
+            class has_for_transitive_requirement(Input >> Generic):
+                python_name = "transitive_requirements"
+
+            class is_transitive_requirement_of(Generic >> Input):
+                python_name = "transitive_requirement_of"
+                inverse_property = has_for_transitive_requirement
 
             owl.AllDisjoint([is_optional_input_of, is_mandatory_input_of])
             owl.AllDisjoint([Input, Function, Output, Generic])
