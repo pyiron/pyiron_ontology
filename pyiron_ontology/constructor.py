@@ -63,12 +63,32 @@ class Constructor:
     def _make_universal_declarations(self):
         with self.onto:
             class PyironOntoThing(owl.Thing):
-                pass
+                def get_sources(
+                        self,
+                        additional_requirements: list[Generic] = None
+                ) -> list[PyironOntoThing]:
+                    raise NotImplementedError
+
+                def get_source_tree(self):
+                    raise NotImplementedError
 
             class Parameter(PyironOntoThing):
                 pass
 
             class Generic(Parameter):
+                def get_sources(
+                        self,
+                        additional_requirements: list[Generic] = None
+                ) -> list[Output]:
+                    return [
+                        out for out in self.indirect_outputs
+                        if out.satisfies(
+                            additional_requirements
+                            if additional_requirements is not None
+                            else []
+                        )
+                    ]
+
                 @staticmethod
                 def only_get_thing_classes(things):
                     return [
@@ -168,6 +188,12 @@ class Constructor:
                 pass
 
             class Function(WorkflowThing):
+                def get_sources(
+                        self,
+                        additional_requirements: list[Generic] = None
+                ) -> list[Input]:
+                    return self.mandatory_inputs
+
                 @property
                 def inputs(self):
                     return self.mandatory_inputs + self.optional_inputs
@@ -195,6 +221,12 @@ class Constructor:
                 inverse_property = has_generic
 
             class Output(IO):
+                def get_sources(
+                        self,
+                        additional_requirements: list[Generic] = None
+                ) -> list[Function]:
+                    return [self.output_of]
+
                 @property
                 def options(self):
                     return self.output_of.options
@@ -225,10 +257,9 @@ class Constructor:
                         self.requirements,
                         additional_requirements
                     ) if additional_requirements is not None else self.requirements
-                    return [
-                        out for out in self.generic.indirect_outputs
-                        if out.satisfies(requirements + [self.generic])
-                    ]
+                    return self.generic.get_sources(
+                        additional_requirements=requirements + [self.generic]
+                    )
 
                 @staticmethod
                 def _more_specific_union(
