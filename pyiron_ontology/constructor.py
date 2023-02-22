@@ -13,6 +13,8 @@ from warnings import warn
 import numpy as np
 import owlready2 as owl
 
+from pyiron_ontology.workflow import NodeTree
+
 
 def is_subset(a, b):
     return np.all([aa in b for aa in a])
@@ -70,7 +72,10 @@ class Constructor:
                     raise NotImplementedError
 
                 def get_source_tree(self):
-                    raise NotImplementedError
+                    return build_tree(self)
+
+                def get_source_path(self, *path_indices: int):
+                    return build_path(self, *path_indices)
 
             class Parameter(PyironOntoThing):
                 pass
@@ -253,7 +258,7 @@ class Constructor:
 
             class Input(IO):
                 def get_sources(self, additional_requirements=None) -> list[Output]:
-                    requirements = self._more_specific_union(
+                    requirements = self.more_specific_union(
                         self.requirements,
                         additional_requirements
                     ) if additional_requirements is not None else self.requirements
@@ -261,8 +266,31 @@ class Constructor:
                         additional_requirements=requirements + [self.generic]
                     )
 
+                def get_requirements(self, additional_requirements=None):
+                    # Throw away anything the input can't use, then make a more specific
+                    # union of the input's requirements and the additional ones
+                    if additional_requirements is not None:
+                        usable_additional_requirements = [
+                            req for req in additional_requirements
+                            if any(
+                                [
+                                    req.is_representable_by(input_req)
+                                    for input_req in [self.generic]
+                                                     + self.requirements
+                                                     + self.transitive_requirements
+                                ]
+                            )
+                        ]
+                    else:
+                        usable_additional_requirements = []
+
+                    return self.more_specific_union(
+                        usable_additional_requirements,
+                        [self.generic] + self.requirements
+                    )
+
                 @staticmethod
-                def _more_specific_union(
+                def more_specific_union(
                         requirements1: list[Generic], requirements2: list[Generic]
                 ) -> list[Generic]:
                     """
@@ -307,3 +335,46 @@ class Constructor:
 
             owl.AllDisjoint([is_optional_input_of, is_mandatory_input_of])
             owl.AllDisjoint([Input, Function, Output, Generic])
+
+        def build_tree(
+                parameter, parent=None, additional_requirements=None
+        ) -> NodeTree:
+            node = NodeTree(parameter, parent=parent)
+
+            if isinstance(parameter, Input):
+                additional_requirements = parameter.get_requirements(
+                    additional_requirements=additional_requirements
+                )
+
+            for source in parameter.get_sources(
+                    additional_requirements=additional_requirements
+            ):
+                build_tree(
+                    source, parent=node, additional_requirements=additional_requirements
+                )
+
+            return node
+
+        def build_path(
+                parameter, *path_indices: int, parent=None, additional_requirements=None
+        ):
+            node = NodeTree(parameter, parent=parent)
+            if isinstance(parameter, Input):
+                additional_requirements = parameter.get_requirements(
+                    additional_requirements
+                )
+            sources = parameter.get_sources(
+                additional_requirements=additional_requirements
+            )
+
+            if len(path_indices) > 0:
+                i, path_indices = path_indices[0], path_indices[1:]
+                source = sources[i]
+                _, sources = build_path(
+                    source,
+                    *path_indices,
+                    parent=node,
+                    additional_requirements=additional_requirements
+                )
+
+            return node, sources
