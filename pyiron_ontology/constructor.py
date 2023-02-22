@@ -20,29 +20,40 @@ def is_subset(a, b):
 
 
 class Constructor(ABC):
-    def __init__(self, name: str, closed: bool = True, strict: bool = False):
+    def __init__(
+            self, name: str, closed: bool = True, strict: bool = False, debug: int = 0,
+    ):
         onto = owl.get_ontology(f"file://{name}.owl")
+        self.onto = onto
         self._make_universal_declarations(onto)
         self._make_specific_declarations(onto)
         # TODO: Introduce a "from_csv" option for constructing, and leverage
         #       `all_classes=False` in `declare_classes`?
+        self.sync(closed=closed, strict=strict, debug=debug)
 
+    def sync(
+            self,
+            closed=True,
+            infer_property_values=True,
+            infer_data_property_values=True,
+            debug=0,
+            strict=True,
+    ):
         if closed:
-            owl.close_world(onto.PyObject)
-        with onto:
+            owl.close_world(self.onto.PyObject)
+        with self.onto:
             owl.sync_reasoner_pellet(
-                infer_property_values=True, infer_data_property_values=True, debug=0
+                infer_property_values=infer_property_values,
+                infer_data_property_values=infer_data_property_values,
+                debug=debug
             )
-
-        inconsistent = list(onto.inconsistent_classes())
+        inconsistent = list(self.onto.inconsistent_classes())
         if len(inconsistent) > 0:
             msg = f"Inconsistent classes were found in the ontology: {inconsistent}"
             if strict:
                 raise RuntimeError(msg)
             else:
                 warn(msg)
-
-        self.onto = onto
 
     def save(self):
         self.onto.save()
