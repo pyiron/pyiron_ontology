@@ -35,7 +35,8 @@ class ExampleOntology(Constructor):
     ):
         super().__init__(name=name, closed=closed, strict=strict)
 
-    def _make_specific_declarations(self, onto):
+    def _make_specific_declarations(self):
+        onto = self.onto
         with onto:
 
             class I(onto.Generic): pass

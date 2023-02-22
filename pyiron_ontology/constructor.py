@@ -25,8 +25,8 @@ class Constructor(ABC):
     ):
         onto = owl.get_ontology(f"file://{name}.owl")
         self.onto = onto
-        self._make_universal_declarations(onto)
-        self._make_specific_declarations(onto)
+        self._make_universal_declarations()
+        self._make_specific_declarations()
         # TODO: Introduce a "from_csv" option for constructing, and leverage
         #       `all_classes=False` in `declare_classes`?
         self.sync(closed=closed, strict=strict, debug=debug)
@@ -59,11 +59,11 @@ class Constructor(ABC):
         self.onto.save()
 
     @abstractmethod
-    def _make_specific_declarations(self, onto):
+    def _make_specific_declarations(self):
         pass
 
-    def _make_universal_declarations(self, onto):
-        with onto:
+    def _make_universal_declarations(self):
+        with self.onto:
             class PyironOntoThing(owl.Thing):
                 pass
 
