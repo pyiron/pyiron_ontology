@@ -7,7 +7,6 @@ A parent class for the constructors of all pyiron ontologies.
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
 from typing import Optional
 from warnings import warn
 
@@ -19,7 +18,7 @@ def is_subset(a, b):
     return np.all([aa in b for aa in a])
 
 
-class Constructor(ABC):
+class Constructor:
     def __init__(
             self, name: str, closed: bool = True, strict: bool = False, debug: int = 0,
     ):
@@ -58,7 +57,6 @@ class Constructor(ABC):
     def save(self):
         self.onto.save()
 
-    @abstractmethod
     def _make_specific_declarations(self):
         pass
 
