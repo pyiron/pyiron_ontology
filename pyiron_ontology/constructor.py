@@ -66,7 +66,7 @@ class Constructor:
                 def get_sources(
                         self,
                         additional_requirements: list[Generic] = None
-                ) -> list[PyironOntoThing]:
+                ) -> list[WorkflowThing]:
                     raise NotImplementedError
 
                 def get_source_tree(self):
