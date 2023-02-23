@@ -212,10 +212,7 @@ class Constructor:
                         options += inp.transitive_requirements
                     return options
 
-            class IO(Parameter, WorkflowThing):
-                # Think about renaming this IO and creating a new `Parameter` common ancestor
-                # to Generic _and_ IO that has a field for units
-                pass
+            class IO(Parameter, WorkflowThing): pass
 
             class has_generic(IO >> Generic, owl.FunctionalProperty):
                 python_name = "generic"
