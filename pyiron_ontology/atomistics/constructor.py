@@ -157,6 +157,7 @@ class AtomisticsOntology(Constructor):
                 generic=BulkModulus(),
                 output_of=murnaghan,
                 hdf_path="output/equilibrium_bulk_modulus",
+                unit="GPa",
             )
             murnaghan_output_b_prime = Output(
                 name=f"{murnaghan.name}_output_b_prime",

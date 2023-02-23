@@ -12,8 +12,11 @@ from warnings import warn
 
 import numpy as np
 import owlready2 as owl
+import pint
 
 from pyiron_ontology.workflow import NodeTree
+
+UREG = pint.UnitRegistry()
 
 
 def is_subset(a, b):
@@ -78,9 +81,14 @@ class Constructor:
                     return build_path(self, *path_indices)
 
             class Parameter(PyironOntoThing):
-                pass
+                def unit_conversion(self, other_unit: str) -> float:
+                    if self.unit is not None:
+                        return UREG(self.unit).to(other_unit).magnitude
+                    else:
+                        raise ValueError("Parameters must have a unit specified")
 
             class has_unit(Parameter >> str, owl.FunctionalProperty):
+                class_property_type = ["some"]
                 python_name = "unit"
 
             class Generic(Parameter):
@@ -191,9 +199,6 @@ class Constructor:
                         ]
                     )
                     return others_things_set < my_things_set and not any_of_mine_are_disjoint
-
-            class has_for_symbol(Generic >> str):
-                python_name = "symbols"
 
             class WorkflowThing(PyironOntoThing):
                 pass

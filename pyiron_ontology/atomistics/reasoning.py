@@ -10,13 +10,10 @@ from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
 
 import pandas as pd
-import pint
 
 if TYPE_CHECKING:
     import pyiron_atomistics
     from pyiron_ontology import atomistics_onto as onto
-
-UREG = pint.UnitRegistry()
 
 
 class AtomisticsReasoner:
@@ -43,18 +40,6 @@ class AtomisticsReasoner:
             return "%"
         return f"%{el}%"
 
-    @staticmethod
-    def convert_unit(my_parameter):
-        if hasattr(my_parameter, "unit"):
-            source_unit = my_parameter.unit
-            if len(source_unit) == 1:
-                target_unit = my_parameter.generic_parameter[0].unit[0]
-                if source_unit[0] != target_unit:
-                    return UREG(source_unit[0]).to(target_unit).magnitude
-            elif len(source_unit) > 1:
-                raise ValueError(f"Multiple units not supported -- got {source_unit}")
-        return 1
-
     def search_database_for_property(
         self,
         my_property: onto.Generic,
@@ -75,7 +60,8 @@ class AtomisticsReasoner:
         """
         pd_header = [
             "Chemical Formula",
-            f"{my_property.__class__}", # [{my_property.unit[0]}]",
+            f"{my_property.__class__}",
+            "unit",
             "Engine",
         ]
         pd_dic = {k: [] for k in pd_header}
@@ -95,9 +81,9 @@ class AtomisticsReasoner:
             for _, row in df_murn.iterrows():
                 job_hdf = project.inspect(row.id)
                 pd_dic["Chemical Formula"].append(row.chemicalformula)
-                # cv = self.convert_unit(specific_property)
                 output_property = job_hdf[property_hdf_path]
-                value = output_property  # cv * output_property if output_property is not None else None
+                value = output_property
                 pd_dic[pd_header[1]].append(value)
+                pd_dic["unit"].append(specific_property.unit)
                 pd_dic["Engine"].append(self._get_job_type(job_hdf))
             return pd.DataFrame(pd_dic)
