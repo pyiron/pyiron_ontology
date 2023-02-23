@@ -19,19 +19,23 @@ class AtomisticsOntology(Constructor):
         super().__init__(name=name, closed=closed, strict=strict)
 
     def _make_specific_declarations(self):
-        onto = self.onto
-        with onto:
-            class UserInput(onto.Generic): pass
+        Generic = self.onto.Generic
+        Input = self.onto.Input
+        Function = self.onto.Function
+        Output = self.onto.Output
 
-            class PyironObject(onto.Generic): pass
-            class PhysicalProperty(onto.Generic): pass  # Add units, etc
+        with self.onto:
+            class UserInput(Generic): pass
+
+            class PyironObject(Generic): pass
+            class PhysicalProperty(Generic): pass  # Add units, etc
             owl.AllDisjoint([PyironObject, PhysicalProperty])
             class ChemicalElement(PhysicalProperty): pass
             class MaterialProperty(PhysicalProperty): pass
             class BulkModulus(MaterialProperty): pass
             class BPrime(MaterialProperty): pass
 
-            class Dimensional(onto.Generic): pass
+            class Dimensional(Generic): pass
             class OneD(Dimensional): pass
             class TwoD(Dimensional): pass
             class ThreeD(Dimensional): pass
@@ -61,86 +65,86 @@ class AtomisticsOntology(Constructor):
             class Vasp(AtomisticsJob): pass
             owl.AllDisjoint([Structure, PyironProject, PyironJob])
 
-            project = onto.Function(name="project")
-            project_input_name = onto.Input(
+            project = Function(name="project")
+            project_input_name = Input(
                 optional_input_of=project,
                 name=f"{project.name}_input_name",
                 generic=UserInput,
             )
-            project_output_atomistics_project = onto.Output(
+            project_output_atomistics_project = Output(
                 output_of=project,
                 name=f"{project.name}_output_atomistics_project",
                 generic=AtomisticsProject,
             )
 
-            bulk_structure = onto.Function(name="bulk_structure")
-            bulk_structure_input_element = onto.Input(
+            bulk_structure = Function(name="bulk_structure")
+            bulk_structure_input_element = Input(
                 optional_input_of=bulk_structure,
                 name=f"{bulk_structure.name}_input_element",
-                generic=onto.Generic(is_a=[ChemicalElement, UserInput])
+                generic=Generic(is_a=[ChemicalElement, UserInput])
             )
-            bulk_structure_output_structure = onto.Output(
+            bulk_structure_output_structure = Output(
                 output_of=bulk_structure,
                 name=f"{bulk_structure.name}_output_structure",
-                generic=onto.Structure(is_a=[Bulk, ThreeD]),
+                generic=Structure(is_a=[Bulk, ThreeD]),
             )
 
-            surface_structure = onto.Function("surface_structure")
-            surface_structure_input_element = onto.Input(
+            surface_structure = Function("surface_structure")
+            surface_structure_input_element = Input(
                 optional_input_of=surface_structure,
                 name=f"{surface_structure.name}_input_element",
-                generic=onto.Generic(is_a=[ChemicalElement, UserInput])
+                generic=Generic(is_a=[ChemicalElement, UserInput])
             )
-            surface_structure_output_structure = onto.Output(
+            surface_structure_output_structure = Output(
                 output_of=surface_structure,
                 name=f"{surface_structure.name}_output_structure",
                 generic=Structure(is_a=[HasSurface, ThreeD]),
             )
 
-            lammps = onto.Function("lammps")
-            lammps_input_structure = onto.Input(
+            lammps = Function("lammps")
+            lammps_input_structure = Input(
                 mandatory_input_of=lammps,
                 name=f"{lammps.name}_input_structure",
                 generic=Structure()
             )
-            lammps_output_job = onto.Output(
+            lammps_output_job = Output(
                 output_of=lammps,
                 name=f"{lammps.name}_output_job",
                 generic=Lammps()
             )
 
-            vasp = onto.Function("vasp")
-            vasp_input_structure = onto.Input(
+            vasp = Function("vasp")
+            vasp_input_structure = Input(
                 mandatory_input_of=vasp,
                 name=f"{vasp.name}_input_structure",
-                generic=onto.Generic(is_a=[Structure, ThreeD])
+                generic=Generic(is_a=[Structure, ThreeD])
                 # Can't be onto.Structure(is_a=[onto.ThreeD]) because is_a _overrides_ the
                 # instantiated class, and ThreeD is not a child of Structure!
             )
-            vasp_output_job = onto.Output(
+            vasp_output_job = Output(
                 output_of=vasp,
                 name=f"{vasp.name}_output_job",
                 generic=Vasp()
             )
 
-            murnaghan = onto.Function("murnaghan", )
-            murnaghan_input_project = onto.Input(
+            murnaghan = Function("murnaghan", )
+            murnaghan_input_project = Input(
                 name=f"{murnaghan.name}_input_project",
                 generic=AtomisticsProject(),
                 mandatory_input_of=murnaghan,
             )
-            murnaghan_input_job = onto.Input(
+            murnaghan_input_job = Input(
                 name=f"{murnaghan.name}_input_job",
                 generic=AtomisticsJob(),
                 mandatory_input_of=murnaghan,
                 requirements=[Structure(is_a=[Bulk, ThreeD])]
             )
-            murnaghan_output_bulk_modulus = onto.Output(
+            murnaghan_output_bulk_modulus = Output(
                 name=f"{murnaghan.name}_output_bulk_modulus",
                 generic=BulkModulus(),
                 output_of=murnaghan,
             )
-            murnaghan_output_b_prime = onto.Output(
+            murnaghan_output_b_prime = Output(
                 name=f"{murnaghan.name}_output_b_prime",
                 generic=BPrime(),
                 output_of=murnaghan,
