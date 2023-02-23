@@ -80,6 +80,9 @@ class Constructor:
             class Parameter(PyironOntoThing):
                 pass
 
+            class has_unit(Parameter >> str, owl.FunctionalProperty):
+                python_name = "unit"
+
             class Generic(Parameter):
                 def get_sources(
                         self,
@@ -188,6 +191,9 @@ class Constructor:
                         ]
                     )
                     return others_things_set < my_things_set and not any_of_mine_are_disjoint
+
+            class has_for_symbol(Generic >> str):
+                python_name = "symbols"
 
             class WorkflowThing(PyironOntoThing):
                 pass
