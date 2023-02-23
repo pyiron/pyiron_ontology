@@ -24,64 +24,40 @@ class AtomisticsOntology(Constructor):
             class UserInput(onto.Generic): pass
 
             class PyironObject(onto.Generic): pass
-
             class PhysicalProperty(onto.Generic): pass  # Add units, etc
-
             owl.AllDisjoint([PyironObject, PhysicalProperty])
-
             class ChemicalElement(PhysicalProperty): pass
-
             class MaterialProperty(PhysicalProperty): pass
-
             class BulkModulus(MaterialProperty): pass
-
             class BPrime(MaterialProperty): pass
 
             class Dimensional(onto.Generic): pass
-
             class OneD(Dimensional): pass
-
             class TwoD(Dimensional): pass
-
             class ThreeD(Dimensional): pass
-
             owl.AllDisjoint([OneD, TwoD, ThreeD])
 
             class Structure(PyironObject, Dimensional): pass
-
             class Defected(Structure): pass
-
             class HasDislocation(Defected): pass
-
             class HasVacancy(Defected): pass
-
             class HasInterface(Defected): pass
-
             class HasGB(HasInterface): pass
-
             class HasSurface(HasInterface): pass
-
             class HasPB(HasInterface): pass
-
             class Bulk(Structure): pass
-
             # equivalent_to = [Structure & owl.Not(Defected)]
             owl.AllDisjoint([Bulk, Defected])  # Not even needed given Bulk definition
             owl.AllDisjoint([OneD, HasGB])
             owl.AllDisjoint([OneD, HasDislocation])
 
             class PyironProject(PyironObject): pass
-
             class AtomisticsProject(PyironProject): pass
 
             class PyironJob(PyironObject): pass
-
             class AtomisticsJob(PyironJob): pass
-
             class Lammps(AtomisticsJob): pass
-
             class Vasp(AtomisticsJob): pass
-
             owl.AllDisjoint([Structure, PyironProject, PyironJob])
 
         bulk_structure_node = onto.Function(name="bulk_structure_node")
