@@ -14,7 +14,6 @@ import pint
 
 if TYPE_CHECKING:
     import pyiron_atomistics
-
     from pyiron_ontology import atomistics_onto as onto
 
 UREG = pint.UnitRegistry()
@@ -58,7 +57,7 @@ class AtomisticsReasoner:
 
     def search_database_for_property(
         self,
-        my_property: onto.GenericParameter,
+        my_property: onto.Generic,
         project: pyiron_atomistics.Project,
         select_alloy: Optional[str] = None,
     ):
@@ -74,32 +73,31 @@ class AtomisticsReasoner:
         Returns:
 
         """
-        specific_property = my_property.has_parameters[0]
-        property_hdf_path = "/".join(specific_property.name.split("/")[1:])
-
         pd_header = [
             "Chemical Formula",
-            f"{my_property.name} [{my_property.unit[0]}]",
+            f"{my_property.__class__}", # [{my_property.unit[0]}]",
             "Engine",
         ]
         pd_dic = {k: [] for k in pd_header}
 
-        df_murn = pd.DataFrame(
-            project.db.get_items_dict(
-                {
-                    "hamilton": specific_property.output_of[0].name,
-                    "chemicalformula": self._alloy_sql(select_alloy),
-                    "project": f"%{project.path}%",
-                }
+        for specific_property in my_property.indirect_outputs:
+            property_hdf_path = specific_property.hdf_path
+            df_murn = pd.DataFrame(
+                project.db.get_items_dict(
+                    {
+                        "hamilton": specific_property.output_of.pyiron_name,
+                        "chemicalformula": self._alloy_sql(select_alloy),
+                        "project": f"%{project.path}%",
+                    }
+                )
             )
-        )
 
-        for _, row in df_murn.iterrows():
-            job_hdf = project.inspect(row.id)
-            pd_dic["Chemical Formula"].append(row.chemicalformula)
-            cv = self.convert_unit(specific_property)
-            output_property = job_hdf[property_hdf_path]
-            value = cv * output_property if output_property is not None else None
-            pd_dic[pd_header[1]].append(value)
-            pd_dic["Engine"].append(self._get_job_type(job_hdf))
-        return pd.DataFrame(pd_dic)
+            for _, row in df_murn.iterrows():
+                job_hdf = project.inspect(row.id)
+                pd_dic["Chemical Formula"].append(row.chemicalformula)
+                # cv = self.convert_unit(specific_property)
+                output_property = job_hdf[property_hdf_path]
+                value = output_property  # cv * output_property if output_property is not None else None
+                pd_dic[pd_header[1]].append(value)
+                pd_dic["Engine"].append(self._get_job_type(job_hdf))
+            return pd.DataFrame(pd_dic)
