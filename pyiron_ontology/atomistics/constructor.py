@@ -60,73 +60,73 @@ class AtomisticsOntology(Constructor):
             class Vasp(AtomisticsJob): pass
             owl.AllDisjoint([Structure, PyironProject, PyironJob])
 
-        bulk_structure_node = onto.Function(name="bulk_structure_node")
-        bulk_structure_node_input_element = onto.Input(
-            optional_input_of=bulk_structure_node,
-            name=f"{bulk_structure_node.name}_input_element",
+        bulk_structure = onto.Function(name="bulk_structure")
+        bulk_structure_input_element = onto.Input(
+            optional_input_of=bulk_structure,
+            name=f"{bulk_structure.name}_input_element",
             generic=onto.Generic(is_a=[onto.ChemicalElement, onto.UserInput])
         )
-        bulk_structure_node_output_structure = onto.Output(
-            output_of=bulk_structure_node,
-            name=f"{bulk_structure_node.name}_output_structure",
+        bulk_structure_output_structure = onto.Output(
+            output_of=bulk_structure,
+            name=f"{bulk_structure.name}_output_structure",
             generic=onto.Structure(is_a=[onto.Bulk, onto.ThreeD]),
         )
 
-        surface_structure_node = onto.Function("surface_structure_node")
-        surface_structure_node_input_element = onto.Input(
-            optional_input_of=surface_structure_node,
-            name=f"{surface_structure_node.name}_input_element",
+        surface_structure = onto.Function("surface_structure")
+        surface_structure_input_element = onto.Input(
+            optional_input_of=surface_structure,
+            name=f"{surface_structure.name}_input_element",
             generic=onto.Generic(is_a=[onto.ChemicalElement, onto.UserInput])
         )
-        surface_structure_node_output_structure = onto.Output(
-            output_of=surface_structure_node,
-            name=f"{surface_structure_node.name}_output_structure",
+        surface_structure_output_structure = onto.Output(
+            output_of=surface_structure,
+            name=f"{surface_structure.name}_output_structure",
             generic=onto.Structure(is_a=[onto.HasSurface, onto.ThreeD]),
         )
 
-        lammps_node = onto.Function("lammps_node")
-        lammps_node_input_structure = onto.Input(
-            mandatory_input_of=lammps_node,
-            name=f"{lammps_node.name}_input_structure",
+        lammps = onto.Function("lammps")
+        lammps_input_structure = onto.Input(
+            mandatory_input_of=lammps,
+            name=f"{lammps.name}_input_structure",
             generic=onto.Structure()
         )
-        lammps_node_output_job = onto.Output(
-            output_of=lammps_node,
-            name=f"{lammps_node.name}_output_job",
+        lammps_output_job = onto.Output(
+            output_of=lammps,
+            name=f"{lammps.name}_output_job",
             generic=onto.Lammps()
         )
 
-        vasp_node = onto.Function("vasp_node")
-        vasp_node_input_structure = onto.Input(
-            mandatory_input_of=vasp_node,
-            name=f"{vasp_node.name}_input_structure",
+        vasp = onto.Function("vasp")
+        vasp_input_structure = onto.Input(
+            mandatory_input_of=vasp,
+            name=f"{vasp.name}_input_structure",
             generic=onto.Structure(is_a=[onto.ThreeD])
         )
-        vasp_node_output_job = onto.Output(
-            output_of=vasp_node,
-            name=f"{vasp_node.name}_output_job",
+        vasp_output_job = onto.Output(
+            output_of=vasp,
+            name=f"{vasp.name}_output_job",
             generic=onto.Vasp()
         )
 
-        murnaghan_node = onto.Function("murnaghan_node", )
-        murnaghan_node_input_project = onto.Input(
-            name=f"{murnaghan_node.name}_input_project",
+        murnaghan = onto.Function("murnaghan", )
+        murnaghan_input_project = onto.Input(
+            name=f"{murnaghan.name}_input_project",
             generic=onto.AtomisticsProject(),
-            mandatory_input_of=murnaghan_node,
+            mandatory_input_of=murnaghan,
         )
-        murnaghan_node_input_job = onto.Input(
-            name=f"{murnaghan_node.name}_input_job",
+        murnaghan_input_job = onto.Input(
+            name=f"{murnaghan.name}_input_job",
             generic=onto.AtomisticsJob(),
-            mandatory_input_of=murnaghan_node,
+            mandatory_input_of=murnaghan,
             requirements=[onto.Structure(is_a=[onto.Bulk, onto.ThreeD])]
         )
-        murnaghan_node_output_bulk_modulus = onto.Output(
-            name=f"{murnaghan_node.name}_output_bulk_modulus",
+        murnaghan_output_bulk_modulus = onto.Output(
+            name=f"{murnaghan.name}_output_bulk_modulus",
             generic=onto.BulkModulus(),
-            output_of=murnaghan_node,
+            output_of=murnaghan,
         )
-        murnaghan_node_output_b_prime = onto.Output(
-            name=f"{murnaghan_node.name}_output_b_prime",
+        murnaghan_output_b_prime = onto.Output(
+            name=f"{murnaghan.name}_output_b_prime",
             generic=onto.BPrime(),
-            output_of=murnaghan_node,
+            output_of=murnaghan,
         )
