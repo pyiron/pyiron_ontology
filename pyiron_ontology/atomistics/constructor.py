@@ -81,31 +81,36 @@ class AtomisticsOntology(Constructor):
             bulk_structure_input_element = Input(
                 optional_input_of=bulk_structure,
                 name=f"{bulk_structure.name}_input_element",
-                generic=Generic(is_a=[ChemicalElement, UserInput])
+                generic=Generic(is_a=[ChemicalElement, UserInput]),
+                hdf_path="input/element",
             )
             bulk_structure_output_structure = Output(
                 output_of=bulk_structure,
                 name=f"{bulk_structure.name}_output_structure",
                 generic=Structure(is_a=[Bulk, ThreeD]),
+                hdf_path="output/structure",
             )
 
             surface_structure = Function("surface_structure")
             surface_structure_input_element = Input(
                 optional_input_of=surface_structure,
                 name=f"{surface_structure.name}_input_element",
-                generic=Generic(is_a=[ChemicalElement, UserInput])
+                generic=Generic(is_a=[ChemicalElement, UserInput]),
+                hdf_path="input/element",
             )
             surface_structure_output_structure = Output(
                 output_of=surface_structure,
                 name=f"{surface_structure.name}_output_structure",
                 generic=Structure(is_a=[HasSurface, ThreeD]),
+                hdf_path="output/structure",
             )
 
             lammps = Function("lammps")
             lammps_input_structure = Input(
                 mandatory_input_of=lammps,
                 name=f"{lammps.name}_input_structure",
-                generic=Structure()
+                generic=Structure(),
+                hdf_path="input/structure",
             )
             lammps_output_job = Output(
                 output_of=lammps,
@@ -117,9 +122,10 @@ class AtomisticsOntology(Constructor):
             vasp_input_structure = Input(
                 mandatory_input_of=vasp,
                 name=f"{vasp.name}_input_structure",
-                generic=Generic(is_a=[Structure, ThreeD])
+                generic=Generic(is_a=[Structure, ThreeD]),
                 # Can't be onto.Structure(is_a=[onto.ThreeD]) because is_a _overrides_ the
                 # instantiated class, and ThreeD is not a child of Structure!
+                hdf_path="input/structure",
             )
             vasp_output_job = Output(
                 output_of=vasp,
@@ -137,15 +143,18 @@ class AtomisticsOntology(Constructor):
                 name=f"{murnaghan.name}_input_job",
                 generic=AtomisticsJob(),
                 mandatory_input_of=murnaghan,
-                requirements=[Structure(is_a=[Bulk, ThreeD])]
+                requirements=[Structure(is_a=[Bulk, ThreeD])],
+                hdf_path="ref_job",
             )
             murnaghan_output_bulk_modulus = Output(
                 name=f"{murnaghan.name}_output_bulk_modulus",
                 generic=BulkModulus(),
                 output_of=murnaghan,
+                hdf_path="output/equilibrium_bulk_modulus",
             )
             murnaghan_output_b_prime = Output(
                 name=f"{murnaghan.name}_output_b_prime",
                 generic=BPrime(),
                 output_of=murnaghan,
+                hdf_path="output/equilibrium_b_prime",
             )

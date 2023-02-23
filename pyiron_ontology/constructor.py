@@ -222,6 +222,9 @@ class Constructor:
                 python_name = "parameters"
                 inverse_property = has_generic
 
+            class has_hdf_path(IO >> str, owl.FunctionalProperty):
+                python_name = "hdf_path"
+
             class Output(IO):
                 def get_sources(
                         self,
