@@ -21,10 +21,16 @@ class AtomisticsOntology(Constructor):
     def _make_specific_declarations(self):
         Generic = self.onto.Generic
         Input = self.onto.Input
-        Function = self.onto.Function
         Output = self.onto.Output
 
         with self.onto:
+            class AtomisticsFunction(self.onto.Function): pass
+
+            class has_pyiron_name(AtomisticsFunction >> str, owl.FunctionalProperty):
+                python_name = "pyiron_name"
+
+            Function = AtomisticsFunction
+
             class UserInput(Generic): pass
 
             class PyironObject(Generic): pass
@@ -105,7 +111,7 @@ class AtomisticsOntology(Constructor):
                 hdf_path="output/structure",
             )
 
-            lammps = Function("lammps")
+            lammps = Function("lammps", pyiron_name="Lammps")
             lammps_input_structure = Input(
                 mandatory_input_of=lammps,
                 name=f"{lammps.name}_input_structure",
@@ -118,7 +124,7 @@ class AtomisticsOntology(Constructor):
                 generic=Lammps()
             )
 
-            vasp = Function("vasp")
+            vasp = Function("vasp", pyiron_name="Vasp")
             vasp_input_structure = Input(
                 mandatory_input_of=vasp,
                 name=f"{vasp.name}_input_structure",
@@ -133,7 +139,7 @@ class AtomisticsOntology(Constructor):
                 generic=Vasp()
             )
 
-            murnaghan = Function("murnaghan", )
+            murnaghan = Function("murnaghan", pyiron_name="Murnaghan")
             murnaghan_input_project = Input(
                 name=f"{murnaghan.name}_input_project",
                 generic=AtomisticsProject(),
