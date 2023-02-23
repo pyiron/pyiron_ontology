@@ -61,6 +61,18 @@ class AtomisticsOntology(Constructor):
             class Vasp(AtomisticsJob): pass
             owl.AllDisjoint([Structure, PyironProject, PyironJob])
 
+            project = onto.Function(name="project")
+            project_input_name = onto.Input(
+                optional_input_of=project,
+                name=f"{project.name}_input_name",
+                generic=UserInput,
+            )
+            project_output_atomistics_project = onto.Output(
+                output_of=project,
+                name=f"{project.name}_output_atomistics_project",
+                generic=AtomisticsProject,
+            )
+
             bulk_structure = onto.Function(name="bulk_structure")
             bulk_structure_input_element = onto.Input(
                 optional_input_of=bulk_structure,
