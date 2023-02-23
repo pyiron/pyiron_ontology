@@ -7,7 +7,6 @@ A parent class for the constructors of all pyiron ontologies.
 
 from __future__ import annotations
 
-from typing import Optional
 from warnings import warn
 
 import numpy as np
@@ -17,10 +16,6 @@ import pint
 from pyiron_ontology.workflow import NodeTree
 
 UREG = pint.UnitRegistry()
-
-
-def is_subset(a, b):
-    return np.all([aa in b for aa in a])
 
 
 class Constructor:
