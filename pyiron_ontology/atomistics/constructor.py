@@ -45,7 +45,8 @@ class AtomisticsOntology(Constructor):
             class HasGB(HasInterface): pass
             class HasSurface(HasInterface): pass
             class HasPB(HasInterface): pass
-            class Bulk(Structure): pass
+            class Bulk(Structure):
+                equivalent_to = [Structure & owl.Not(Defected)]
             # equivalent_to = [Structure & owl.Not(Defected)]
             owl.AllDisjoint([Bulk, Defected])  # Not even needed given Bulk definition
             owl.AllDisjoint([OneD, HasGB])
