@@ -40,6 +40,7 @@ class AtomisticsOntology(Constructor):
             class MaterialProperty(PhysicalProperty): pass
             class BulkModulus(MaterialProperty): pass
             class BPrime(MaterialProperty): pass
+            class SurfaceEnergy(MaterialProperty): pass
 
             class Dimensional(Generic): pass
             class OneD(Dimensional): pass
@@ -164,4 +165,23 @@ class AtomisticsOntology(Constructor):
                 generic=BPrime(),
                 output_of=murnaghan,
                 hdf_path="output/equilibrium_b_prime",
+            )
+
+            surface_energy = Function("surface_energy")
+            surface_energy_input_bulk_job = Input(
+                name=f"{surface_energy.name}_input_bulk_job",
+                generic=AtomisticsJob(),
+                mandatory_input_of=surface_energy,
+                requirements=[Bulk()],
+            )
+            surface_energy_input_slab_job = Input(
+                name=f"{surface_energy.name}_input_slab_job",
+                generic=AtomisticsJob(),
+                mandatory_input_of=surface_energy,
+                requirements=[HasSurface()],
+            )
+            surface_energy_output_surface_energy = Output(
+                name=f"{surface_energy.name}_output_surface_energy",
+                generic=SurfaceEnergy(),
+                output_of=surface_energy,
             )
