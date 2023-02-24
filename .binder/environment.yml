@@ -6,4 +6,4 @@ dependencies:
 - owlready2
 - pandas
 - pint
-- pyiron_atomistics >=0.2.63
+- pyiron_atomistics
