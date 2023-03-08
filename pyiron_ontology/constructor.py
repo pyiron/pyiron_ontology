@@ -20,7 +20,11 @@ UREG = pint.UnitRegistry()
 
 class Constructor:
     def __init__(
-            self, name: str, closed: bool = True, strict: bool = False, debug: int = 0,
+        self,
+        name: str,
+        closed: bool = True,
+        strict: bool = False,
+        debug: int = 0,
     ):
         onto = owl.get_ontology(f"file://{name}.owl")
         self.onto = onto
@@ -31,12 +35,12 @@ class Constructor:
         self.sync(closed=closed, strict=strict, debug=debug)
 
     def sync(
-            self,
-            closed=True,
-            infer_property_values=True,
-            infer_data_property_values=True,
-            debug=0,
-            strict=True,
+        self,
+        closed=True,
+        infer_property_values=True,
+        infer_data_property_values=True,
+        debug=0,
+        strict=True,
     ):
         if closed:
             owl.close_world(self.onto.PyObject)
@@ -44,7 +48,7 @@ class Constructor:
             owl.sync_reasoner_pellet(
                 infer_property_values=infer_property_values,
                 infer_data_property_values=infer_data_property_values,
-                debug=debug
+                debug=debug,
             )
         inconsistent = list(self.onto.inconsistent_classes())
         if len(inconsistent) > 0:
@@ -62,10 +66,10 @@ class Constructor:
 
     def _make_universal_declarations(self):
         with self.onto:
+
             class PyironOntoThing(owl.Thing):
                 def get_sources(
-                        self,
-                        additional_requirements: list[Generic] = None
+                    self, additional_requirements: list[Generic] = None
                 ) -> list[WorkflowThing]:
                     raise NotImplementedError
 
@@ -88,11 +92,11 @@ class Constructor:
 
             class Generic(Parameter):
                 def get_sources(
-                        self,
-                        additional_requirements: list[Generic] = None
+                    self, additional_requirements: list[Generic] = None
                 ) -> list[Output]:
                     return [
-                        out for out in self.indirect_outputs
+                        out
+                        for out in self.indirect_outputs
                         if out.satisfies(
                             additional_requirements
                             if additional_requirements is not None
@@ -103,7 +107,8 @@ class Constructor:
                 @staticmethod
                 def only_get_thing_classes(things):
                     return [
-                        is_a_class for is_a_class in things
+                        is_a_class
+                        for is_a_class in things
                         if isinstance(is_a_class, owl.ThingClass)
                     ]
 
@@ -119,9 +124,7 @@ class Constructor:
                             *[gc.instances() for gc in generic_classes[1:]]
                         )
                     )
-                    return [
-                        p for ui in unique_instances for p in ui.parameters
-                    ]
+                    return [p for ui in unique_instances for p in ui.parameters]
 
                 @property
                 def indirect_outputs(self) -> list[Output]:
@@ -136,7 +139,8 @@ class Constructor:
                         thing_disjoints = []
                         for dj in thing.disjoints():
                             entities = list(
-                                dj.entities)  # Don't modify entities in place!
+                                dj.entities
+                            )  # Don't modify entities in place!
                             entities.remove(thing)
                             thing_disjoints += entities
                         disjoints += thing_disjoints
@@ -173,11 +177,15 @@ class Constructor:
                         [my_thing in others_disjoints for my_thing in exclusively_mine]
                     )
                     any_of_others_are_disjoint = any(
-                        [others_thing in my_disjoints for others_thing in
-                         exclusively_others]
+                        [
+                            others_thing in my_disjoints
+                            for others_thing in exclusively_others
+                        ]
                     )
 
-                    return not any_of_mine_are_disjoint and not any_of_others_are_disjoint
+                    return (
+                        not any_of_mine_are_disjoint and not any_of_others_are_disjoint
+                    )
 
                 def is_more_specific_than(self, other: Generic) -> bool:
                     """
@@ -193,15 +201,17 @@ class Constructor:
                             for my_thing in exclusively_mine
                         ]
                     )
-                    return others_things_set < my_things_set and not any_of_mine_are_disjoint
+                    return (
+                        others_things_set < my_things_set
+                        and not any_of_mine_are_disjoint
+                    )
 
             class WorkflowThing(PyironOntoThing):
                 pass
 
             class Function(WorkflowThing):
                 def get_sources(
-                        self,
-                        additional_requirements: list[Generic] = None
+                    self, additional_requirements: list[Generic] = None
                 ) -> list[Input]:
                     return self.mandatory_inputs
 
@@ -218,13 +228,13 @@ class Constructor:
                         options += inp.transitive_requirements
                     return options
 
-            class IO(Parameter, WorkflowThing): pass
+            class IO(Parameter, WorkflowThing):
+                pass
 
             class has_generic(IO >> Generic, owl.FunctionalProperty):
                 python_name = "generic"
 
-            class has_for_parameter(Generic >> IO,
-                                    owl.InverseFunctionalProperty):
+            class has_for_parameter(Generic >> IO, owl.InverseFunctionalProperty):
                 python_name = "parameters"
                 inverse_property = has_generic
 
@@ -233,8 +243,7 @@ class Constructor:
 
             class Output(IO):
                 def get_sources(
-                        self,
-                        additional_requirements: list[Generic] = None
+                    self, additional_requirements: list[Generic] = None
                 ) -> list[Function]:
                     return [self.output_of]
 
@@ -264,10 +273,13 @@ class Constructor:
 
             class Input(IO):
                 def get_sources(self, additional_requirements=None) -> list[Output]:
-                    requirements = self.more_specific_union(
-                        self.requirements,
-                        additional_requirements
-                    ) if additional_requirements is not None else self.requirements
+                    requirements = (
+                        self.more_specific_union(
+                            self.requirements, additional_requirements
+                        )
+                        if additional_requirements is not None
+                        else self.requirements
+                    )
                     return self.generic.get_sources(
                         additional_requirements=requirements + [self.generic]
                     )
@@ -277,13 +289,14 @@ class Constructor:
                     # union of the input's requirements and the additional ones
                     if additional_requirements is not None:
                         usable_additional_requirements = [
-                            req for req in additional_requirements
+                            req
+                            for req in additional_requirements
                             if any(
                                 [
                                     req.is_representable_by(input_req)
                                     for input_req in [self.generic]
-                                                     + self.requirements
-                                                     + self.transitive_requirements
+                                    + self.requirements
+                                    + self.transitive_requirements
                                 ]
                             )
                         ]
@@ -292,19 +305,20 @@ class Constructor:
 
                     return self.more_specific_union(
                         usable_additional_requirements,
-                        [self.generic] + self.requirements
+                        [self.generic] + self.requirements,
                     )
 
                 @staticmethod
                 def more_specific_union(
-                        requirements1: list[Generic], requirements2: list[Generic]
+                    requirements1: list[Generic], requirements2: list[Generic]
                 ) -> list[Generic]:
                     """
                     A union of two lists of Generics that throws away any less-specific items.
                     """
                     union = list(set(requirements1).union(requirements2))
                     to_remove = [
-                        i for i, req_i in enumerate(union)
+                        i
+                        for i, req_i in enumerate(union)
                         if any([req_j.is_more_specific_than(req_i) for req_j in union])
                     ]
                     return [req for i, req in enumerate(union) if i not in to_remove]
@@ -312,16 +326,18 @@ class Constructor:
             class is_optional_input_of(Input >> Function, owl.FunctionalProperty):
                 python_name = "optional_input_of"
 
-            class has_for_optional_input(Function >> Input,
-                                         owl.InverseFunctionalProperty):
+            class has_for_optional_input(
+                Function >> Input, owl.InverseFunctionalProperty
+            ):
                 python_name = "optional_inputs"
                 inverse_property = is_optional_input_of
 
             class is_mandatory_input_of(Input >> Function, owl.FunctionalProperty):
                 python_name = "mandatory_input_of"
 
-            class has_for_mandatory_input(Function >> Input,
-                                          owl.InverseFunctionalProperty):
+            class has_for_mandatory_input(
+                Function >> Input, owl.InverseFunctionalProperty
+            ):
                 python_name = "mandatory_inputs"
                 inverse_property = is_mandatory_input_of
 
@@ -343,7 +359,7 @@ class Constructor:
             owl.AllDisjoint([Input, Function, Output, Generic])
 
         def build_tree(
-                parameter, parent=None, additional_requirements=None
+            parameter, parent=None, additional_requirements=None
         ) -> NodeTree:
             node = NodeTree(parameter, parent=parent)
 
@@ -353,7 +369,7 @@ class Constructor:
                 )
 
             for source in parameter.get_sources(
-                    additional_requirements=additional_requirements
+                additional_requirements=additional_requirements
             ):
                 build_tree(
                     source, parent=node, additional_requirements=additional_requirements
@@ -362,7 +378,7 @@ class Constructor:
             return node
 
         def build_path(
-                parameter, *path_indices: int, parent=None, additional_requirements=None
+            parameter, *path_indices: int, parent=None, additional_requirements=None
         ):
             node = NodeTree(parameter, parent=parent)
             if isinstance(parameter, Input):
@@ -380,7 +396,7 @@ class Constructor:
                     source,
                     *path_indices,
                     parent=node,
-                    additional_requirements=additional_requirements
+                    additional_requirements=additional_requirements,
                 )
 
             return node, sources

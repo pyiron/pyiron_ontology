@@ -30,35 +30,55 @@ class ExampleOntology(Constructor):
     Terminology goes: I:Input:IM:Middle:MO:Output:O, with letters and numbers to
     distinguish siblings/inheritance.
     """
-    def __init__(
-        self, name: str = "example", closed: bool = True, strict: bool = True
-    ):
+
+    def __init__(self, name: str = "example", closed: bool = True, strict: bool = True):
         super().__init__(name=name, closed=closed, strict=strict)
 
     def _make_specific_declarations(self):
         onto = self.onto
         with onto:
 
-            class I(onto.Generic): pass
-            class I1(I): pass
-            class I2(I): pass
+            class I(onto.Generic):
+                pass
+
+            class I1(I):
+                pass
+
+            class I2(I):
+                pass
+
             owl.AllDisjoint([I1, I2])
 
-            class IM(onto.Generic): pass
-            class IMOptional(onto.Generic): pass
+            class IM(onto.Generic):
+                pass
 
-            class MO(onto.Generic): pass
-            class MO1(MO): pass
-            class MO2(MO): pass
-            class MO2A(MO2): pass
-            class MO2B(MO2): pass
+            class IMOptional(onto.Generic):
+                pass
+
+            class MO(onto.Generic):
+                pass
+
+            class MO1(MO):
+                pass
+
+            class MO2(MO):
+                pass
+
+            class MO2A(MO2):
+                pass
+
+            class MO2B(MO2):
+                pass
+
             owl.AllDisjoint([MO1, MO2])
 
-            class MOUnused(onto.Generic): pass
+            class MOUnused(onto.Generic):
+                pass
 
-            class O(onto.Generic): pass
+            class O(onto.Generic):
+                pass
+
             owl.AllDisjoint([O, MO, MOUnused, IMOptional, IM, I])
-
 
         input1 = onto.Function("input1")
         input1_inp = onto.Input(
@@ -89,7 +109,7 @@ class ExampleOntology(Constructor):
             name="middle1_inp1",
             mandatory_input_of=middle1,
             generic=IM(),
-            transitive_requirements=[I()]
+            transitive_requirements=[I()],
         )
         middle1_inp2 = onto.Input(
             name="middle1_inp2",
@@ -112,7 +132,7 @@ class ExampleOntology(Constructor):
             name="middle2_inp1",
             mandatory_input_of=middle2,
             generic=IM(),
-            transitive_requirements=[I()]
+            transitive_requirements=[I()],
         )
         middle2_inp2 = onto.Input(
             name="middle2_inp2",

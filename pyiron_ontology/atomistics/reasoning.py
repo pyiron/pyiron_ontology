@@ -14,6 +14,7 @@ import pandas as pd
 if TYPE_CHECKING:
     import pyiron_atomistics
     from pyiron_ontology.atomistics.constructor import AtomisticsOntology
+
     onto = AtomisticsOntology().onto
 
 

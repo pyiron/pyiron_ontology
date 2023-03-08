@@ -24,52 +24,105 @@ class AtomisticsOntology(Constructor):
         Output = self.onto.Output
 
         with self.onto:
-            class AtomisticsFunction(self.onto.Function): pass
+
+            class AtomisticsFunction(self.onto.Function):
+                pass
 
             class has_pyiron_name(AtomisticsFunction >> str, owl.FunctionalProperty):
                 python_name = "pyiron_name"
 
             Function = AtomisticsFunction
 
-            class UserInput(Generic): pass
+            class UserInput(Generic):
+                pass
 
-            class PyironObject(Generic): pass
-            class PhysicalProperty(Generic): pass  # Add units, etc
+            class PyironObject(Generic):
+                pass
+
+            class PhysicalProperty(Generic):
+                pass  # Add units, etc
+
             owl.AllDisjoint([PyironObject, PhysicalProperty])
-            class ChemicalElement(PhysicalProperty): pass
-            class MaterialProperty(PhysicalProperty): pass
-            class BulkModulus(MaterialProperty): pass
-            class BPrime(MaterialProperty): pass
-            class SurfaceEnergy(MaterialProperty): pass
 
-            class Dimensional(Generic): pass
-            class OneD(Dimensional): pass
-            class TwoD(Dimensional): pass
-            class ThreeD(Dimensional): pass
+            class ChemicalElement(PhysicalProperty):
+                pass
+
+            class MaterialProperty(PhysicalProperty):
+                pass
+
+            class BulkModulus(MaterialProperty):
+                pass
+
+            class BPrime(MaterialProperty):
+                pass
+
+            class SurfaceEnergy(MaterialProperty):
+                pass
+
+            class Dimensional(Generic):
+                pass
+
+            class OneD(Dimensional):
+                pass
+
+            class TwoD(Dimensional):
+                pass
+
+            class ThreeD(Dimensional):
+                pass
+
             owl.AllDisjoint([OneD, TwoD, ThreeD])
 
-            class Structure(PyironObject, Dimensional): pass
-            class Defected(Structure): pass
-            class HasDislocation(Defected): pass
-            class HasVacancy(Defected): pass
-            class HasInterface(Defected): pass
-            class HasGB(HasInterface): pass
-            class HasSurface(HasInterface): pass
-            class HasPB(HasInterface): pass
+            class Structure(PyironObject, Dimensional):
+                pass
+
+            class Defected(Structure):
+                pass
+
+            class HasDislocation(Defected):
+                pass
+
+            class HasVacancy(Defected):
+                pass
+
+            class HasInterface(Defected):
+                pass
+
+            class HasGB(HasInterface):
+                pass
+
+            class HasSurface(HasInterface):
+                pass
+
+            class HasPB(HasInterface):
+                pass
+
             class Bulk(Structure):
                 equivalent_to = [Structure & owl.Not(Defected)]
+
             # equivalent_to = [Structure & owl.Not(Defected)]
             owl.AllDisjoint([Bulk, Defected])  # Not even needed given Bulk definition
             owl.AllDisjoint([OneD, HasGB])
             owl.AllDisjoint([OneD, HasDislocation])
 
-            class PyironProject(PyironObject): pass
-            class AtomisticsProject(PyironProject): pass
+            class PyironProject(PyironObject):
+                pass
 
-            class PyironJob(PyironObject): pass
-            class AtomisticsJob(PyironJob): pass
-            class Lammps(AtomisticsJob): pass
-            class Vasp(AtomisticsJob): pass
+            class AtomisticsProject(PyironProject):
+                pass
+
+            class PyironJob(PyironObject):
+                pass
+
+            class AtomisticsJob(PyironJob):
+                pass
+
+            class Lammps(AtomisticsJob):
+                pass
+
+            class Vasp(AtomisticsJob):
+                pass
+
             owl.AllDisjoint([Structure, PyironProject, PyironJob])
 
             project = Function(name="project")
@@ -120,9 +173,7 @@ class AtomisticsOntology(Constructor):
                 hdf_path="input/structure",
             )
             lammps_output_job = Output(
-                output_of=lammps,
-                name=f"{lammps.name}_output_job",
-                generic=Lammps()
+                output_of=lammps, name=f"{lammps.name}_output_job", generic=Lammps()
             )
 
             vasp = Function("vasp", pyiron_name="Vasp")
@@ -135,9 +186,7 @@ class AtomisticsOntology(Constructor):
                 hdf_path="input/structure",
             )
             vasp_output_job = Output(
-                output_of=vasp,
-                name=f"{vasp.name}_output_job",
-                generic=Vasp()
+                output_of=vasp, name=f"{vasp.name}_output_job", generic=Vasp()
             )
 
             murnaghan = Function("murnaghan", pyiron_name="Murnaghan")
