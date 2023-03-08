@@ -9,6 +9,17 @@ This project is currently in alpha-stage and subject to rapid change.
 
 Philosophically, `pyiron_ontology` breaks the construction of ontologies down into two parts: a set of classes that are "universal" to all `pyiron_ontology` ontologies, which describe the core elements of a workflow, and a set of "domain specific" declarations (most or all of which) define 
 
+## Installation and setup
+
+For the bleeding-edge, clone this repo. 
+`pyiron_ontology` is also available from Conda Forge via `conda install -c conda-forge pyiron_ontology`.
+
+`pyiron_ontology` uses `owlready2`, which requires java. 
+In case you try to run and get an `owlready2` error about not finding java, you may need to set the java path (cf. [owlready2 docs](https://owlready2.readthedocs.io/en/latest/reasoning.html#configuration)): `import owlready2; owlready2.JAVA_EXE = "C:\\path\\to\\java.exe"`.
+
+Java is also available via `conda install -c conda-forge openjdk`.
+It may be sufficient to install this, and restart your jupyter session from a clean terminal.
+
 ### Universal declarations
 
 We use a graph-based paradigm for representing workflows, such that they are made up of nodes on a directed graph. Each node is thought of to have inputs and outputs, and these may connect to the outputs/inputs of other nodes (or even back on themselves). Data moving through these classes, i.e. anything that is an input or an output, is represented by some child of a generic data class (these are defined and refined during domain-specific declarations).
