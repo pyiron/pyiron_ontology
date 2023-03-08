@@ -31,7 +31,8 @@ setup(
         'owlready2',
         'pandas',
         'pint',
-        'pyiron_atomistics',
+        'pyiron_atomistics>=0.2.63',
+        'sqlalchemy==1.4.46',
     ],
     cmdclass=versioneer.get_cmdclass(),
 

@@ -16,31 +16,6 @@ class NodeTree:
 
     def render(self, depth=0):
         tabs = "".join(["\t"] * depth)
-        print(f"{tabs}{self.value}")
+        print(f"{tabs}{self.value.name}")
         for child in self.children:
             child.render(depth=depth + 1)
-
-
-def build_tree(parameter, parent=None, additional_conditions=None) -> NodeTree:
-    node = NodeTree(parameter, parent=parent)
-    conditions = parameter.get_conditions(additional_conditions)
-
-    for source in parameter.get_sources(conditions):
-        build_tree(source, parent=node, additional_conditions=conditions)
-
-    return node
-
-
-def build_path(parameter, *path_indices: int, parent=None, additional_conditions=None):
-    node = NodeTree(parameter, parent=parent)
-    conditions = parameter.get_conditions(additional_conditions)
-    sources = parameter.get_sources(conditions)
-
-    if len(path_indices) > 0:
-        i, path_indices = path_indices[0], path_indices[1:]
-        source = sources[i]
-        _, sources = build_path(
-            source, *path_indices, parent=node, additional_conditions=conditions
-        )
-
-    return node, sources

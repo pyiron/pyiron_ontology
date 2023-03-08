@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from pyiron_ontology.constructor import Constructor
 
+import owlready2 as owl
+
 
 class AtomisticsOntology(Constructor):
     def __init__(
@@ -16,166 +18,219 @@ class AtomisticsOntology(Constructor):
     ):
         super().__init__(name=name, closed=closed, strict=strict)
 
-    def _declare_individuals(self, onto):
-        lblAtomistic = onto.Label(name="Atomistic")
-        lblCode = onto.Label(name="lCode")
-        lblDFT = onto.Label(name="DFT")
-        lblMaterialProperty = onto.Label(name="MaterialProperty")
-        lblPeriodicBoundaryConditions = onto.Label(name="PeriodicBoundaryConditions")
-        lblUserInput = onto.Label(
-            name="UserInput",
-            comment="Easy to provide input. Can be used to start a workflow",
-        )
-        lblBulk3DCrystal = onto.Label(
-            name="Bulk3dStructure",
-            comment="Bulk 3d structure generated/needed. Has a well defined volume.",
-        )
-        lblAtomisticEnergyCalculator = onto.Label(
-            name="AtomisticEnergyCalculator",
-            comment="Code to compute the energy of an atomic structure",
-        )
+    def _make_specific_declarations(self):
+        Generic = self.onto.Generic
+        Input = self.onto.Input
+        Output = self.onto.Output
 
-        ChemicalElement = onto.GenericParameter(
-            name="ChemicalElement",
-            description="Single chemical element",
-            domain=[lblAtomistic, lblUserInput],
-        )
-        AtomicStructure = onto.GenericParameter(
-            name="AtomicStructure",
-            description="Contains all information to construct an atomic structure (molecule, crystal, etc.)",
-            domain=[lblAtomistic],
-        )
-        Executable = onto.GenericParameter(
-            name="Executable",
-            description="Code that requires input and produces output",
-            domain=[],
-        )
-        Flag = onto.GenericParameter(
-            name="Flag",
-            description="Input that selects a choice for a particular code",
-            domain=[lblUserInput],
-        )
+        with self.onto:
 
-        # Structure
-        CreateStructureBulk = onto.Code(
-            name="CreateStructureBulk",
-            domain=[lblAtomistic, lblCode],
-            generic_parameter=[Executable],
-        )
-        CreateStructureBulk_element = onto.InputParameter(
-            name=f"{CreateStructureBulk.name}/input/element",
-            mandatory_input_in=[CreateStructureBulk],
-            generic_parameter=[ChemicalElement],
-        )
-        CreateStructureBulk_structure = onto.OutputParameter(
-            name=f"{CreateStructureBulk.name}/output/structure",
-            output_of=[CreateStructureBulk],
-            generic_parameter=[AtomicStructure],
-            has_options=[lblBulk3DCrystal],
-        )
+            class AtomisticsFunction(self.onto.Function):
+                pass
 
-        CreateSurface = onto.Code(
-            name="CreateSurface",
-            domain=[lblAtomistic, lblCode],
-            generic_parameter=[Executable],
-        )
-        CreateSurface_element = onto.InputParameter(
-            name=f"{CreateSurface.name}/input/element",
-            mandatory_input_in=[CreateSurface],
-            generic_parameter=[ChemicalElement],
-        )
-        CreateSurface_structure = onto.OutputParameter(
-            name=f"{CreateSurface.name}/output/structure",
-            output_of=[CreateSurface],
-            generic_parameter=[AtomicStructure],
-            has_options=[],
-        )
+            class has_pyiron_name(AtomisticsFunction >> str, owl.FunctionalProperty):
+                python_name = "pyiron_name"
 
-        # Murnaghan
-        Bulkmodulus = onto.GenericParameter(
-            name="Bulk_modulus",
-            description="https://en.wikipedia.org/wiki/Bulk_modulus",
-            symbols=["B", "K"],
-            unit=["MPa"],
-            domain=[lblMaterialProperty],
-        )
-        Bprime = onto.GenericParameter(
-            name="B_prime",
-            decription="First derivative of Bulk modulus with respect to volume",
-            symbols=["Bprime"],
-            unit=["1"],
-            domain=[lblMaterialProperty],
-        )
+            Function = AtomisticsFunction
 
-        Murnaghan = onto.Code(
-            name="Murnaghan",
-            domain=[lblAtomistic, lblCode],
-            generic_parameter=[Executable],
-        )
-        Murnaghan_Bulkmodulus = onto.OutputParameter(
-            name=f"{Murnaghan.name}/output/equilibrium_bulk_modulus",
-            output_of=[Murnaghan],
-            generic_parameter=[Bulkmodulus],
-            unit=["GPa"],
-        )
-        Murnaghan_Bprime = onto.OutputParameter(
-            name=f"{Murnaghan.name}/output/equilibrium_b_prime",
-            output_of=[Murnaghan],
-            generic_parameter=[Bprime],
-        )
-        Murnaghan_Ref_Job = onto.InputParameter(
-            name=f"{Murnaghan.name}/ref_job",
-            mandatory_input_in=[Murnaghan],
-            generic_parameter=[Executable],
-            has_conditions=[lblBulk3DCrystal, lblAtomisticEnergyCalculator],
-        )
+            class UserInput(Generic):
+                pass
 
-        # DFT
-        EnergyCutoff = onto.GenericParameter(
-            name="EnergyCutoff",
-            description="The cutoff on the number of plane wave functions being utilized as basis functions to represent the wavefunction",
-        )
+            class PyironObject(Generic):
+                pass
 
-        VASP = onto.Code(
-            name="VASP",
-            domain=[lblAtomistic, lblCode, lblDFT],
-            has_options=[lblBulk3DCrystal, lblAtomisticEnergyCalculator],
-            generic_parameter=[Executable],
-        )
-        VASP_ENCUT = onto.InputParameter(
-            name="ENCUT",
-            input_in=[VASP],
-            generic_parameter=[EnergyCutoff],
-            unit=["eV"],
-        )
-        VASP_IBRION = onto.InputParameter(
-            name="IBRION",
-            generic_parameter=[Flag],
-            input_in=[VASP],
-        )
-        VASP_Structure = onto.InputParameter(
-            name=f"{VASP.name}/input/structure",
-            mandatory_input_in=[VASP],
-            generic_parameter=[AtomicStructure],
-            has_transitive_conditions=[lblBulk3DCrystal],
-        )
+            class PhysicalProperty(Generic):
+                pass  # Add units, etc
 
-        VASP_ETOT = onto.OutputParameter(name="ETOT", output_of=[VASP])
+            owl.AllDisjoint([PyironObject, PhysicalProperty])
 
-        # LAMMPS
+            class ChemicalElement(PhysicalProperty):
+                pass
 
-        LAMMPS = onto.Code(
-            name="LAMMPS",
-            domain=[lblAtomistic, lblCode],
-            has_options=[lblBulk3DCrystal, lblAtomisticEnergyCalculator],
-            generic_parameter=[Executable],
-        )
+            class MaterialProperty(PhysicalProperty):
+                pass
 
-        LAMMPS_Structure = onto.InputParameter(
-            name=f"{LAMMPS.name}/input/structure",
-            mandatory_input_in=[LAMMPS],
-            generic_parameter=[AtomicStructure],
-            has_transitive_conditions=[lblBulk3DCrystal],
-        )
+            class BulkModulus(MaterialProperty):
+                pass
 
-        LAMMPS_ETOT = onto.OutputParameter(name="ETOT", output_of=[LAMMPS])
+            class BPrime(MaterialProperty):
+                pass
+
+            class SurfaceEnergy(MaterialProperty):
+                pass
+
+            class Dimensional(Generic):
+                pass
+
+            class OneD(Dimensional):
+                pass
+
+            class TwoD(Dimensional):
+                pass
+
+            class ThreeD(Dimensional):
+                pass
+
+            owl.AllDisjoint([OneD, TwoD, ThreeD])
+
+            class Structure(PyironObject, Dimensional):
+                pass
+
+            class Defected(Structure):
+                pass
+
+            class HasDislocation(Defected):
+                pass
+
+            class HasVacancy(Defected):
+                pass
+
+            class HasInterface(Defected):
+                pass
+
+            class HasGB(HasInterface):
+                pass
+
+            class HasSurface(HasInterface):
+                pass
+
+            class HasPB(HasInterface):
+                pass
+
+            class Bulk(Structure):
+                equivalent_to = [Structure & owl.Not(Defected)]
+
+            # equivalent_to = [Structure & owl.Not(Defected)]
+            owl.AllDisjoint([Bulk, Defected])  # Not even needed given Bulk definition
+            owl.AllDisjoint([OneD, HasGB])
+            owl.AllDisjoint([OneD, HasDislocation])
+
+            class PyironProject(PyironObject):
+                pass
+
+            class AtomisticsProject(PyironProject):
+                pass
+
+            class PyironJob(PyironObject):
+                pass
+
+            class AtomisticsJob(PyironJob):
+                pass
+
+            class Lammps(AtomisticsJob):
+                pass
+
+            class Vasp(AtomisticsJob):
+                pass
+
+            owl.AllDisjoint([Structure, PyironProject, PyironJob])
+
+            project = Function(name="project")
+            project_input_name = Input(
+                optional_input_of=project,
+                name=f"{project.name}_input_name",
+                generic=UserInput,
+            )
+            project_output_atomistics_project = Output(
+                output_of=project,
+                name=f"{project.name}_output_atomistics_project",
+                generic=AtomisticsProject,
+            )
+
+            bulk_structure = Function(name="bulk_structure")
+            bulk_structure_input_element = Input(
+                optional_input_of=bulk_structure,
+                name=f"{bulk_structure.name}_input_element",
+                generic=Generic(is_a=[ChemicalElement, UserInput]),
+                hdf_path="input/element",
+            )
+            bulk_structure_output_structure = Output(
+                output_of=bulk_structure,
+                name=f"{bulk_structure.name}_output_structure",
+                generic=Structure(is_a=[Bulk, ThreeD]),
+                hdf_path="output/structure",
+            )
+
+            surface_structure = Function("surface_structure")
+            surface_structure_input_element = Input(
+                optional_input_of=surface_structure,
+                name=f"{surface_structure.name}_input_element",
+                generic=Generic(is_a=[ChemicalElement, UserInput]),
+                hdf_path="input/element",
+            )
+            surface_structure_output_structure = Output(
+                output_of=surface_structure,
+                name=f"{surface_structure.name}_output_structure",
+                generic=Structure(is_a=[HasSurface, ThreeD]),
+                hdf_path="output/structure",
+            )
+
+            lammps = Function("lammps", pyiron_name="Lammps")
+            lammps_input_structure = Input(
+                mandatory_input_of=lammps,
+                name=f"{lammps.name}_input_structure",
+                generic=Structure(),
+                hdf_path="input/structure",
+            )
+            lammps_output_job = Output(
+                output_of=lammps, name=f"{lammps.name}_output_job", generic=Lammps()
+            )
+
+            vasp = Function("vasp", pyiron_name="Vasp")
+            vasp_input_structure = Input(
+                mandatory_input_of=vasp,
+                name=f"{vasp.name}_input_structure",
+                generic=Generic(is_a=[Structure, ThreeD]),
+                # Can't be onto.Structure(is_a=[onto.ThreeD]) because is_a _overrides_ the
+                # instantiated class, and ThreeD is not a child of Structure!
+                hdf_path="input/structure",
+            )
+            vasp_output_job = Output(
+                output_of=vasp, name=f"{vasp.name}_output_job", generic=Vasp()
+            )
+
+            murnaghan = Function("murnaghan", pyiron_name="Murnaghan")
+            murnaghan_input_project = Input(
+                name=f"{murnaghan.name}_input_project",
+                generic=AtomisticsProject(),
+                mandatory_input_of=murnaghan,
+            )
+            murnaghan_input_job = Input(
+                name=f"{murnaghan.name}_input_job",
+                generic=AtomisticsJob(),
+                mandatory_input_of=murnaghan,
+                requirements=[Structure(is_a=[Bulk, ThreeD])],
+                hdf_path="ref_job",
+            )
+            murnaghan_output_bulk_modulus = Output(
+                name=f"{murnaghan.name}_output_bulk_modulus",
+                generic=BulkModulus(),
+                output_of=murnaghan,
+                hdf_path="output/equilibrium_bulk_modulus",
+                unit="GPa",
+            )
+            murnaghan_output_b_prime = Output(
+                name=f"{murnaghan.name}_output_b_prime",
+                generic=BPrime(),
+                output_of=murnaghan,
+                hdf_path="output/equilibrium_b_prime",
+            )
+
+            surface_energy = Function("surface_energy")
+            surface_energy_input_bulk_job = Input(
+                name=f"{surface_energy.name}_input_bulk_job",
+                generic=AtomisticsJob(),
+                mandatory_input_of=surface_energy,
+                requirements=[Bulk()],
+            )
+            surface_energy_input_slab_job = Input(
+                name=f"{surface_energy.name}_input_slab_job",
+                generic=AtomisticsJob(),
+                mandatory_input_of=surface_energy,
+                requirements=[HasSurface()],
+            )
+            surface_energy_output_surface_energy = Output(
+                name=f"{surface_energy.name}_output_surface_energy",
+                generic=SurfaceEnergy(),
+                output_of=surface_energy,
+            )
