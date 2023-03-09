@@ -4,7 +4,7 @@ name: Daily
 
 on:
   schedule:
-    - cron: '0 23 * * *'
+    - cron: '30 22 * * *'
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
