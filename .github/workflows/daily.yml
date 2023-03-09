@@ -6,7 +6,33 @@ on:
   schedule:
     - cron: '0 23 * * *'
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
-  codeql:
-    uses: pyiron/actions/.github/workflows/tests-and-coverage.yml@main
-    secrets: inherit
+  Tests-and-Coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pyiron/actions/unit-tests@main
+        with:
+          python-version: '3.10'
+          env-prefix: /usr/share/miniconda3/envs/my-env
+          env-label: linux-64-py-3-10
+          env-files: .ci_support/environment.yml
+          test-dir: tests
+      - name: Coverage
+        shell: bash -l {0}
+        run: |
+          coverage combine
+          coveralls
+          coverage xml
+      - name: Codacy
+        shell: bash -l {0}
+        env:
+          CODACY_API_TOKEN: ${{ secrets.CODACY_API_TOKEN }}
+          CODACY_ORGANIZATION_PROVIDER: gh
+          CODACY_USERNAME: ${{ github.repository_owner }}
+          CODACY_PROJECT_NAME: ${{ github.event.repository.name }}
+        run: |
+          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r coverage.xml
