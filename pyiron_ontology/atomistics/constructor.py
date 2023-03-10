@@ -129,12 +129,12 @@ class AtomisticsOntology(Constructor):
             project_input_name = Input(
                 optional_input_of=project,
                 name=f"{project.name}_input_name",
-                generic=UserInput,
+                generic=UserInput(),
             )
             project_output_atomistics_project = Output(
                 output_of=project,
                 name=f"{project.name}_output_atomistics_project",
-                generic=AtomisticsProject,
+                generic=AtomisticsProject(),
             )
 
             bulk_structure = Function(name="bulk_structure")
