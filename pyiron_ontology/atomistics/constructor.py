@@ -251,17 +251,27 @@ class AtomisticsOntology(Constructor):
             )
 
             surface_energy = Function("surface_energy")
-            surface_energy_input_bulk_job = Input(
-                name=f"{surface_energy.name}_input_bulk_job",
-                generic=AtomisticsJob(),
+            surface_energy_input_bulk_structure = Input(
+                name="surface_energy_input_bulk_structure",
+                generic=Structure(is_a=[Bulk, ThreeD]),
                 mandatory_input_of=surface_energy,
-                requirements=[Bulk()],
             )
-            surface_energy_input_slab_job = Input(
-                name=f"{surface_energy.name}_input_slab_job",
-                generic=AtomisticsJob(),
+            surface_energy_input_bulk_energy = Input(
+                name="surface_energy_input_bulk_energy",
+                generic=Energy(),
                 mandatory_input_of=surface_energy,
-                requirements=[HasSurface()],
+                requirements=[Structure(is_a=[Bulk, ThreeD])],
+            )
+            surface_energy_input_slab_structure = Input(
+                name="surface_energy_input_slab_structure",
+                generic=Structure(is_a=[HasSurface, ThreeD]),
+                mandatory_input_of=surface_energy,
+            )
+            surface_energy_input_slab_energy = Input(
+                name="surface_energy_input_slab_energy",
+                generic=Energy(),
+                mandatory_input_of=surface_energy,
+                requirements=[Structure(is_a=[HasSurface, ThreeD])],
             )
             surface_energy_output_surface_energy = Output(
                 name=f"{surface_energy.name}_output_surface_energy",
