@@ -44,6 +44,12 @@ class AtomisticsOntology(Constructor):
 
             owl.AllDisjoint([PyironObject, PhysicalProperty])
 
+            class Energy(PhysicalProperty):
+                pass
+
+            class Force(PhysicalProperty):
+                pass
+
             class ChemicalElement(PhysicalProperty):
                 pass
 
