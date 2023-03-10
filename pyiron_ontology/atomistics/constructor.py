@@ -205,6 +205,24 @@ class AtomisticsOntology(Constructor):
                 output_of=vasp, name=f"{vasp.name}_output_job", generic=Vasp()
             )
 
+            atomistic_taker = Function("atomistic_taker")
+            atomistic_taker_job = Input(
+                name="atomistic_taker_job",
+                generic=AtomisticsJob(),
+                mandatory_input_of=atomistic_taker,
+                transitive_requirements=[Structure()]
+            )
+            atomistic_taker_output_energy_pot = Output(
+                name="atomistic_taker_output_energy_pot",
+                generic=Energy(),
+                output_of=atomistic_taker,
+            )
+            atomistic_taker_output_forces = Output(
+                name="atomistic_taker_output_forces",
+                generic=Force(),
+                output_of=atomistic_taker,
+            )
+
             murnaghan = Function("murnaghan", pyiron_name="Murnaghan")
             murnaghan_input_project = Input(
                 name=f"{murnaghan.name}_input_project",
