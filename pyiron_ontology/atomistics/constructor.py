@@ -166,6 +166,11 @@ class AtomisticsOntology(Constructor):
             )
 
             lammps = Function("lammps", pyiron_name="Lammps")
+            lammps_input_project = Input(
+                name=f"{lammps.name}_input_project",
+                generic=AtomisticsProject(),
+                mandatory_input_of=lammps,
+            )
             lammps_input_structure = Input(
                 mandatory_input_of=lammps,
                 name=f"{lammps.name}_input_structure",
@@ -177,6 +182,11 @@ class AtomisticsOntology(Constructor):
             )
 
             vasp = Function("vasp", pyiron_name="Vasp")
+            vasp_input_project = Input(
+                name=f"{vasp.name}_input_project",
+                generic=AtomisticsProject(),
+                mandatory_input_of=vasp,
+            )
             vasp_input_structure = Input(
                 mandatory_input_of=vasp,
                 name=f"{vasp.name}_input_structure",
