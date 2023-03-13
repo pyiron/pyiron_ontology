@@ -73,8 +73,11 @@ class Constructor:
                 ) -> list[WorkflowThing]:
                     raise NotImplementedError
 
-                def get_source_tree(self):
-                    return build_tree(self)
+                def get_source_tree(self, additional_requirements=None):
+                    return build_tree(
+                        self,
+                        additional_requirements=additional_requirements
+                    )
 
                 def get_source_path(self, *path_indices: int):
                     return build_path(self, *path_indices)
