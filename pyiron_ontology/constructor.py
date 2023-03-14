@@ -163,20 +163,26 @@ class Constructor:
                     combined_ancestors = set(ancestors1).union(ancestors2)
                     return len(combined_disjoints.intersection(combined_ancestors)) > 0
 
-                def is_representable_by(self, other: Generic) -> bool:
-                    """
-                    Checks for disjointness among all indirect thing classes.
-                    """
+                def is_representable_by_any(self, others: list[Generic]) -> bool:
                     my_things = self.indirect_things
-                    others_things = other.indirect_things
-
                     my_disjoints = self.indirect_disjoints_set
-                    others_disjoints = other.indirect_disjoints_set
 
-                    return (
-                            len(my_disjoints.intersection(others_things)) == 0
-                            and len(others_disjoints.intersection(my_things)) == 0
+                    return any(
+                        [
+                            self._not_disjoint(
+                                my_disjoints,
+                                other.indirect_disjoints_set,
+                                my_things,
+                                other.indirect_things
+                            )
+                            for other in others
+                        ]
                     )
+
+                @staticmethod
+                def _not_disjoint(disjoints1, disjoints2, things1, things2):
+                    return len(disjoints1.intersection(things2)) == \
+                        len(disjoints2.intersection(things1)) == 0
 
                 def is_more_specific_than(self, other: Generic) -> bool:
                     """
@@ -245,11 +251,8 @@ class Constructor:
                 def satisfies(self, requirements: list[Generic]) -> bool:
                     return all(
                         [
-                            any(
-                                [
-                                    requirement.is_representable_by(option)
-                                    for option in self.options + [self.generic]
-                                ]
+                            requirement.is_representable_by_any(
+                                self.options + [self.generic]
                             )
                             for requirement in requirements
                         ]
@@ -282,13 +285,10 @@ class Constructor:
                         usable_additional_requirements = [
                             req
                             for req in additional_requirements
-                            if any(
-                                [
-                                    req.is_representable_by(input_req)
-                                    for input_req in [self.generic]
-                                    + self.requirements
-                                    + self.transitive_requirements
-                                ]
+                            if req.is_representable_by_any(
+                                [self.generic]
+                                + self.requirements
+                                + self.transitive_requirements
                             )
                         ]
                     else:
