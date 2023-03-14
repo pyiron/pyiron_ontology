@@ -170,24 +170,12 @@ class Constructor:
                     my_things = self.indirect_things
                     others_things = other.indirect_things
 
-                    exclusively_mine = set(my_things).difference(others_things)
-                    exclusively_others = set(others_things).difference(my_things)
-
                     my_disjoints = self.indirect_disjoints_set
                     others_disjoints = other.indirect_disjoints_set
 
-                    any_of_mine_are_disjoint = any(
-                        [my_thing in others_disjoints for my_thing in exclusively_mine]
-                    )
-                    any_of_others_are_disjoint = any(
-                        [
-                            others_thing in my_disjoints
-                            for others_thing in exclusively_others
-                        ]
-                    )
-
                     return (
-                        not any_of_mine_are_disjoint and not any_of_others_are_disjoint
+                            len(my_disjoints.intersection(others_things)) == 0
+                            and len(others_disjoints.intersection(my_things)) == 0
                     )
 
                 def is_more_specific_than(self, other: Generic) -> bool:
