@@ -99,10 +99,10 @@ class Constructor:
                     return [
                         out
                         for out in self.indirect_outputs
-                        if out.satisfies(
-                            additional_requirements
+                        if (
+                            out.satisfies(additional_requirements)
                             if additional_requirements is not None
-                            else []
+                            else True
                         )
                     ]
 
