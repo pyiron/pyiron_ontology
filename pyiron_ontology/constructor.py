@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from warnings import warn
 
-import numpy as np
 import owlready2 as owl
 import pint
 
