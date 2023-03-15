@@ -153,6 +153,19 @@ class Constructor:
                 def indirect_disjoints_set(self) -> set[Generic]:
                     return self._get_disjoints_set(self.indirect_things)
 
+                @property
+                def representation_info(self):
+                    """
+                    A more computationally efficient call when you know you need both
+                    the `indirect_disjoints` _and_ `indirect_things` properties at once.
+
+                    Returns:
+                        list, set: indirect things, indirect disjoints
+                    """
+                    indirect_things = self.indirect_things
+                    indirect_disjoints = self._get_disjoints_set(indirect_things)
+                    return indirect_disjoints, indirect_things
+
                 @classmethod
                 def class_is_indirectly_disjoint_with(cls, other: owl.ThingClass):
                     ancestors1 = list(cls.ancestors())
@@ -164,8 +177,7 @@ class Constructor:
                     return len(combined_disjoints.intersection(combined_ancestors)) > 0
 
                 def has_a_representation_among_others(self, others_info):
-                    my_things = self.indirect_things
-                    my_disjoints = self.indirect_disjoints_set
+                    my_disjoints, my_things = self.representation_info
                     return any(
                         [
                             self._not_disjoint(
@@ -264,10 +276,9 @@ class Constructor:
                     return self.output_of.options
 
                 def satisfies(self, requirements: list[Generic]) -> bool:
-                    others = self.options + [self.generic]
                     others_info = [
-                        (other.indirect_disjoints_set, other.indirect_things)
-                        for other in others
+                        other.representation_info
+                        for other in self.options + [self.generic]
                     ]
                     return all(
                         [
@@ -299,12 +310,11 @@ class Constructor:
                 def get_requirements(self, additional_requirements=None):
                     # Throw away anything the input can't use, then make a more specific
                     # union of the input's requirements and the additional ones
-                    others = [self.generic] \
-                             + self.requirements \
-                             + self.transitive_requirements
                     others_info = [
-                        (other.indirect_disjoints_set, other.indirect_things)
-                        for other in others
+                        other.representation_info
+                        for other in [self.generic]
+                                     + self.requirements
+                                     + self.transitive_requirements
                     ]
                     if additional_requirements is not None:
                         usable_additional_requirements = [
