@@ -274,15 +274,10 @@ class Constructor:
 
             class Input(IO):
                 def get_sources(self, additional_requirements=None) -> list[Output]:
-                    requirements = (
-                        self.more_specific(
-                            [self.generic] + self.requirements + additional_requirements
-                        )
-                        if additional_requirements is not None
-                        else [self.generic] + self.requirements
-                    )
                     return self.generic.get_sources(
-                        additional_requirements=requirements
+                        additional_requirements=self.get_requirements(
+                            additional_requirements=additional_requirements
+                        )
                     )
 
                 def get_requirements(self, additional_requirements=None):
@@ -361,11 +356,6 @@ class Constructor:
         ) -> NodeTree:
             node = NodeTree(parameter, parent=parent)
 
-            if isinstance(parameter, Input):
-                additional_requirements = parameter.get_requirements(
-                    additional_requirements=additional_requirements
-                )
-
             for source in parameter.get_sources(
                 additional_requirements=additional_requirements
             ):
@@ -379,10 +369,7 @@ class Constructor:
             parameter, *path_indices: int, parent=None, additional_requirements=None
         ):
             node = NodeTree(parameter, parent=parent)
-            if isinstance(parameter, Input):
-                additional_requirements = parameter.get_requirements(
-                    additional_requirements
-                )
+
             sources = parameter.get_sources(
                 additional_requirements=additional_requirements
             )
