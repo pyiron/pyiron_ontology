@@ -179,15 +179,13 @@ class Constructor:
                 def has_a_representation_among_others(self, others_info):
                     my_disjoints, my_things = self.representation_info
                     return any(
-                        [
-                            self._not_disjoint(
-                                my_disjoints,
-                                other_disjoints,
-                                my_things,
-                                other_things
-                            )
-                            for (other_disjoints, other_things) in others_info
-                        ]
+                        self._not_disjoint(
+                            my_disjoints,
+                            other_disjoints,
+                            my_things,
+                            other_things
+                        )
+                        for (other_disjoints, other_things) in others_info
                     )
 
                 @staticmethod
@@ -204,10 +202,8 @@ class Constructor:
 
                     exclusively_mine = my_things_set.difference(others_things_set)
                     any_of_mine_are_disjoint = any(
-                        [
-                            my_thing in other.indirect_disjoints_set
-                            for my_thing in exclusively_mine
-                        ]
+                        my_thing in other.indirect_disjoints_set
+                        for my_thing in exclusively_mine
                     )
                     return (
                         others_things_set < my_things_set
@@ -265,10 +261,8 @@ class Constructor:
                         for other in self.options + [self.generic]
                     ]
                     return all(
-                        [
-                            requirement.has_a_representation_among_others(others_info)
-                            for requirement in requirements
-                        ]
+                        requirement.has_a_representation_among_others(others_info)
+                        for requirement in requirements
                     )
 
             class is_output_of(Output >> Function, owl.FunctionalProperty):
@@ -324,8 +318,7 @@ class Constructor:
                     return [
                         req
                         for req in union
-                        if not any(
-                            other.is_more_specific_than(req) for other in union)
+                        if not any(other.is_more_specific_than(req) for other in union)
                     ]
 
             class is_optional_input_of(Input >> Function, owl.FunctionalProperty):
