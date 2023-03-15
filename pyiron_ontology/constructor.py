@@ -194,7 +194,8 @@ class Constructor:
 
                 def is_more_specific_than(self, other: Generic) -> bool:
                     """
-                    Only has extra classes compared to other, and non of them are disjoint
+                    Only has extra classes compared to other, and none of them are
+                    disjoint
                     """
                     my_things_set = set(self.indirect_things)
                     others_things_set = set(other.indirect_things)
