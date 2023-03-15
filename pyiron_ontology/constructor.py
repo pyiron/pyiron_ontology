@@ -130,7 +130,7 @@ class Constructor:
 
                 @property
                 def indirect_outputs(self) -> list[Output]:
-                    return [p for p in self.indirect_io if Output in p.is_a]
+                    return [p for p in self.indirect_things if Output in p.is_a]
 
                 @classmethod
                 def _get_disjoints_set(cls, classes: list[owl.ThingClass]):
