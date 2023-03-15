@@ -206,8 +206,8 @@ class Constructor:
                         for my_thing in exclusively_mine
                     )
                     return (
+                        not any_of_mine_are_disjoint and
                         others_things_set < my_things_set
-                        and not any_of_mine_are_disjoint
                     )
 
             class WorkflowThing(PyironOntoThing):
