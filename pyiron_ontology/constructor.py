@@ -275,14 +275,14 @@ class Constructor:
             class Input(IO):
                 def get_sources(self, additional_requirements=None) -> list[Output]:
                     requirements = (
-                        self.more_specific_union(
-                            self.requirements, additional_requirements
+                        self.more_specific(
+                            [self.generic] + self.requirements + additional_requirements
                         )
                         if additional_requirements is not None
-                        else self.requirements
+                        else [self.generic] + self.requirements
                     )
                     return self.generic.get_sources(
-                        additional_requirements=requirements + [self.generic]
+                        additional_requirements=requirements
                     )
 
                 def get_requirements(self, additional_requirements=None):
@@ -302,23 +302,23 @@ class Constructor:
                     else:
                         usable_additional_requirements = []
 
-                    return self.more_specific_union(
-                        usable_additional_requirements,
-                        [self.generic] + self.requirements,
+                    return self.more_specific(
+                        usable_additional_requirements
+                        + [self.generic]
+                        + self.requirements
                     )
 
                 @staticmethod
-                def more_specific_union(
-                    requirements1: list[Generic], requirements2: list[Generic]
-                ) -> list[Generic]:
+                def more_specific(requirements: list[Generic]) -> list[Generic]:
                     """
-                    A union of two lists of Generics that throws away any less-specific items.
+                    Throws away any items for which there is a more specific item in the
+                    list.
                     """
-                    union = set(requirements1).union(requirements2)
                     return [
-                        req
-                        for req in union
-                        if not any(other.is_more_specific_than(req) for other in union)
+                        req for req in requirements
+                        if not any(
+                            other.is_more_specific_than(req) for other in requirements
+                        )
                     ]
 
             class is_optional_input_of(Input >> Function, owl.FunctionalProperty):
