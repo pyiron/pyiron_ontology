@@ -190,22 +190,6 @@ class Constructor:
                         ]
                     )
 
-                def is_representable_by_any(self, others: list[Generic]) -> bool:
-                    my_things = self.indirect_things
-                    my_disjoints = self.indirect_disjoints_set
-
-                    return any(
-                        [
-                            self._not_disjoint(
-                                my_disjoints,
-                                other.indirect_disjoints_set,
-                                my_things,
-                                other.indirect_things
-                            )
-                            for other in others
-                        ]
-                    )
-
                 @staticmethod
                 def _not_disjoint(disjoints1, disjoints2, things1, things2):
                     return len(disjoints1.intersection(things2)) == \
