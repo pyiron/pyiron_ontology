@@ -198,16 +198,17 @@ class Constructor:
                     disjoint
                     """
                     my_things_set = set(self.indirect_things)
-                    others_things_set = set(other.indirect_things)
+                    other_disjoints, other_things = other.representation_info
+                    other_things_set = set(other_things)
 
-                    exclusively_mine = my_things_set.difference(others_things_set)
+                    exclusively_mine = my_things_set.difference(other_things_set)
                     any_of_mine_are_disjoint = any(
-                        my_thing in other.indirect_disjoints_set
+                        my_thing in other_disjoints
                         for my_thing in exclusively_mine
                     )
                     return (
                         not any_of_mine_are_disjoint and
-                        others_things_set < my_things_set
+                        other_things_set < my_things_set
                     )
 
             class WorkflowThing(PyironOntoThing):
