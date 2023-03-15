@@ -320,13 +320,13 @@ class Constructor:
                     """
                     A union of two lists of Generics that throws away any less-specific items.
                     """
-                    union = list(set(requirements1).union(requirements2))
-                    to_remove = [
-                        i
-                        for i, req_i in enumerate(union)
-                        if any([req_j.is_more_specific_than(req_i) for req_j in union])
+                    union = set(requirements1).union(requirements2)
+                    return [
+                        req
+                        for req in union
+                        if not any(
+                            other.is_more_specific_than(req) for other in union)
                     ]
-                    return [req for i, req in enumerate(union) if i not in to_remove]
 
             class is_optional_input_of(Input >> Function, owl.FunctionalProperty):
                 python_name = "optional_input_of"
