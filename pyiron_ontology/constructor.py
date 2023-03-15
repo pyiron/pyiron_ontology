@@ -163,6 +163,21 @@ class Constructor:
                     combined_ancestors = set(ancestors1).union(ancestors2)
                     return len(combined_disjoints.intersection(combined_ancestors)) > 0
 
+                def has_a_representation_among_others(self, others_info):
+                    my_things = self.indirect_things
+                    my_disjoints = self.indirect_disjoints_set
+                    return any(
+                        [
+                            self._not_disjoint(
+                                my_disjoints,
+                                other_disjoints,
+                                my_things,
+                                other_things
+                            )
+                            for (other_disjoints, other_things) in others_info
+                        ]
+                    )
+
                 def is_representable_by_any(self, others: list[Generic]) -> bool:
                     my_things = self.indirect_things
                     my_disjoints = self.indirect_disjoints_set
@@ -249,11 +264,14 @@ class Constructor:
                     return self.output_of.options
 
                 def satisfies(self, requirements: list[Generic]) -> bool:
+                    others = self.options + [self.generic]
+                    others_info = [
+                        (other.indirect_disjoints_set, other.indirect_things)
+                        for other in others
+                    ]
                     return all(
                         [
-                            requirement.is_representable_by_any(
-                                self.options + [self.generic]
-                            )
+                            requirement.has_a_representation_among_others(others_info)
                             for requirement in requirements
                         ]
                     )
@@ -281,15 +299,17 @@ class Constructor:
                 def get_requirements(self, additional_requirements=None):
                     # Throw away anything the input can't use, then make a more specific
                     # union of the input's requirements and the additional ones
+                    others = [self.generic] \
+                             + self.requirements \
+                             + self.transitive_requirements
+                    others_info = [
+                        (other.indirect_disjoints_set, other.indirect_things)
+                        for other in others
+                    ]
                     if additional_requirements is not None:
                         usable_additional_requirements = [
-                            req
-                            for req in additional_requirements
-                            if req.is_representable_by_any(
-                                [self.generic]
-                                + self.requirements
-                                + self.transitive_requirements
-                            )
+                            req for req in additional_requirements
+                            if req.has_a_representation_among_others(others_info)
                         ]
                     else:
                         usable_additional_requirements = []
