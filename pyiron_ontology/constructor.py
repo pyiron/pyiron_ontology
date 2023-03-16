@@ -7,9 +7,9 @@ A parent class for the constructors of all pyiron ontologies.
 
 from __future__ import annotations
 
+from typing import Optional
 from warnings import warn
 
-import numpy as np
 import owlready2 as owl
 import pint
 
@@ -73,8 +73,10 @@ class Constructor:
                 ) -> list[WorkflowThing]:
                     raise NotImplementedError
 
-                def get_source_tree(self):
-                    return build_tree(self)
+                def get_source_tree(self, additional_requirements=None):
+                    return build_tree(
+                        self, additional_requirements=additional_requirements
+                    )
 
                 def get_source_path(self, *path_indices: int):
                     return build_path(self, *path_indices)
@@ -97,10 +99,10 @@ class Constructor:
                     return [
                         out
                         for out in self.indirect_outputs
-                        if out.satisfies(
-                            additional_requirements
+                        if (
+                            out.satisfies(additional_requirements)
                             if additional_requirements is not None
-                            else []
+                            else True
                         )
                     ]
 
@@ -130,80 +132,43 @@ class Constructor:
                 def indirect_outputs(self) -> list[Output]:
                     return [p for p in self.indirect_io if Output in p.is_a]
 
-                @classmethod
-                def _get_disjoints_set(cls, classes: list[owl.ThingClass]):
-                    disjoints = []
-                    for thing in classes:
-                        if thing == owl.Thing:
-                            continue
-                        thing_disjoints = []
-                        for dj in thing.disjoints():
-                            entities = list(
-                                dj.entities
-                            )  # Don't modify entities in place!
-                            entities.remove(thing)
-                            thing_disjoints += entities
-                        disjoints += thing_disjoints
-                    return set(disjoints)
-
                 @property
                 def indirect_disjoints_set(self) -> set[Generic]:
-                    return self._get_disjoints_set(self.indirect_things)
+                    return get_disjoints_set(self.indirect_things)
+
+                @property
+                def representation_info(self):
+                    """
+                    A more computationally efficient call when you know you need both
+                    the `indirect_disjoints` _and_ `indirect_things` properties at once.
+
+                    Returns:
+                        list, set: indirect things, indirect disjoints
+                    """
+                    indirect_things = self.indirect_things
+                    indirect_disjoints = get_disjoints_set(indirect_things)
+                    return indirect_things, indirect_disjoints
 
                 @classmethod
                 def class_is_indirectly_disjoint_with(cls, other: owl.ThingClass):
                     ancestors1 = list(cls.ancestors())
                     ancestors2 = list(other.ancestors())
-                    combined_disjoints = cls._get_disjoints_set(ancestors1).union(
-                        cls._get_disjoints_set(ancestors2)
+                    combined_disjoints = get_disjoints_set(ancestors1).union(
+                        get_disjoints_set(ancestors2)
                     )
                     combined_ancestors = set(ancestors1).union(ancestors2)
                     return len(combined_disjoints.intersection(combined_ancestors)) > 0
 
-                def is_representable_by(self, other: Generic) -> bool:
-                    """
-                    Checks for disjointness among all indirect thing classes.
-                    """
-                    my_things = self.indirect_things
-                    others_things = other.indirect_things
-
-                    exclusively_mine = set(my_things).difference(others_things)
-                    exclusively_others = set(others_things).difference(my_things)
-
-                    my_disjoints = self.indirect_disjoints_set
-                    others_disjoints = other.indirect_disjoints_set
-
-                    any_of_mine_are_disjoint = any(
-                        [my_thing in others_disjoints for my_thing in exclusively_mine]
-                    )
-                    any_of_others_are_disjoint = any(
-                        [
-                            others_thing in my_disjoints
-                            for others_thing in exclusively_others
-                        ]
-                    )
-
-                    return (
-                        not any_of_mine_are_disjoint and not any_of_others_are_disjoint
-                    )
-
-                def is_more_specific_than(self, other: Generic) -> bool:
-                    """
-                    Only has extra classes compared to other, and non of them are disjoint
-                    """
-                    my_things_set = set(self.indirect_things)
-                    others_things_set = set(other.indirect_things)
-
-                    exclusively_mine = my_things_set.difference(others_things_set)
-                    any_of_mine_are_disjoint = any(
-                        [
-                            my_thing in other.indirect_disjoints_set
-                            for my_thing in exclusively_mine
-                        ]
-                    )
-                    return (
-                        others_things_set < my_things_set
-                        and not any_of_mine_are_disjoint
+                def has_a_representation_among_others(self, others_info):
+                    my_things, my_disjoints = self.representation_info
+                    return any(
+                        compatible_classes(
+                            my_things,
+                            my_disjoints,
+                            other_things,
+                            other_disjoints,
+                        )
+                        for (other_things, other_disjoints) in others_info
                     )
 
             class WorkflowThing(PyironOntoThing):
@@ -221,12 +186,13 @@ class Constructor:
 
                 @property
                 def options(self):
-                    options = []
-                    for inp in self.inputs:
-                        options.append(inp.generic)
-                        options += inp.requirements
-                        options += inp.transitive_requirements
-                    return options
+                    return [
+                        opt
+                        for inp in self.inputs
+                        for opt in [inp.generic]
+                        + inp.requirements
+                        + inp.transitive_requirements
+                    ]
 
             class IO(Parameter, WorkflowThing):
                 pass
@@ -252,16 +218,13 @@ class Constructor:
                     return self.output_of.options
 
                 def satisfies(self, requirements: list[Generic]) -> bool:
+                    others_info = [
+                        other.representation_info
+                        for other in self.options + [self.generic]
+                    ]
                     return all(
-                        [
-                            any(
-                                [
-                                    requirement.is_representable_by(option)
-                                    for option in self.options + [self.generic]
-                                ]
-                            )
-                            for requirement in requirements
-                        ]
+                        requirement.has_a_representation_among_others(others_info)
+                        for requirement in requirements
                     )
 
             class is_output_of(Output >> Function, owl.FunctionalProperty):
@@ -272,56 +235,78 @@ class Constructor:
                 inverse_property = is_output_of
 
             class Input(IO):
-                def get_sources(self, additional_requirements=None) -> list[Output]:
-                    requirements = (
-                        self.more_specific_union(
-                            self.requirements, additional_requirements
-                        )
-                        if additional_requirements is not None
-                        else self.requirements
+                def get_sources(
+                    self, additional_requirements: Optional[list[Generic]] = None
+                ) -> list[Output]:
+                    return self.get_sources_and_passed_requirements(
+                        additional_requirements=additional_requirements
+                    )[0]
+
+                def get_sources_and_passed_requirements(
+                    self, additional_requirements: Optional[list[Generic]] = None
+                ) -> tuple[list[Output], list[Generic]]:
+                    requirements = self.get_requirements(
+                        additional_requirements=additional_requirements
                     )
-                    return self.generic.get_sources(
-                        additional_requirements=requirements + [self.generic]
+                    sources = self.generic.get_sources(
+                        additional_requirements=requirements
                     )
+                    return sources, requirements
 
                 def get_requirements(self, additional_requirements=None):
-                    # Throw away anything the input can't use, then make a more specific
-                    # union of the input's requirements and the additional ones
-                    if additional_requirements is not None:
-                        usable_additional_requirements = [
-                            req
-                            for req in additional_requirements
-                            if any(
-                                [
-                                    req.is_representable_by(input_req)
-                                    for input_req in [self.generic]
-                                    + self.requirements
-                                    + self.transitive_requirements
-                                ]
-                            )
-                        ]
-                    else:
-                        usable_additional_requirements = []
+                    """
+                    For each additional requirement, see if it is as or more specific
+                    than an existing requirement (from among the generic class,
+                    requirements, and transitive requirements), and if so keep it
+                    (discarding the original if in the generic class or requirements,
+                    appending if it's a transitive requirement that we're actually
+                    receiving).
+                    """
+                    if additional_requirements is None:
+                        return [self.generic] + self.requirements
+                    requirements = [self.generic] + self.requirements
 
-                    return self.more_specific_union(
-                        usable_additional_requirements,
-                        [self.generic] + self.requirements,
-                    )
+                    base_infos = [other.representation_info for other in requirements]
+                    transitive_infos = [
+                        other.representation_info
+                        for other in self.transitive_requirements
+                    ]
+
+                    for add_req in additional_requirements:
+                        add_things, add_disjoints = add_req.representation_info
+                        used = False  # For early breaking if we use the additional req
+                        for i, (base_things, base_disjoints) in enumerate(base_infos):
+                            if self.candidate_is_as_or_more_specific_than(
+                                add_things, base_disjoints, base_things
+                            ):
+                                requirements[i] = add_req  # Overwrite the thing you're
+                                # more specific than
+                                used = True
+                                break
+                        if used:
+                            continue
+
+                        for trans_things, trans_disjoints in transitive_infos:
+                            # If you haven't found the additional requirement yet,
+                            # check if it's in the allowed transitive requirements
+                            if compatible_classes(
+                                add_things,
+                                add_disjoints,
+                                trans_things,
+                                trans_disjoints,
+                            ):
+                                requirements.append(add_req)
+                                break
+                    return requirements
 
                 @staticmethod
-                def more_specific_union(
-                    requirements1: list[Generic], requirements2: list[Generic]
-                ) -> list[Generic]:
-                    """
-                    A union of two lists of Generics that throws away any less-specific items.
-                    """
-                    union = list(set(requirements1).union(requirements2))
-                    to_remove = [
-                        i
-                        for i, req_i in enumerate(union)
-                        if any([req_j.is_more_specific_than(req_i) for req_j in union])
-                    ]
-                    return [req for i, req in enumerate(union) if i not in to_remove]
+                def candidate_is_as_or_more_specific_than(
+                    candidate_things, ref_disjoints, ref_things
+                ) -> bool:
+                    not_disjoint = (
+                        len(ref_disjoints.intersection(candidate_things)) == 0
+                    )
+                    return not_disjoint and set(ref_things).issubset(candidate_things)
 
             class is_optional_input_of(Input >> Function, owl.FunctionalProperty):
                 python_name = "optional_input_of"
@@ -358,19 +343,74 @@ class Constructor:
             owl.AllDisjoint([is_optional_input_of, is_mandatory_input_of])
             owl.AllDisjoint([Input, Function, Output, Generic])
 
+        def compatible_classes(
+            things1: list[owl.ThingClass],
+            disjoints1: set[owl.ThingClass],
+            things2: list[owl.ThingClass],
+            disjoints2: set[owl.ThingClass],
+        ):
+            """
+            Given the `is_a` and disjoint classes of two individuals, checks whether
+            they are compatible -- i.e. whether the classes of one are in the disjoints
+            of the other (which would lead to incompatibility).
+
+            Args:
+                things1 (list[owl.ThingClass]): Classes of the first indivual.
+                disjoints1 (set[owl.ThingClass]): Disjoints of the first individual.
+                things2 (list[owl.ThingClass]): Classes of the second individual.
+                disjoints2 (set[owl.ThingClass]):
+
+            Returns:
+                (bool): Whether any classes of one individual are in the disjoints of
+                    the other.
+            """
+            # Put 0 first so we can skip the second evaluation when the first fails
+            return (
+                0
+                == len(disjoints1.intersection(things2))
+                == len(disjoints2.intersection(things1))
+            )
+
+        def get_disjoints_set(classes: list[owl.ThingClass]):
+            """
+            For a list of things, get the set of all the things they're disjoint
+            to
+            """
+            disjoints = []
+            for thing in classes:
+                if thing == owl.Thing:
+                    continue
+                try:
+                    entities = list(next(thing.disjoints()).entities)
+                    # The entities are the actual classes that are disjoint
+                    # The entities for each of the disjoints are ideantical,
+                    # so we can just use `next` to grab the first one
+                    entities.remove(thing)
+                    # The entities of our disjoint include us, so remove us
+                    disjoints += entities
+                except StopIteration:
+                    # If the disjoints are empty, just continue
+                    continue
+            return set(disjoints)
+
         def build_tree(
             parameter, parent=None, additional_requirements=None
         ) -> NodeTree:
             node = NodeTree(parameter, parent=parent)
 
             if isinstance(parameter, Input):
-                additional_requirements = parameter.get_requirements(
+                (
+                    sources,
+                    additional_requirements,
+                ) = parameter.get_sources_and_passed_requirements(
+                    additional_requirements=additional_requirements
+                )  # Snag the accepted transitive requirements as well
+            else:
+                sources = parameter.get_sources(
                     additional_requirements=additional_requirements
                 )
 
-            for source in parameter.get_sources(
-                additional_requirements=additional_requirements
-            ):
+            for source in sources:
                 build_tree(
                     source, parent=node, additional_requirements=additional_requirements
                 )
@@ -381,10 +421,7 @@ class Constructor:
             parameter, *path_indices: int, parent=None, additional_requirements=None
         ):
             node = NodeTree(parameter, parent=parent)
-            if isinstance(parameter, Input):
-                additional_requirements = parameter.get_requirements(
-                    additional_requirements
-                )
+
             sources = parameter.get_sources(
                 additional_requirements=additional_requirements
             )

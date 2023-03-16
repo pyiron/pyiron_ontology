@@ -44,8 +44,16 @@ class AtomisticsOntology(Constructor):
 
             owl.AllDisjoint([PyironObject, PhysicalProperty])
 
+            class Energy(PhysicalProperty):
+                pass
+
+            class Force(PhysicalProperty):
+                pass
+
             class ChemicalElement(PhysicalProperty):
                 pass
+
+            owl.AllDisjoint([Energy, Force, ChemicalElement])
 
             class MaterialProperty(PhysicalProperty):
                 pass
@@ -58,6 +66,8 @@ class AtomisticsOntology(Constructor):
 
             class SurfaceEnergy(MaterialProperty):
                 pass
+
+            owl.AllDisjoint([BulkModulus, BPrime, SurfaceEnergy])
 
             class Dimensional(Generic):
                 pass
@@ -129,12 +139,12 @@ class AtomisticsOntology(Constructor):
             project_input_name = Input(
                 optional_input_of=project,
                 name=f"{project.name}_input_name",
-                generic=UserInput,
+                generic=UserInput(),
             )
             project_output_atomistics_project = Output(
                 output_of=project,
                 name=f"{project.name}_output_atomistics_project",
-                generic=AtomisticsProject,
+                generic=AtomisticsProject(),
             )
 
             bulk_structure = Function(name="bulk_structure")
@@ -166,6 +176,11 @@ class AtomisticsOntology(Constructor):
             )
 
             lammps = Function("lammps", pyiron_name="Lammps")
+            lammps_input_project = Input(
+                name=f"{lammps.name}_input_project",
+                generic=AtomisticsProject(),
+                mandatory_input_of=lammps,
+            )
             lammps_input_structure = Input(
                 mandatory_input_of=lammps,
                 name=f"{lammps.name}_input_structure",
@@ -177,6 +192,11 @@ class AtomisticsOntology(Constructor):
             )
 
             vasp = Function("vasp", pyiron_name="Vasp")
+            vasp_input_project = Input(
+                name=f"{vasp.name}_input_project",
+                generic=AtomisticsProject(),
+                mandatory_input_of=vasp,
+            )
             vasp_input_structure = Input(
                 mandatory_input_of=vasp,
                 name=f"{vasp.name}_input_structure",
@@ -187,6 +207,24 @@ class AtomisticsOntology(Constructor):
             )
             vasp_output_job = Output(
                 output_of=vasp, name=f"{vasp.name}_output_job", generic=Vasp()
+            )
+
+            atomistic_taker = Function("atomistic_taker")
+            atomistic_taker_job = Input(
+                name="atomistic_taker_job",
+                generic=AtomisticsJob(),
+                mandatory_input_of=atomistic_taker,
+                transitive_requirements=[Structure()],
+            )
+            atomistic_taker_output_energy_pot = Output(
+                name="atomistic_taker_output_energy_pot",
+                generic=Energy(),
+                output_of=atomistic_taker,
+            )
+            atomistic_taker_output_forces = Output(
+                name="atomistic_taker_output_forces",
+                generic=Force(),
+                output_of=atomistic_taker,
             )
 
             murnaghan = Function("murnaghan", pyiron_name="Murnaghan")
@@ -217,17 +255,27 @@ class AtomisticsOntology(Constructor):
             )
 
             surface_energy = Function("surface_energy")
-            surface_energy_input_bulk_job = Input(
-                name=f"{surface_energy.name}_input_bulk_job",
-                generic=AtomisticsJob(),
+            surface_energy_input_bulk_structure = Input(
+                name="surface_energy_input_bulk_structure",
+                generic=Structure(is_a=[Bulk, ThreeD]),
                 mandatory_input_of=surface_energy,
-                requirements=[Bulk()],
             )
-            surface_energy_input_slab_job = Input(
-                name=f"{surface_energy.name}_input_slab_job",
-                generic=AtomisticsJob(),
+            surface_energy_input_bulk_energy = Input(
+                name="surface_energy_input_bulk_energy",
+                generic=Energy(),
                 mandatory_input_of=surface_energy,
-                requirements=[HasSurface()],
+                requirements=[Structure(is_a=[Bulk, ThreeD])],
+            )
+            surface_energy_input_slab_structure = Input(
+                name="surface_energy_input_slab_structure",
+                generic=Structure(is_a=[HasSurface, ThreeD]),
+                mandatory_input_of=surface_energy,
+            )
+            surface_energy_input_slab_energy = Input(
+                name="surface_energy_input_slab_energy",
+                generic=Energy(),
+                mandatory_input_of=surface_energy,
+                requirements=[Structure(is_a=[HasSurface, ThreeD])],
             )
             surface_energy_output_surface_energy = Output(
                 name=f"{surface_energy.name}_output_surface_energy",
