@@ -277,21 +277,55 @@ class Constructor:
                     )
 
                 def get_requirements(self, additional_requirements=None):
-                    # Throw away anything the input can't use, then make a more specific
-                    # union of the input's requirements and the additional ones
-                    others_info = [
+                    """
+                    For each additional requirement, see if it is as or more specific
+                    than an existing requirement (from among the generic class,
+                    requirements, and transitive requirements), and if so keep it
+                    (discarding the original if in the generic class or requirements,
+                    appending if it's a transitive requirement that we're actually
+                    receiving).
+                    """
+                    if additional_requirements is None:
+                        return [self.generic] + self.requirements
+                    requirements = [self.generic] + self.requirements
+
+                    base_infos = [
                         other.representation_info
-                        for other in [self.generic]
-                                     + self.requirements
-                                     + self.transitive_requirements
+                        for other in requirements
                     ]
-                    if additional_requirements is not None:
-                        usable_additional_requirements = [
-                            req for req in additional_requirements
-                            if req.has_a_representation_among_others(others_info)
-                        ]
-                    else:
-                        usable_additional_requirements = []
+                    transitive_infos = [
+                        other.representation_info
+                        for other in self.transitive_requirements
+                    ]
+
+                    for add_req in additional_requirements:
+                        add_things, add_disjoints = add_req.representation_info
+                        used = False  # For early breaking if we use the additional req
+                        for i, (base_things, base_disjoints) in enumerate(base_infos):
+                            if self.candidate_is_as_or_more_specific_than(
+                                    add_things,
+                                    base_disjoints,
+                                    base_things
+                            ):
+                                requirements[i] = add_req  # Overwrite the thing you're
+                                # more specific than
+                                used = True
+                                break
+                        if used:
+                            break
+
+                        for (trans_things, trans_disjoints) in transitive_infos:
+                            # If you haven't found the additional requirement yet,
+                            # check if it's in the allowed transitive requirements
+                            if compatible_classes(
+                                    add_things,
+                                    add_disjoints,
+                                    trans_things,
+                                    trans_disjoints,
+                            ):
+                                requirements.append(add_req)
+                                break
+                    return requirements
 
                 @staticmethod
                 def candidate_is_as_or_more_specific_than(
