@@ -214,7 +214,7 @@ class AtomisticsOntology(Constructor):
                 name="atomistic_taker_job",
                 generic=AtomisticsJob(),
                 mandatory_input_of=atomistic_taker,
-                transitive_requirements=[Structure()]
+                transitive_requirements=[Structure()],
             )
             atomistic_taker_output_energy_pot = Output(
                 name="atomistic_taker_output_energy_pot",

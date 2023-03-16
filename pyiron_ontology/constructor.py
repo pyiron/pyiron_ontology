@@ -75,8 +75,7 @@ class Constructor:
 
                 def get_source_tree(self, additional_requirements=None):
                     return build_tree(
-                        self,
-                        additional_requirements=additional_requirements
+                        self, additional_requirements=additional_requirements
                     )
 
                 def get_source_path(self, *path_indices: int):
@@ -191,8 +190,8 @@ class Constructor:
                         opt
                         for inp in self.inputs
                         for opt in [inp.generic]
-                                   + inp.requirements
-                                   + inp.transitive_requirements
+                        + inp.requirements
+                        + inp.transitive_requirements
                     ]
 
             class IO(Parameter, WorkflowThing):
@@ -237,18 +236,18 @@ class Constructor:
 
             class Input(IO):
                 def get_sources(
-                        self, additional_requirements: Optional[list[Generic]] = None
+                    self, additional_requirements: Optional[list[Generic]] = None
                 ) -> list[Output]:
                     return self.get_sources_and_passed_requirements(
                         additional_requirements=additional_requirements
                     )[0]
 
                 def get_sources_and_passed_requirements(
-                        self, additional_requirements: Optional[list[Generic]] = None
+                    self, additional_requirements: Optional[list[Generic]] = None
                 ) -> tuple[list[Output], list[Generic]]:
                     requirements = self.get_requirements(
-                            additional_requirements=additional_requirements
-                        )
+                        additional_requirements=additional_requirements
+                    )
                     sources = self.generic.get_sources(
                         additional_requirements=requirements
                     )
@@ -267,10 +266,7 @@ class Constructor:
                         return [self.generic] + self.requirements
                     requirements = [self.generic] + self.requirements
 
-                    base_infos = [
-                        other.representation_info
-                        for other in requirements
-                    ]
+                    base_infos = [other.representation_info for other in requirements]
                     transitive_infos = [
                         other.representation_info
                         for other in self.transitive_requirements
@@ -281,9 +277,7 @@ class Constructor:
                         used = False  # For early breaking if we use the additional req
                         for i, (base_things, base_disjoints) in enumerate(base_infos):
                             if self.candidate_is_as_or_more_specific_than(
-                                    add_things,
-                                    base_disjoints,
-                                    base_things
+                                add_things, base_disjoints, base_things
                             ):
                                 requirements[i] = add_req  # Overwrite the thing you're
                                 # more specific than
@@ -292,14 +286,14 @@ class Constructor:
                         if used:
                             continue
 
-                        for (trans_things, trans_disjoints) in transitive_infos:
+                        for trans_things, trans_disjoints in transitive_infos:
                             # If you haven't found the additional requirement yet,
                             # check if it's in the allowed transitive requirements
                             if compatible_classes(
-                                    add_things,
-                                    add_disjoints,
-                                    trans_things,
-                                    trans_disjoints,
+                                add_things,
+                                add_disjoints,
+                                trans_things,
+                                trans_disjoints,
                             ):
                                 requirements.append(add_req)
                                 break
@@ -307,9 +301,11 @@ class Constructor:
 
                 @staticmethod
                 def candidate_is_as_or_more_specific_than(
-                        candidate_things, ref_disjoints, ref_things
+                    candidate_things, ref_disjoints, ref_things
                 ) -> bool:
-                    not_disjoint = len(ref_disjoints.intersection(candidate_things)) == 0
+                    not_disjoint = (
+                        len(ref_disjoints.intersection(candidate_things)) == 0
+                    )
                     return not_disjoint and set(ref_things).issubset(candidate_things)
 
             class is_optional_input_of(Input >> Function, owl.FunctionalProperty):
@@ -348,10 +344,10 @@ class Constructor:
             owl.AllDisjoint([Input, Function, Output, Generic])
 
         def compatible_classes(
-                things1: list[owl.ThingClass],
-                disjoints1: set[owl.ThingClass],
-                things2: list[owl.ThingClass],
-                disjoints2: set[owl.ThingClass],
+            things1: list[owl.ThingClass],
+            disjoints1: set[owl.ThingClass],
+            things2: list[owl.ThingClass],
+            disjoints2: set[owl.ThingClass],
         ):
             """
             Given the `is_a` and disjoint classes of two individuals, checks whether
@@ -369,8 +365,11 @@ class Constructor:
                     the other.
             """
             # Put 0 first so we can skip the second evaluation when the first fails
-            return 0 == len(disjoints1.intersection(things2)) == \
-                len(disjoints2.intersection(things1))
+            return (
+                0
+                == len(disjoints1.intersection(things2))
+                == len(disjoints2.intersection(things1))
+            )
 
         def get_disjoints_set(classes: list[owl.ThingClass]):
             """
@@ -400,10 +399,12 @@ class Constructor:
             node = NodeTree(parameter, parent=parent)
 
             if isinstance(parameter, Input):
-                sources, additional_requirements = \
-                    parameter.get_sources_and_passed_requirements(
-                        additional_requirements=additional_requirements
-                    )  # Snag the accepted transitive requirements as well
+                (
+                    sources,
+                    additional_requirements,
+                ) = parameter.get_sources_and_passed_requirements(
+                    additional_requirements=additional_requirements
+                )  # Snag the accepted transitive requirements as well
             else:
                 sources = parameter.get_sources(
                     additional_requirements=additional_requirements
