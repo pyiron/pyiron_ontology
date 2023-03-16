@@ -7,6 +7,7 @@ A parent class for the constructors of all pyiron ontologies.
 
 from __future__ import annotations
 
+from typing import Optional
 from warnings import warn
 
 import owlready2 as owl
@@ -269,12 +270,23 @@ class Constructor:
                 inverse_property = is_output_of
 
             class Input(IO):
-                def get_sources(self, additional_requirements=None) -> list[Output]:
-                    return self.generic.get_sources(
-                        additional_requirements=self.get_requirements(
+                def get_sources(
+                        self, additional_requirements: Optional[list[Generic]] = None
+                ) -> list[Output]:
+                    return self.get_sources_and_passed_requirements(
+                        additional_requirements=additional_requirements
+                    )[0]
+
+                def get_sources_and_passed_requirements(
+                        self, additional_requirements: Optional[list[Generic]] = None
+                ) -> tuple[list[Output], list[Generic]]:
+                    requirements = self.get_requirements(
                             additional_requirements=additional_requirements
                         )
+                    sources = self.generic.get_sources(
+                        additional_requirements=requirements
                     )
+                    return sources, requirements
 
                 def get_requirements(self, additional_requirements=None):
                     """
@@ -312,7 +324,7 @@ class Constructor:
                                 used = True
                                 break
                         if used:
-                            break
+                            continue
 
                         for (trans_things, trans_disjoints) in transitive_infos:
                             # If you haven't found the additional requirement yet,
@@ -411,9 +423,17 @@ class Constructor:
         ) -> NodeTree:
             node = NodeTree(parameter, parent=parent)
 
-            for source in parameter.get_sources(
-                additional_requirements=additional_requirements
-            ):
+            if isinstance(parameter, Input):
+                sources, additional_requirements = \
+                    parameter.get_sources_and_passed_requirements(
+                        additional_requirements=additional_requirements
+                    )  # Snag the accepted transitive requirements as well
+            else:
+                sources = parameter.get_sources(
+                    additional_requirements=additional_requirements
+                )
+
+            for source in sources:
                 build_tree(
                     source, parent=node, additional_requirements=additional_requirements
                 )
