@@ -53,6 +53,8 @@ class AtomisticsOntology(Constructor):
             class ChemicalElement(PhysicalProperty):
                 pass
 
+            owl.AllDisjoint([Energy, Force, ChemicalElement])
+
             class MaterialProperty(PhysicalProperty):
                 pass
 
@@ -64,6 +66,8 @@ class AtomisticsOntology(Constructor):
 
             class SurfaceEnergy(MaterialProperty):
                 pass
+
+            owl.AllDisjoint([BulkModulus, BPrime, SurfaceEnergy])
 
             class Dimensional(Generic):
                 pass
