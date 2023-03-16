@@ -188,25 +188,6 @@ class Constructor:
                         for (other_things, other_disjoints) in others_info
                     )
 
-                def is_more_specific_than(self, other: Generic) -> bool:
-                    """
-                    Only has extra classes compared to other, and none of them are
-                    disjoint
-                    """
-                    my_things_set = set(self.indirect_things)
-                    other_things, other_disjoints = other.representation_info
-                    other_things_set = set(other_things)
-
-                    exclusively_mine = my_things_set.difference(other_things_set)
-                    any_of_mine_are_disjoint = any(
-                        my_thing in other_disjoints
-                        for my_thing in exclusively_mine
-                    )
-                    return (
-                        not any_of_mine_are_disjoint and
-                        other_things_set < my_things_set
-                    )
-
             class WorkflowThing(PyironOntoThing):
                 pass
 
@@ -345,19 +326,6 @@ class Constructor:
                 ) -> bool:
                     not_disjoint = len(ref_disjoints.intersection(candidate_things)) == 0
                     return not_disjoint and set(ref_things).issubset(candidate_things)
-
-                @staticmethod
-                def more_specific(requirements: list[Generic]) -> list[Generic]:
-                    """
-                    Throws away any items for which there is a more specific item in the
-                    list.
-                    """
-                    return [
-                        req for req in requirements
-                        if not any(
-                            other.is_more_specific_than(req) for other in requirements
-                        )
-                    ]
 
             class is_optional_input_of(Input >> Function, owl.FunctionalProperty):
                 python_name = "optional_input_of"
