@@ -135,18 +135,25 @@ class Constructor:
 
                 @classmethod
                 def _get_disjoints_set(cls, classes: list[owl.ThingClass]):
+                    """
+                    For a list of things, get the set of all the things they're disjoint
+                    to
+                    """
                     disjoints = []
                     for thing in classes:
                         if thing == owl.Thing:
                             continue
-                        thing_disjoints = []
-                        for dj in thing.disjoints():
-                            entities = list(
-                                dj.entities
-                            )  # Don't modify entities in place!
+                        try:
+                            entities = list(next(thing.disjoints()).entities)
+                            # The entities are the actual classes that are disjoint
+                            # The entities for each of the disjoints are ideantical,
+                            # so we can just use `next` to grab the first one
                             entities.remove(thing)
-                            thing_disjoints += entities
-                        disjoints += thing_disjoints
+                            # The entities of our disjoint include us, so remove us
+                            disjoints += entities
+                        except StopIteration:
+                            # If the disjoints are empty, just continue
+                            continue
                     return set(disjoints)
 
                 @property
