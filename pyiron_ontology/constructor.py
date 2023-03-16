@@ -384,8 +384,9 @@ class Constructor:
                 (bool): Whether any classes of one individual are in the disjoints of
                     the other.
             """
-            return len(disjoints1.intersection(things2)) == \
-                len(disjoints2.intersection(things1)) == 0
+            # Put 0 first so we can skip the second evaluation when the first fails
+            return 0 == len(disjoints1.intersection(things2)) == \
+                len(disjoints2.intersection(things1))
 
         def build_tree(
             parameter, parent=None, additional_requirements=None
