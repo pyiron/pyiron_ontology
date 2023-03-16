@@ -203,12 +203,13 @@ class Constructor:
 
                 @property
                 def options(self):
-                    options = []
-                    for inp in self.inputs:
-                        options.append(inp.generic)
-                        options += inp.requirements
-                        options += inp.transitive_requirements
-                    return options
+                    return [
+                        opt
+                        for inp in self.inputs
+                        for opt in [inp.generic]
+                                   + inp.requirements
+                                   + inp.transitive_requirements
+                    ]
 
             class IO(Parameter, WorkflowThing):
                 pass
