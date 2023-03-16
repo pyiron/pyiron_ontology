@@ -16,4 +16,10 @@ class TestTree(TestCase):
         while len(tree.children) > 0:
             tree = tree.children[0]
 
-        self.assertEqual(onto.input2_inp, tree.value)
+
+        self.assertTrue(
+            tree.value == onto.input2_inp or tree.value == onto.input1_inp,
+            # The or value is because there are two leaves and the ordering is
+            # stochastic so we can't be sure which one we'll reach.
+            msg="Didn't find expected leaf"
+        )
