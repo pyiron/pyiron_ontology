@@ -163,7 +163,7 @@ class Constructor:
                     """
                     indirect_things = self.indirect_things
                     indirect_disjoints = self._get_disjoints_set(indirect_things)
-                    return indirect_disjoints, indirect_things
+                    return indirect_things, indirect_disjoints
 
                 @classmethod
                 def class_is_indirectly_disjoint_with(cls, other: owl.ThingClass):
@@ -176,21 +176,16 @@ class Constructor:
                     return len(combined_disjoints.intersection(combined_ancestors)) > 0
 
                 def has_a_representation_among_others(self, others_info):
-                    my_disjoints, my_things = self.representation_info
+                    my_things, my_disjoints = self.representation_info
                     return any(
-                        self._not_disjoint(
-                            my_disjoints,
-                            other_disjoints,
+                        compatible_classes(
                             my_things,
-                            other_things
+                            my_disjoints,
+                            other_things,
+                            other_disjoints,
                         )
-                        for (other_disjoints, other_things) in others_info
+                        for (other_things, other_disjoints) in others_info
                     )
-
-                @staticmethod
-                def _not_disjoint(disjoints1, disjoints2, things1, things2):
-                    return len(disjoints1.intersection(things2)) == \
-                        len(disjoints2.intersection(things1)) == 0
 
                 def is_more_specific_than(self, other: Generic) -> bool:
                     """
@@ -198,7 +193,7 @@ class Constructor:
                     disjoint
                     """
                     my_things_set = set(self.indirect_things)
-                    other_disjoints, other_things = other.representation_info
+                    other_things, other_disjoints = other.representation_info
                     other_things_set = set(other_things)
 
                     exclusively_mine = my_things_set.difference(other_things_set)
@@ -298,11 +293,12 @@ class Constructor:
                     else:
                         usable_additional_requirements = []
 
-                    return self.more_specific(
-                        usable_additional_requirements
-                        + [self.generic]
-                        + self.requirements
-                    )
+                @staticmethod
+                def candidate_is_as_or_more_specific_than(
+                        candidate_things, ref_disjoints, ref_things
+                ) -> bool:
+                    not_disjoint = len(ref_disjoints.intersection(candidate_things)) == 0
+                    return not_disjoint and set(ref_things).issubset(candidate_things)
 
                 @staticmethod
                 def more_specific(requirements: list[Generic]) -> list[Generic]:
@@ -351,6 +347,30 @@ class Constructor:
 
             owl.AllDisjoint([is_optional_input_of, is_mandatory_input_of])
             owl.AllDisjoint([Input, Function, Output, Generic])
+
+        def compatible_classes(
+                things1: list[owl.ThingClass],
+                disjoints1: set[owl.ThingClass],
+                things2: list[owl.ThingClass],
+                disjoints2: set[owl.ThingClass],
+        ):
+            """
+            Given the `is_a` and disjoint classes of two individuals, checks whether
+            they are compatible -- i.e. whether the classes of one are in the disjoints
+            of the other (which would lead to incompatibility).
+
+            Args:
+                things1 (list[owl.ThingClass]): Classes of the first indivual.
+                disjoints1 (set[owl.ThingClass]): Disjoints of the first individual.
+                things2 (list[owl.ThingClass]): Classes of the second individual.
+                disjoints2 (set[owl.ThingClass]):
+
+            Returns:
+                (bool): Whether any classes of one individual are in the disjoints of
+                    the other.
+            """
+            return len(disjoints1.intersection(things2)) == \
+                len(disjoints2.intersection(things1)) == 0
 
         def build_tree(
             parameter, parent=None, additional_requirements=None
