@@ -133,32 +133,9 @@ class Constructor:
                 def indirect_outputs(self) -> list[Output]:
                     return [p for p in self.indirect_io if Output in p.is_a]
 
-                @classmethod
-                def _get_disjoints_set(cls, classes: list[owl.ThingClass]):
-                    """
-                    For a list of things, get the set of all the things they're disjoint
-                    to
-                    """
-                    disjoints = []
-                    for thing in classes:
-                        if thing == owl.Thing:
-                            continue
-                        try:
-                            entities = list(next(thing.disjoints()).entities)
-                            # The entities are the actual classes that are disjoint
-                            # The entities for each of the disjoints are ideantical,
-                            # so we can just use `next` to grab the first one
-                            entities.remove(thing)
-                            # The entities of our disjoint include us, so remove us
-                            disjoints += entities
-                        except StopIteration:
-                            # If the disjoints are empty, just continue
-                            continue
-                    return set(disjoints)
-
                 @property
                 def indirect_disjoints_set(self) -> set[Generic]:
-                    return self._get_disjoints_set(self.indirect_things)
+                    return get_disjoints_set(self.indirect_things)
 
                 @property
                 def representation_info(self):
@@ -170,15 +147,15 @@ class Constructor:
                         list, set: indirect things, indirect disjoints
                     """
                     indirect_things = self.indirect_things
-                    indirect_disjoints = self._get_disjoints_set(indirect_things)
+                    indirect_disjoints = get_disjoints_set(indirect_things)
                     return indirect_things, indirect_disjoints
 
                 @classmethod
                 def class_is_indirectly_disjoint_with(cls, other: owl.ThingClass):
                     ancestors1 = list(cls.ancestors())
                     ancestors2 = list(other.ancestors())
-                    combined_disjoints = cls._get_disjoints_set(ancestors1).union(
-                        cls._get_disjoints_set(ancestors2)
+                    combined_disjoints = get_disjoints_set(ancestors1).union(
+                        get_disjoints_set(ancestors2)
                     )
                     combined_ancestors = set(ancestors1).union(ancestors2)
                     return len(combined_disjoints.intersection(combined_ancestors)) > 0
@@ -394,6 +371,28 @@ class Constructor:
             # Put 0 first so we can skip the second evaluation when the first fails
             return 0 == len(disjoints1.intersection(things2)) == \
                 len(disjoints2.intersection(things1))
+
+        def get_disjoints_set(classes: list[owl.ThingClass]):
+            """
+            For a list of things, get the set of all the things they're disjoint
+            to
+            """
+            disjoints = []
+            for thing in classes:
+                if thing == owl.Thing:
+                    continue
+                try:
+                    entities = list(next(thing.disjoints()).entities)
+                    # The entities are the actual classes that are disjoint
+                    # The entities for each of the disjoints are ideantical,
+                    # so we can just use `next` to grab the first one
+                    entities.remove(thing)
+                    # The entities of our disjoint include us, so remove us
+                    disjoints += entities
+                except StopIteration:
+                    # If the disjoints are empty, just continue
+                    continue
+            return set(disjoints)
 
         def build_tree(
             parameter, parent=None, additional_requirements=None
