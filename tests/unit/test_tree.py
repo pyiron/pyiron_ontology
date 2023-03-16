@@ -16,10 +16,18 @@ class TestTree(TestCase):
         while len(tree.children) > 0:
             tree = tree.children[0]
 
+        self.assertEqual(
+            onto.input2_inp,
+            tree.value,
+            msg="Output4 has a a requirement for I2(), so ONLY input2 should be showing"
+                "up if this requirement correctly gets transitively passed through the"
+                "middle layer"
+        )
 
-        self.assertTrue(
-            tree.value == onto.input2_inp or tree.value == onto.input1_inp,
-            # The or value is because there are two leaves and the ordering is
-            # stochastic so we can't be sure which one we'll reach.
-            msg="Didn't find expected leaf"
+        self.assertEqual(
+            len(tree.parent.children),
+            1,
+            msg="If you broke transitive condition passing, the previous test might "
+                "have passed stochastically; this makes sure there was only one"
+                "solution available."
         )
