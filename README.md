@@ -50,7 +50,7 @@ With the following key relationships:
 
 ```mermaid
 erDiagram
-    Function ||--|{ Input : has_mandatory
+    Function ||--|{ Input : optional_inputs
     Function ||--o{ Input : mandatory_inputs
     Function ||--|{ Output : outputs
     Input |{--|| Generic : generic
