@@ -32,7 +32,7 @@ setup(
         'pandas',
         'pint',
         'pyiron_atomistics>=0.2.63',
-        'sqlalchemy',
+        'sqlalchemy==2.0.9',
     ],
     cmdclass=versioneer.get_cmdclass(),
 
