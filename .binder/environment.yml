@@ -7,6 +7,6 @@ dependencies:
 - pandas
 - pint
 - pyiron_atomistics >=0.2.63
-- sqlalchemy
+- sqlalchemy =2.0.9
 - python >= 3.8
 - lammps
