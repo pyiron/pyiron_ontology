@@ -6,9 +6,6 @@ on:
   schedule:
     - cron: '00 19 * * *'
 
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 jobs:
   Tests-and-Coverage:
     runs-on: ubuntu-latest
