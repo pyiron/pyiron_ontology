@@ -5,7 +5,6 @@ name: Daily
 on:
   schedule:
     - cron: '00 19 * * *'
-  workflow_call:
 
 jobs:
   Tests-and-Coverage:
@@ -24,7 +23,6 @@ jobs:
         env:
           COVERALLS_SERVICE_NAME: 'github'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: |
           coverage combine
           coveralls --service=github
