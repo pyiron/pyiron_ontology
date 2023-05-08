@@ -14,3 +14,5 @@ jobs:
     secrets: inherit
     with:
       notebooks-env-files: .ci_support/environment.yml .ci_support/environment-notebooks.yml
+  coverage:
+    uses: pyiron/pyiron_ontology/.github/workflows/daily.yml@coveralls_by_token
