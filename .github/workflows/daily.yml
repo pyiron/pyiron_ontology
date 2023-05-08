@@ -4,10 +4,7 @@ name: Daily
 
 on:
   schedule:
-    - cron: '00 19 * * *'
-
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - cron: '00 23 * * *'
 
 jobs:
   Tests-and-Coverage:
@@ -24,7 +21,6 @@ jobs:
       - name: Coverage
         shell: bash -l {0}
         env:
-          COVERALLS_SERVICE_NAME: 'github'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           coverage combine
