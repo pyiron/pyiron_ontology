@@ -10,5 +10,5 @@ on:
 
 jobs:
   pyiron:
-    uses: pyiron/actions/.github/workflows/tests-and-coverage.yml@df78a04
+    uses: pyiron/actions/.github/workflows/tests-and-coverage.yml@coveralls
     secrets: inherit
