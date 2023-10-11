@@ -1,0 +1,14 @@
+# This runs jobs which pyiron modules should run on pushes or PRs to main
+
+name: Tests-and-Coverage with GitHub action
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  pyiron:
+    uses: pyiron/actions/.github/workflows/tests-and-coverage.yml@df78a04
+    secrets: inherit
