@@ -9,3 +9,4 @@ dependencies:
 - pyiron_atomistics >=0.2.63
 - python >= 3.8
 - lammps
+- pyiron-data
