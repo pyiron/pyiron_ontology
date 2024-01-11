@@ -29,11 +29,10 @@ setup(
     keywords='pyiron',
     packages=find_packages(exclude=["*tests*", "*docs*", "*binder*", "*conda*", "*notebooks*", "*.ci_support*"]),
     install_requires=[
-        'numpy',
-        'owlready2',
-        'pandas',
-        'pint',
-        'pyiron_atomistics>=0.2.63',
+        'numpy==1.26.3',
+        'owlready2==0.45',
+        'pandas==2.1.4',
+        'pint==0.23',
     ],
     cmdclass=versioneer.get_cmdclass(),
 

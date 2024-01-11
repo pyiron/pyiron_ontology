@@ -3,4 +3,5 @@ channels:
 dependencies:
   - python >= 3.8
   - lammps
+  - pyiron_atomistics
   - pyiron-data
