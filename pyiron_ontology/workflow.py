@@ -17,7 +17,7 @@ class NodeTree:
             parent.children.append(self)
 
     def render(self, depth=0, order_alphabetically=True):
-        tabs = "".join(["\t"] * depth)
+        tabs = "".join(["  "] * depth)
         print(f"{tabs}{self.value.name}")
         children = (
             [self.children[n] for n in argsort([str(c.value) for c in self.children])]

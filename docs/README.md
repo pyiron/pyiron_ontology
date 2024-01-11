@@ -98,233 +98,226 @@ Here is an example using the `Constructor` class to build a workflow ontology fo
 You can use it interactively in the demo notebook `pizza.ipynb`
 
 ```python
-import owlready2 as owl
-from pyiron_ontology import Constructor
-
-c = Constructor('pizza')
-
-# Knowledge base
-with c.onto:
-    class Flour(c.onto.Generic): pass
-    class Wheat(Flour): pass
-    class GlutenFree(Flour): pass
-    owl.AllDisjoint([GlutenFree, Wheat])
-
-    class Crust(c.onto.Generic): pass
-    class Thin(Crust): pass
-    class Regular(Crust): pass
-    owl.AllDisjoint([Thin, Regular])
-    class Stuffed(Regular): pass
-
-    class Ingredients(c.onto.Generic): pass
-    class HasVegetables(Ingredients): pass
-    class HasMushrooms(HasVegetables): pass
-    class HasPeppers(HasVegetables): pass
-    class HasMeat(Ingredients): pass
-    class HasSalami(HasMeat): pass
-    class HasBacon(HasMeat): pass
-    class Vegetarian(Ingredients):
-        equivalent_to = [Ingredients & owl.Not(HasMeat)]
-    owl.AllDisjoint([Vegetarian, HasMeat])
-
-    class RawPizza(c.onto.Generic): pass
-
-    class CookedPizza(c.onto.Generic): pass
-
-    owl.AllDisjoint([Flour, Crust, Ingredients, RawPizza, CookedPizza])
-
-# Code base
-buy_wheat_flour = c.onto.Function("buy_wheat_flour")
-buy_wheat_flour_out = c.onto.Output(
-    "buy_wheat_flour_out",
-    output_of=buy_wheat_flour,
-    generic=Wheat()
-)
-
-buy_corn_flour = c.onto.Function("buy_corn_flour")
-buy_corn_flour_out = c.onto.Output(
-    "buy_corn_flour_out",
-    output_of=buy_corn_flour,
-    generic=GlutenFree()
-)
-
-make_crust = c.onto.Function("make_crust")
-make_crust_inp_flour = c.onto.Input(
-    name="make_crust_inp_flour",
-    mandatory_input_of=make_crust,
-    generic=Flour(),
-)
-make_crust_out = c.onto.Output(
-    name="make_crust_out",
-    output_of=make_crust,
-    generic=Crust(),
-)
-
-make_thin_crust = c.onto.Function("make_thin_crust")
-make_thin_crust_inp_flour = c.onto.Input(
-    name="make_thin_crust_inp_flour",
-    mandatory_input_of=make_thin_crust,
-    generic=Flour(),
-)
-make_thin_crust_out = c.onto.Output(
-    name="make_thin_crust_out",
-    output_of=make_thin_crust,
-    generic=Thin(),
-)
-
-make_gluten_free_crust = c.onto.Function("make_gluten_free_crust")
-make_gluten_free_crust_inp_flour = c.onto.Input(
-    name="make_gluten_free_crust_inp_flour",
-    mandatory_input_of=make_gluten_free_crust,
-    generic=GlutenFree(),
-)
-make_gluten_free_crust_out = c.onto.Output(
-    name="make_gluten_free_crust_out",
-    output_of=make_gluten_free_crust,
-    generic=Crust(),
-)
-
-add_meat = c.onto.Function("add_meat")
-add_meat_inp_ingredients = c.onto.Input(
-    name="add_meat_inp_ingredients",
-    mandatory_input_of=add_meat,
-    generic=HasMeat(),
-)
-add_meat_inp_crust = c.onto.Input(
-    name="add_meat_inp_crust",
-    mandatory_input_of=add_meat,
-    generic=Crust(),
-    transitive_requirements=[Flour()]
-)
-add_meat_out = c.onto.Output(
-    name="add_meat_out",
-    output_of=add_meat,
-    generic=RawPizza()
-)
-
-add_vegetables = c.onto.Function("add_vegetables")
-add_vegetables_inp_ingredients = c.onto.Input(
-    name="add_vegetables_inp_ingredients",
-    mandatory_input_of=add_vegetables,
-    generic=HasVegetables(),
-)
-add_vegetables_inp_crust = c.onto.Input(
-    name="add_vegetables_inp_crust",
-    mandatory_input_of=add_vegetables,
-    generic=Crust(),
-    transitive_requirements=[Flour()]
-)
-add_vegetables_out = c.onto.Output(
-    name="add_vegetables_out",
-    output_of=add_vegetables,
-    generic=RawPizza()
-)
-
-canadian = c.onto.Function("canadian")
-canadian_inp_ingredients = c.onto.Input(
-    name="canadian_inp_ingredients",
-    mandatory_input_of=canadian,
-    generic=Ingredients(is_a=[HasBacon, HasMushrooms]),
-)
-canadian_inp_crust = c.onto.Input(
-    name="canadian_inp_crust",
-    mandatory_input_of=canadian,
-    generic=Crust(),
-    transitive_requirements=[Flour()]
-)
-canadian_out = c.onto.Output(
-    name="canadian_out",
-    output_of=canadian,
-    generic=RawPizza()
-)
-
-bake_for_omnivor = c.onto.Function("bake_for_omnivor")
-bake_for_omnivor_inp = c.onto.Input(
-    name="bake_for_omnivor_inp",
-    mandatory_input_of=bake_for_omnivor,
-    generic=RawPizza(),
-
-)
-bake_for_omnivor_out = c.onto.Output(
-    name="bake_for_omnivor_out",
-    output_of=bake_for_omnivor,
-    generic=CookedPizza()
-)
-
-bake_for_vegetarian = c.onto.Function("bake_for_vegetarian")
-bake_for_vegetarian_inp = c.onto.Input(
-    name="bake_for_vegetarian_inp",
-    mandatory_input_of=bake_for_vegetarian,
-    generic=RawPizza(),
-    requirements=[Vegetarian()]
-)
-bake_for_vegetarian_out = c.onto.Output(
-    name="bake_for_vegetarian_out",
-    output_of=bake_for_vegetarian,
-    generic=CookedPizza()
-)
-
-bake_stuffed_crust = c.onto.Function("bake_stuffed_crust")
-bake_stuffed_crust_inp = c.onto.Input(
-    name="bake_stuffed_crust_inp",
-    mandatory_input_of=bake_stuffed_crust,
-    generic=RawPizza(),
-    requirements=[Stuffed(), Wheat()]
-)
-bake_stuffed_crust_out = c.onto.Output(
-    name="bake_stuffed_crust_out",
-    output_of=bake_stuffed_crust,
-    generic=CookedPizza()
-)
-
-bake_dietary_restrictions = c.onto.Function("bake_dietary_restrictions")
-bake_dietary_restrictions_inp = c.onto.Input(
-    name="bake_dietary_restrictions_inp",
-    mandatory_input_of=bake_dietary_restrictions,
-    generic=RawPizza(),
-    requirements=[GlutenFree(), Vegetarian()]
-)
-bake_dietary_restrictions_out = c.onto.Output(
-    name="bake_dietary_restrictions_out",
-    output_of=bake_dietary_restrictions,
-    generic=CookedPizza()
-)
-
-c.sync()
-
-# Workflow generation
-bake_for_vegetarian_out.get_source_tree().render()
-```
-
-Result:
-
-```
+>>> import owlready2 as owl
+>>> from pyiron_ontology import Constructor
+>>>
+>>> c = Constructor('pizza')
+>>>
+>>> # Knowledge base
+>>> with c.onto:
+...     class Flour(c.onto.Generic): pass
+...     class Wheat(Flour): pass
+...     class GlutenFree(Flour): pass
+...     _ = owl.AllDisjoint([GlutenFree, Wheat])
+...
+...     class Crust(c.onto.Generic): pass
+...     class Thin(Crust): pass
+...     class Regular(Crust): pass
+...     _ = owl.AllDisjoint([Thin, Regular])
+...     class Stuffed(Regular): pass
+...
+...     class Ingredients(c.onto.Generic): pass
+...     class HasVegetables(Ingredients): pass
+...     class HasMushrooms(HasVegetables): pass
+...     class HasPeppers(HasVegetables): pass
+...     class HasMeat(Ingredients): pass
+...     class HasSalami(HasMeat): pass
+...     class HasBacon(HasMeat): pass
+...     class Vegetarian(Ingredients):
+...         equivalent_to = [Ingredients & owl.Not(HasMeat)]
+...     _ = owl.AllDisjoint([Vegetarian, HasMeat])
+...
+...     class RawPizza(c.onto.Generic): pass
+...
+...     class CookedPizza(c.onto.Generic): pass
+...
+...     _ = owl.AllDisjoint([Flour, Crust, Ingredients, RawPizza, CookedPizza])
+>>>
+>>> # Code base
+>>> buy_wheat_flour = c.onto.Function("buy_wheat_flour")
+>>> buy_wheat_flour_out = c.onto.Output(
+...     "buy_wheat_flour_out",
+...     output_of=buy_wheat_flour,
+...     generic=Wheat()
+... )
+>>>
+>>> buy_corn_flour = c.onto.Function("buy_corn_flour")
+>>> buy_corn_flour_out = c.onto.Output(
+...     "buy_corn_flour_out",
+...     output_of=buy_corn_flour,
+...     generic=GlutenFree()
+... )
+>>>
+>>> make_crust = c.onto.Function("make_crust")
+>>> make_crust_inp_flour = c.onto.Input(
+...     name="make_crust_inp_flour",
+...     mandatory_input_of=make_crust,
+...     generic=Flour(),
+... )
+>>> make_crust_out = c.onto.Output(
+...     name="make_crust_out",
+...     output_of=make_crust,
+...     generic=Crust(),
+... )
+>>>
+>>> make_thin_crust = c.onto.Function("make_thin_crust")
+>>> make_thin_crust_inp_flour = c.onto.Input(
+...     name="make_thin_crust_inp_flour",
+...     mandatory_input_of=make_thin_crust,
+...     generic=Flour(),
+... )
+>>> make_thin_crust_out = c.onto.Output(
+...     name="make_thin_crust_out",
+...     output_of=make_thin_crust,
+...     generic=Thin(),
+... )
+>>> make_gluten_free_crust = c.onto.Function("make_gluten_free_crust")
+>>> make_gluten_free_crust_inp_flour = c.onto.Input(
+...     name="make_gluten_free_crust_inp_flour",
+...     mandatory_input_of=make_gluten_free_crust,
+...     generic=GlutenFree(),
+... )
+>>> make_gluten_free_crust_out = c.onto.Output(
+...     name="make_gluten_free_crust_out",
+...     output_of=make_gluten_free_crust,
+...     generic=Crust(),
+... )
+>>>
+>>> add_meat = c.onto.Function("add_meat")
+>>> add_meat_inp_ingredients = c.onto.Input(
+...     name="add_meat_inp_ingredients",
+...     mandatory_input_of=add_meat,
+...     generic=HasMeat(),
+... )
+>>> add_meat_inp_crust = c.onto.Input(
+...     name="add_meat_inp_crust",
+...     mandatory_input_of=add_meat,
+...     generic=Crust(),
+...     transitive_requirements=[Flour()]
+... )
+>>> add_meat_out = c.onto.Output(
+...     name="add_meat_out",
+...     output_of=add_meat,
+...     generic=RawPizza()
+... )
+>>>
+>>> add_vegetables = c.onto.Function("add_vegetables")
+>>> add_vegetables_inp_ingredients = c.onto.Input(
+...     name="add_vegetables_inp_ingredients",
+...     mandatory_input_of=add_vegetables,
+...     generic=HasVegetables(),
+... )
+>>> add_vegetables_inp_crust = c.onto.Input(
+...     name="add_vegetables_inp_crust",
+...     mandatory_input_of=add_vegetables,
+...     generic=Crust(),
+...     transitive_requirements=[Flour()]
+... )
+>>> add_vegetables_out = c.onto.Output(
+...     name="add_vegetables_out",
+...     output_of=add_vegetables,
+...     generic=RawPizza()
+... )
+>>>
+>>> canadian = c.onto.Function("canadian")
+>>> canadian_inp_ingredients = c.onto.Input(
+...     name="canadian_inp_ingredients",
+...     mandatory_input_of=canadian,
+...     generic=Ingredients(is_a=[HasBacon, HasMushrooms]),
+... )
+>>> canadian_inp_crust = c.onto.Input(
+...     name="canadian_inp_crust",
+...     mandatory_input_of=canadian,
+...     generic=Crust(),
+...     transitive_requirements=[Flour()]
+... )
+>>> canadian_out = c.onto.Output(
+...     name="canadian_out",
+...     output_of=canadian,
+...     generic=RawPizza()
+... )
+>>>
+>>> bake_for_omnivor = c.onto.Function("bake_for_omnivor")
+>>> bake_for_omnivor_inp = c.onto.Input(
+...     name="bake_for_omnivor_inp",
+...     mandatory_input_of=bake_for_omnivor,
+...     generic=RawPizza(),
+... )
+>>> bake_for_omnivor_out = c.onto.Output(
+...     name="bake_for_omnivor_out",
+...     output_of=bake_for_omnivor,
+...     generic=CookedPizza()
+... )
+>>>
+>>> bake_for_vegetarian = c.onto.Function("bake_for_vegetarian")
+>>> bake_for_vegetarian_inp = c.onto.Input(
+...     name="bake_for_vegetarian_inp",
+...     mandatory_input_of=bake_for_vegetarian,
+...     generic=RawPizza(),
+...     requirements=[Vegetarian()]
+... )
+>>> bake_for_vegetarian_out = c.onto.Output(
+...     name="bake_for_vegetarian_out",
+...     output_of=bake_for_vegetarian,
+...     generic=CookedPizza()
+... )
+>>>
+>>> bake_stuffed_crust = c.onto.Function("bake_stuffed_crust")
+>>> bake_stuffed_crust_inp = c.onto.Input(
+...     name="bake_stuffed_crust_inp",
+...     mandatory_input_of=bake_stuffed_crust,
+...     generic=RawPizza(),
+...     requirements=[Stuffed(), Wheat()]
+... )
+>>> bake_stuffed_crust_out = c.onto.Output(
+...     name="bake_stuffed_crust_out",
+...     output_of=bake_stuffed_crust,
+...     generic=CookedPizza()
+... )
+>>>
+>>> bake_dietary_restrictions = c.onto.Function("bake_dietary_restrictions")
+>>> bake_dietary_restrictions_inp = c.onto.Input(
+...     name="bake_dietary_restrictions_inp",
+...     mandatory_input_of=bake_dietary_restrictions,
+...     generic=RawPizza(),
+...     requirements=[GlutenFree(), Vegetarian()]
+... )
+>>> bake_dietary_restrictions_out = c.onto.Output(
+...     name="bake_dietary_restrictions_out",
+...     output_of=bake_dietary_restrictions,
+...     generic=CookedPizza()
+... )
+>>>
+>>> c.sync()
+>>>
+>>> bake_for_vegetarian_out.get_source_tree().render()
 bake_for_vegetarian_out
-	bake_for_vegetarian
-		bake_for_vegetarian_inp
-			add_vegetables_out
-				add_vegetables
-					add_vegetables_inp_ingredients
-					add_vegetables_inp_crust
-						make_crust_out
-							make_crust
-								make_crust_inp_flour
-									buy_corn_flour_out
-										buy_corn_flour
-									buy_wheat_flour_out
-										buy_wheat_flour
-						make_thin_crust_out
-							make_thin_crust
-								make_thin_crust_inp_flour
-									buy_corn_flour_out
-										buy_corn_flour
-									buy_wheat_flour_out
-										buy_wheat_flour
-						make_gluten_free_crust_out
-							make_gluten_free_crust
-								make_gluten_free_crust_inp_flour
-									buy_corn_flour_out
-										buy_corn_flour
+  bake_for_vegetarian
+    bake_for_vegetarian_inp
+      add_vegetables_out
+        add_vegetables
+          add_vegetables_inp_crust
+            make_crust_out
+              make_crust
+                make_crust_inp_flour
+                  buy_corn_flour_out
+                    buy_corn_flour
+                  buy_wheat_flour_out
+                    buy_wheat_flour
+            make_gluten_free_crust_out
+              make_gluten_free_crust
+                make_gluten_free_crust_inp_flour
+                  buy_corn_flour_out
+                    buy_corn_flour
+            make_thin_crust_out
+              make_thin_crust
+                make_thin_crust_inp_flour
+                  buy_corn_flour_out
+                    buy_corn_flour
+                  buy_wheat_flour_out
+                    buy_wheat_flour
+          add_vegetables_inp_ingredients
+
 ```
 
 Note: Our `bake_for_vegetarian` has an input requirement `Vegetarian()`, and sure enough we _only_ get workflows that use `add_vegetables` when choosing topings.
@@ -338,15 +331,18 @@ Defining all the individuals that map to a (hypothetical) code base is quite ver
 `pyiron_ontology` also comes with an ontology defined for (a small sub-set of) `pyiron_atomistics`.
 
 ```python
-import pyiron_ontology as po
-from pyiron_ontology import AtomisticsReasoner
-from pyiron_atomistics import Project
+>>> import pyiron_ontology as po
+>>> from pyiron_ontology import AtomisticsReasoner
+>>> from pyiron_atomistics import Project
+>>>
+>>> onto = po.dynamic.atomistics()
+>>> reasoner = AtomisticsReasoner(onto) 
+>>> pr = Project('your_project_tree_with_loads_of_data')
+>>>
+>>> out = reasoner.search_database_for_property(onto.BulkModulus(), pr)
+>>> out.columns
+Index(['Chemical Formula', 'atomistics.BulkModulus', 'unit', 'Engine'], dtype='object')
 
-onto = po.dynamic.atomistics()
-reasoner = AtomisticsReasoner(onto) 
-pr = Project('your_project_tree_with_loads_of_data')
-
-reasoner.search_database_for_property(onto.BulkModulus(), pr)
 ```
 
 If you have `Murnaghan` jobs in your project, this will return a nice little dataframe.
