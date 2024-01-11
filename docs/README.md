@@ -295,33 +295,32 @@ You can use it interactively in the demo notebook `pizza.ipynb`
 >>> c.sync()
 >>>
 >>> bake_for_vegetarian_out.get_source_tree().render()
-    bake_for_vegetarian_out
-    	bake_for_vegetarian
-    		bake_for_vegetarian_inp
-    			add_vegetables_out
-    				add_vegetables
-    					add_vegetables_inp_ingredients
-    					add_vegetables_inp_crust
-    						make_thin_crust_out
-    							make_thin_crust
-    								make_thin_crust_inp_flour
-    									buy_wheat_flour_out
-    										buy_wheat_flour
-    									buy_corn_flour_out
-    										buy_corn_flour
-    						make_gluten_free_crust_out
-    							make_gluten_free_crust
-    								make_gluten_free_crust_inp_flour
-    									buy_corn_flour_out
-    										buy_corn_flour
-    						make_crust_out
-    							make_crust
-    								make_crust_inp_flour
-    									buy_wheat_flour_out
-    										buy_wheat_flour
-    									buy_corn_flour_out
-    										buy_corn_flour
-
+bake_for_vegetarian_out
+  bake_for_vegetarian
+    bake_for_vegetarian_inp
+      add_vegetables_out
+        add_vegetables
+          add_vegetables_inp_crust
+            make_crust_out
+              make_crust
+                make_crust_inp_flour
+                  buy_corn_flour_out
+                    buy_corn_flour
+                  buy_wheat_flour_out
+                    buy_wheat_flour
+            make_gluten_free_crust_out
+              make_gluten_free_crust
+                make_gluten_free_crust_inp_flour
+                  buy_corn_flour_out
+                    buy_corn_flour
+            make_thin_crust_out
+              make_thin_crust
+                make_thin_crust_inp_flour
+                  buy_corn_flour_out
+                    buy_corn_flour
+                  buy_wheat_flour_out
+                    buy_wheat_flour
+          add_vegetables_inp_ingredients
 
 ```
 
