@@ -10,3 +10,5 @@ jobs:
   Tests-and-Coverage:
     uses: pyiron/actions/.github/workflows/tests-and-coverage.yml@main
     secrets: inherit
+    with:
+      tests-env-files: .ci_support/environment.yml .ci_support/environment-pyiron_atomistics.yml
