@@ -36,6 +36,7 @@ from sphinx.ext.apidoc import main
 # ones.
 extensions = [
     'myst_parser',
+    'sphinxcontrib.mermaid',
     'nbsphinx',
     'sphinx.ext.mathjax',
     'sphinx.ext.autodoc',
