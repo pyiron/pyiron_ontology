@@ -8,3 +8,4 @@ dependencies:
 - owlready2 =0.45
 - pandas =2.1.4
 - pint =0.23
+- myst-parser
