@@ -108,12 +108,12 @@ You can use it interactively in the demo notebook `pizza.ipynb`
 ...     class Flour(c.onto.Generic): pass
 ...     class Wheat(Flour): pass
 ...     class GlutenFree(Flour): pass
-...     owl.AllDisjoint([GlutenFree, Wheat])
+...     _ = owl.AllDisjoint([GlutenFree, Wheat])
 ...
 ...     class Crust(c.onto.Generic): pass
 ...     class Thin(Crust): pass
 ...     class Regular(Crust): pass
-...     owl.AllDisjoint([Thin, Regular])
+...     _ = owl.AllDisjoint([Thin, Regular])
 ...     class Stuffed(Regular): pass
 ...
 ...     class Ingredients(c.onto.Generic): pass
@@ -125,17 +125,13 @@ You can use it interactively in the demo notebook `pizza.ipynb`
 ...     class HasBacon(HasMeat): pass
 ...     class Vegetarian(Ingredients):
 ...         equivalent_to = [Ingredients & owl.Not(HasMeat)]
-...     owl.AllDisjoint([Vegetarian, HasMeat])
+...     _ = owl.AllDisjoint([Vegetarian, HasMeat])
 ...
 ...     class RawPizza(c.onto.Generic): pass
 ...
 ...     class CookedPizza(c.onto.Generic): pass
 ...
-...     owl.AllDisjoint([Flour, Crust, Ingredients, RawPizza, CookedPizza])
-    AllDisjoint([pizza.GlutenFree, pizza.Wheat])
-    AllDisjoint([pizza.Thin, pizza.Regular])
-    AllDisjoint([pizza.Vegetarian, pizza.HasMeat])
-    AllDisjoint([pizza.Flour, pizza.Crust, pizza.Ingredients, pizza.RawPizza, pizza.CookedPizza])
+...     _ = owl.AllDisjoint([Flour, Crust, Ingredients, RawPizza, CookedPizza])
 >>>
 >>> # Code base
 >>> buy_wheat_flour = c.onto.Function("buy_wheat_flour")
