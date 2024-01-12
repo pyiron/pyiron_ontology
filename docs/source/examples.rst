@@ -1,4 +1,4 @@
-.. _indices:
+.. _examples:
 
 
 Example Notebooks
