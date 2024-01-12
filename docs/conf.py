@@ -35,8 +35,8 @@ from sphinx.ext.apidoc import main
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'myst_parser',
     'sphinxcontrib.mermaid',
+    'myst_parser',
     'nbsphinx',
     'sphinx.ext.mathjax',
     'sphinx.ext.autodoc',
