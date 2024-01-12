@@ -8,4 +8,4 @@ Example Notebooks
    :maxdepth: 2
    :glob:
 
-    notebooks/*
+   notebooks/*
