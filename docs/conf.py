@@ -44,6 +44,9 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon'
 ]
+myst_fence_as_directive = ["mermaid"]
+# optional to use directive options
+myst_enable_extensions = ["attrs_block"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
