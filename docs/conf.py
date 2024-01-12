@@ -47,6 +47,7 @@ extensions = [
 myst_fence_as_directive = ["mermaid"]
 # optional to use directive options
 myst_enable_extensions = ["attrs_block"]
+mermaid_params = ['-p' 'puppeteer-config.json']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
