@@ -4,3 +4,4 @@ dependencies:
   - myst-parser
   - sphinxcontrib-mermaid
   - sphinx-gallery
+  - sphinx-rtd-theme
