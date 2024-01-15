@@ -54,6 +54,7 @@ mermaid_output_format = "png"
 
 sphinx_gallery_conf = {
     'default_thumb_file': '_static/pyiron-logo.png',
+    'thumbnail_size': (50, 50),
 }
 
 # Add any paths that contain templates here, relative to this directory.
