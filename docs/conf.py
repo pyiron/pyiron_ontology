@@ -34,14 +34,37 @@ from sphinx.ext.apidoc import main
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['nbsphinx', 'sphinx.ext.mathjax', 'sphinx.ext.autodoc', 'sphinx.ext.viewcode',
-              'sphinx.ext.autosummary', 'sphinx.ext.napoleon']
+extensions = [
+    'sphinxcontrib.mermaid',
+    'myst_parser',
+    'nbsphinx',
+    'sphinx_gallery.load_style',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.imgconverter',
+]
+myst_fence_as_directive = ["mermaid"]
+# optional to use directive options
+myst_enable_extensions = ["attrs_block"]
+mermaid_params = ['-p' 'puppeteer-config.json']
+mermaid_output_format = "png"
+
+nbsphinx_thumbnails = {
+    'source/notebooks/example': "_static/pyiron-logo-dark.png",
+    'source/notebooks/pizza': "_static/pyiron-logo-dark.png",
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.md': 'markdown'
+}
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
@@ -279,7 +302,7 @@ texinfo_documents = [
    u'pyiron Documentation',
    u'Max-Planck-Institut für Eisenforschung GmbH - Computational Materials Design (CM) Department',
    'pyiron_ontology',
-   'One line description of project.',
+   'Ontologies for guided workflow design.',
    'Miscellaneous'),
 ]
 
