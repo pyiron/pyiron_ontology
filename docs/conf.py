@@ -73,7 +73,7 @@ source_suffix = {
 master_doc = 'index'
 
 # General information about the project.
-project = u'pyiron'
+project = u'pyiron_ontology'
 copyright = u'2021, Max-Planck-Institut für Eisenforschung GmbH - Computational Materials Design (CM) Department ' \
             u'All rights reserved'
 
@@ -251,7 +251,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'pyiron.tex', u'pyiron Documentation',
+  ('index', 'pyiron_ontology.tex', u'pyiron_ontology Documentation',
    u'Max-Planck-Institut für Eisenforschung GmbH - Computational Materials Design (CM) Department', 'manual'),
 ]
 
@@ -282,8 +282,8 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index',
-     'pyiron',
-     u'pyiron Documentation',
+     'pyiron_ontology',
+     u'pyiron_ontology Documentation',
      [u'Max-Planck-Institut für Eisenforschung GmbH - Computational Materials Design (CM) Department'], 1)
 ]
 
@@ -299,7 +299,7 @@ man_pages = [
 texinfo_documents = [
   ('index',
    'pyiron_ontology',
-   u'pyiron Documentation',
+   u'pyiron_ontology Documentation',
    u'Max-Planck-Institut für Eisenforschung GmbH - Computational Materials Design (CM) Department',
    'pyiron_ontology',
    'Ontologies for guided workflow design.',
