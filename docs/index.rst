@@ -7,7 +7,7 @@
    :parser: myst_parser.sphinx_
 
 .. toctree::
-   :hidden:
+   :maxdepth: 2
 
    source/examples.rst
    source/indices.rst
