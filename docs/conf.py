@@ -39,7 +39,6 @@ extensions = [
     'myst_parser',
     'nbsphinx',
     'sphinx_gallery.load_style',
-    'sphinx_gallery.gen_gallery',
     'sphinx.ext.mathjax',
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
@@ -53,9 +52,9 @@ myst_enable_extensions = ["attrs_block"]
 mermaid_params = ['-p' 'puppeteer-config.json']
 mermaid_output_format = "png"
 
-sphinx_gallery_conf = {
-    'default_thumb_file': '_static/pyiron-logo.png',
-    'thumbnail_size': (50, 50),
+nbsphinx_thumbnails = {
+    'source/notebooks/example': "_static/pyiron-logo.png",
+    'source/notebooks/pizza': "_static/pyiron-logo.png",
 }
 
 # Add any paths that contain templates here, relative to this directory.
