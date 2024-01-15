@@ -53,8 +53,8 @@ mermaid_params = ['-p' 'puppeteer-config.json']
 mermaid_output_format = "png"
 
 nbsphinx_thumbnails = {
-    'source/notebooks/example': "_static/pyiron-logo.png",
-    'source/notebooks/pizza': "_static/pyiron-logo.png",
+    'source/notebooks/example': "_static/pyiron-logo-dark.png",
+    'source/notebooks/pizza': "_static/pyiron-logo-dark.png",
 }
 
 # Add any paths that contain templates here, relative to this directory.
