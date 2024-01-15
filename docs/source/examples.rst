@@ -4,7 +4,7 @@
 Example Notebooks
 =================
 
-.. toctree::
+.. nbgallery::
    :maxdepth: 2
    :glob:
 

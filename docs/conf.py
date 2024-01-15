@@ -38,6 +38,7 @@ extensions = [
     'sphinxcontrib.mermaid',
     'myst_parser',
     'nbsphinx',
+    'sphinx_gallery.load_style',
     'sphinx.ext.mathjax',
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
