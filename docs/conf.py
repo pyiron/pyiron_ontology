@@ -39,6 +39,7 @@ extensions = [
     'myst_parser',
     'nbsphinx',
     'sphinx_gallery.load_style',
+    'sphinx_gallery.gen_gallery',
     'sphinx.ext.mathjax',
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
