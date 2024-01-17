@@ -326,7 +326,9 @@ Defining all the individuals that map to a (hypothetical) code base is quite ver
 
 ## Reasoning on existing `pyiron_atomistics` data
 
-`pyiron_ontology` also comes with an ontology defined for (a small sub-set of) `pyiron_atomistics`.
+`pyiron_ontology` also comes with an ontology defined for (a small sub-set of) `pyiron_atomistics` (an optional dependency).
+
+For example, if you have `Murnaghan` jobs in your pyiron project, the snippet below will return a nice little dataframe of results:
 
 ```python
 >>> import pyiron_ontology as po
@@ -342,5 +344,3 @@ Defining all the individuals that map to a (hypothetical) code base is quite ver
 Index(['Chemical Formula', 'atomistics.BulkModulus', 'unit', 'Engine'], dtype='object')
 
 ```
-
-If you have `Murnaghan` jobs in your project, this will return a nice little dataframe.
