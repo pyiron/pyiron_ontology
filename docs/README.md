@@ -19,8 +19,7 @@ Philosophically, `pyiron_ontology` breaks the construction of ontologies down in
 
 ## Installation and setup
 
-For the bleeding-edge, clone this repo. 
-`pyiron_ontology` is also available from Conda Forge via `conda install -c conda-forge pyiron_ontology`.
+`pyiron_ontology` available to clone, pip-install, or on conda (recommended) from Conda Forge via `conda install -c conda-forge pyiron_ontology`.
 
 `pyiron_ontology` uses `owlready2`, which requires java. 
 In case you try to run and get an `owlready2` error about not finding java, you may need to set the java path (cf. [owlready2 docs](https://owlready2.readthedocs.io/en/latest/reasoning.html#configuration)): `import owlready2; owlready2.JAVA_EXE = "C:\\path\\to\\java.exe"`.
