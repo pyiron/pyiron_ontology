@@ -13,15 +13,13 @@
 
 ## Overview
 
-`pyiron_ontology` is a new pyiron project built on top of `owlready2` for ontologically-guided workflow design.
-This project is currently in alpha-stage and subject to rapid change.
+`pyiron_ontology` is a pyiron project built on top of `owlready2` to leverage ontologies for guided workflow design and dynamic (use-based) typing.
 
-Philosophically, `pyiron_ontology` breaks the construction of ontologies down into two parts: a set of classes that are "universal" to all `pyiron_ontology` ontologies, which describe the core elements of a workflow, and a set of "domain specific" declarations (most or all of which) define 
+Philosophically, `pyiron_ontology` breaks the construction of ontologies down into two parts: a set of classes that are "universal" to all `pyiron_ontology` ontologies, which describe the core elements of a workflow, and a set of "domain specific" instance declarations (most or all of which) define relationships between different pieces of code. 
 
 ## Installation and setup
 
-For the bleeding-edge, clone this repo. 
-`pyiron_ontology` is also available from Conda Forge via `conda install -c conda-forge pyiron_ontology`.
+`pyiron_ontology` available to clone, pip-install, or on conda (recommended) from Conda Forge via `conda install -c conda-forge pyiron_ontology`.
 
 `pyiron_ontology` uses `owlready2`, which requires java. 
 In case you try to run and get an `owlready2` error about not finding java, you may need to set the java path (cf. [owlready2 docs](https://owlready2.readthedocs.io/en/latest/reasoning.html#configuration)): `import owlready2; owlready2.JAVA_EXE = "C:\\path\\to\\java.exe"`.
@@ -328,7 +326,9 @@ Defining all the individuals that map to a (hypothetical) code base is quite ver
 
 ## Reasoning on existing `pyiron_atomistics` data
 
-`pyiron_ontology` also comes with an ontology defined for (a small sub-set of) `pyiron_atomistics`.
+`pyiron_ontology` also comes with an ontology defined for (a small sub-set of) `pyiron_atomistics` (an optional dependency).
+
+For example, if you have `Murnaghan` jobs in your pyiron project, the snippet below will return a nice little dataframe of results:
 
 ```python
 >>> import pyiron_ontology as po
@@ -344,5 +344,3 @@ Defining all the individuals that map to a (hypothetical) code base is quite ver
 Index(['Chemical Formula', 'atomistics.BulkModulus', 'unit', 'Engine'], dtype='object')
 
 ```
-
-If you have `Murnaghan` jobs in your project, this will return a nice little dataframe.
