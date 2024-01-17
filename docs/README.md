@@ -15,7 +15,7 @@
 
 `pyiron_ontology` is a pyiron project built on top of `owlready2` to leverage ontologies for guided workflow design and dynamic (use-based) typing.
 
-Philosophically, `pyiron_ontology` breaks the construction of ontologies down into two parts: a set of classes that are "universal" to all `pyiron_ontology` ontologies, which describe the core elements of a workflow, and a set of "domain specific" declarations (most or all of which) define 
+Philosophically, `pyiron_ontology` breaks the construction of ontologies down into two parts: a set of classes that are "universal" to all `pyiron_ontology` ontologies, which describe the core elements of a workflow, and a set of "domain specific" instance declarations (most or all of which) define relationships between different pieces of code. 
 
 ## Installation and setup
 
