@@ -31,7 +31,7 @@ setup(
     install_requires=[
         'numpy==1.26.3',
         'owlready2==0.45',
-        'pandas==2.1.4',
+        'pandas==2.2.0',
         'pint==0.23',
     ],
     extras_require={
