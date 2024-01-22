@@ -34,6 +34,9 @@ setup(
         'pandas==2.1.4',
         'pint==0.23',
     ],
+    extras_require={
+        "pyiron_atomistics": [],
+    },
     cmdclass=versioneer.get_cmdclass(),
 
     )
