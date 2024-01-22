@@ -2,5 +2,6 @@ channels:
   - conda-forge
 dependencies:
   - python >= 3.9
+  - mp-api >= 0.39.4
   - pyiron_atomistics >= 0.4.7
   - pyiron-data >= 0.0.27
