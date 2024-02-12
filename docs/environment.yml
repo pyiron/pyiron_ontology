@@ -6,7 +6,7 @@ dependencies:
 - nbsphinx
 - sphinx-gallery
 - sphinx-rtd-theme
-- numpy =1.26.3
+- numpy =1.26.4
 - openjdk
 - owlready2 =0.45
 - pandas =2.1.4
