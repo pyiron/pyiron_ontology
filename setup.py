@@ -30,7 +30,7 @@ setup(
     packages=find_packages(exclude=["*tests*", "*docs*", "*binder*", "*conda*", "*notebooks*", "*.ci_support*"]),
     install_requires=[
         'numpy==1.26.3',
-        'owlready2==0.45',
+        'owlready2==0.46',
         'pandas==2.1.4',
         'pint==0.23',
     ],
