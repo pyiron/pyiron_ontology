@@ -3,7 +3,7 @@ channels:
 dependencies:
 - numpy =1.26.3
 - openjdk
-- owlready2 =0.45
+- owlready2 =0.46
 - pandas =2.1.4
 - pint =0.23
 - python >= 3.9
