@@ -9,9 +9,10 @@ on:
 
 jobs:
   pyiron:
-    uses: pyiron/actions/.github/workflows/push-pull.yml@optional_env_update
+    uses: pyiron/actions/.github/workflows/push-pull.yml@feature_flags
     secrets: inherit
     with:
+      do-unit-tests: false
       docs-env-files: .ci_support/environment.yml .ci_support/environment-docs.yml
       notebooks-env-files: .ci_support/environment.yml .ci_support/environment-pyiron_atomistics.yml .ci_support/environment-lammps.yml
       tests-env-files: .ci_support/environment.yml .ci_support/environment-pyiron_atomistics.yml
