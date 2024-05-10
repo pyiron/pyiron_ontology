@@ -1,0 +1,10 @@
+channels:
+- conda-forge
+dependencies:
+- numpy =1.26.3
+- openjdk
+- owlready2 =0.46
+- pandas =2.1.4
+- pint =0.23
+- pyiron_atomistics =0.5.0
+- pyiron-data =0.0.26
