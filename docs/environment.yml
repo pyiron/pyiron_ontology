@@ -6,6 +6,7 @@ dependencies:
 - nbsphinx
 - sphinx-gallery
 - sphinx-rtd-theme
+- versioneer
 - numpy =1.26.4
 - openjdk
 - owlready2 =0.46
