@@ -9,7 +9,7 @@ on:
 
 jobs:
   pyiron:
-    uses: pyiron/actions/.github/workflows/push-pull.yml@feature_flags
+    uses: pyiron/actions/.github/workflows/push-pull.yml@coverage-omission
     secrets: inherit
     with:
       do-unit-tests: false
