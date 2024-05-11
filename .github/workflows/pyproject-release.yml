@@ -1,0 +1,45 @@
+# Take == dependencies in pyproject.toml (or equivalent) and relax them
+# according to conda environment yaml files and rules for semantic versioning,
+# then make a pypi release.
+# For full docs cf. .support/update_pyproject_dependencies.py'
+# Usage:
+#   on:
+#     release:
+#       types: [published]
+
+name: Pyproject Release
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  pypi-release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+#    - uses: pyiron/actions/cached-mamba@main
+#      with:
+#        python-version: "3.11"
+#        env-prefix: /usr/share/miniconda3/envs/my-env
+#        env-label: ubuntu-py-3-11
+#        env-files: ${{ inputs.env-files }}
+    - uses: pyiron/actions/update-pyproject-dependencies@actions-2.0.6
+      with:
+        lower-bound-yaml: .ci_support/
+        semantic-upper-bound: minor
+    - name: Install dependencies
+      run: >-
+        python -m pip install --user --upgrade setuptools wheel versioneer[toml]
+    - name: Build
+      shell: bash -l {0}
+      run: >-
+        python setup.py sdist bdist_wheel
+#    - name: Publish distribution 📦 to PyPI
+#      uses: pypa/gh-action-pypi-publish@release/v1
+#      with: # Remove once trusted publisher works with reusable workflows
+#        user: __token__  # Remove once trusted publisher works with reusable workflows
+#        password: ${{ secrets.pypi_password }}  # Remove once trusted publisher works with reusable workflows
