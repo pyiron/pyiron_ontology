@@ -6,7 +6,6 @@ dependencies:
 - owlready2 =0.46
 - pandas =2.2.2
 - pint =0.23
-- python >= 3.9
-- pyiron_atomistics >= 0.5.4
-- pyiron-data >= 0.0.29
+- pyiron_atomistics =0.5.4
+- pyiron-data =0.0.29
 - lammps

@@ -1,3 +1,1 @@
-include versioneer.py
-include pyiron_ontology/_version.py
 include LICENSE

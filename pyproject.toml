@@ -1,0 +1,59 @@
+[build-system]
+requires = [
+    "numpy",
+    "owlready2",
+    "pandas",
+    "pint",
+    "setuptools",
+    "versioneer[toml]==0.29",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyiron_ontology"
+description = "pyiron_ontology - module extension to pyiron."
+readme = "docs/README.md"
+keywords = [ "pyiron",]
+requires-python = ">=3.9, <3.13"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Topic :: Scientific/Engineering :: Physics",
+    "License :: OSI Approved :: BSD License",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "numpy==1.26.4",
+    "owlready2==0.46",
+    "pandas==2.2.2",
+    "pint==0.23",
+]
+dynamic = [ "version",]
+authors = [
+    { name = "Liam Huber", email = "liamhuber@greyhavensolutions.com" },
+]
+
+[project.license]
+file = "LICENSE"
+
+[project.urls]
+Homepage = "https://github.com/pyiron/pyiron_ontology"
+Documentation = "https://pyiron-ontology.readthedocs.io"
+Repository = "https://github.com/pyiron/pyiron_ontology"
+
+[tool.versioneer]
+VCS = "git"
+style = "pep440-pre"
+versionfile_source = "pyiron_ontology/_version.py"
+parentdir_prefix = "pyiron_ontology"
+tag_prefix = "pyiron_ontology-"
+
+[tool.setuptools.packages.find]
+include = [ "pyiron_ontology*",]
+
+[tool.setuptools.dynamic.version]
+attr = "pyiron_ontology.__version__"
