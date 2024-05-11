@@ -23,7 +23,7 @@ jobs:
         python-version: '3.11'
         env-prefix: /usr/share/miniconda3/envs/my-env
         env-label: ubuntu-latest-py-3-11
-        env-files: .ci_support/environment.py
+        env-files: .ci_support/environment.yml
 #    - uses: conda-incubator/setup-miniconda@v2.2.0
 #      with:
 #        python-version: "3.12"
