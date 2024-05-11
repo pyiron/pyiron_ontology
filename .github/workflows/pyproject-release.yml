@@ -18,15 +18,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: conda-incubator/setup-miniconda@v2.2.0
+    - uses: pyiron/actions/cached-mamba@main
       with:
-        python-version: "3.12"
-        mamba-version: "*"
-        channels: conda-forge
-        miniforge-variant: Mambaforge
-        channel-priority: strict
-        auto-update-conda: true
-        environment-file: .ci_support/environment.yml
+        python-version: '3.11'
+        env-prefix: /usr/share/miniconda3/envs/my-env
+        env-label: ubuntu-latest-py-3-11
+        env-files: .ci_support/environment.py
+#    - uses: conda-incubator/setup-miniconda@v2.2.0
+#      with:
+#        python-version: "3.12"
+#        mamba-version: "*"
+#        channels: conda-forge
+#        miniforge-variant: Mambaforge
+#        channel-priority: strict
+#        auto-update-conda: true
+#        environment-file: .ci_support/environment.yml
 #    - uses: actions/setup-python@v5
 #      with:
 #        python-version: '3.12'
