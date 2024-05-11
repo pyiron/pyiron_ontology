@@ -29,7 +29,7 @@ jobs:
 #        env-files: ${{ inputs.env-files }}
     - uses: pyiron/actions/update-pyproject-dependencies@actions-2.0.6
       with:
-        lower-bound-yaml: .ci_support/
+        lower-bound-yaml: .ci_support/lower_bound.yml
         semantic-upper-bound: minor
     - name: Install dependencies
       run: >-
