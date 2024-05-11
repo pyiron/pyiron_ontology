@@ -7,7 +7,7 @@ on:
 
 jobs:
   pyiron:
-    uses: pyiron/actions/.github/workflows/pyproject-release.yml@actions-2.0.1
+    uses: pyiron/actions/.github/workflows/pyproject-release.yml@actions-2.0.2
     secrets: inherit
     with:
       semantic-upper-bound: 'minor'
