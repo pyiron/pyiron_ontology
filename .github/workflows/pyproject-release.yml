@@ -27,10 +27,10 @@ jobs:
 #        env-prefix: /usr/share/miniconda3/envs/my-env
 #        env-label: ubuntu-py-3-11
 #        env-files: ${{ inputs.env-files }}
-    - uses: pyiron/actions/update-pyproject-dependencies@actions-2.0.6
-      with:
-        lower-bound-yaml: .ci_support/lower_bound.yml
-        semantic-upper-bound: minor
+#    - uses: pyiron/actions/update-pyproject-dependencies@actions-2.0.6
+#      with:
+#        lower-bound-yaml: .ci_support/lower_bound.yml
+#        semantic-upper-bound: minor
     - name: Install dependencies
       run: >-
         python -m pip install --user --upgrade setuptools wheel versioneer[toml]
