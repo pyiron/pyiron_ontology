@@ -34,10 +34,12 @@ jobs:
     - name: Install dependencies
       run: >-
         python -m pip install --user --upgrade setuptools wheel versioneer[toml]
-    - name: Look at things
+    - name: Print pyproject
       run: >-
         cat pyproject.toml
-        cat setup.py
+    - name: Print setup
+        run: >-
+          cat setup.py
     - name: Build
       shell: bash -l {0}
       run: >-
