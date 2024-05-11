@@ -31,11 +31,13 @@ jobs:
 #      with:
 #        lower-bound-yaml: .ci_support/lower_bound.yml
 #        semantic-upper-bound: minor
-    - name: Install dependencies
-      run: >-
-        python -m pip install --user --upgrade setuptools wheel versioneer[toml]
+#    - name: Install dependencies
+#      run: >-
+#        python -m pip install --user --upgrade setuptools wheel versioneer[toml]
     - name: Print pyproject
-      run: >-
+      shell: bash -l {0}
+      run: |
+        pip install versioneer[toml]==0.29
         cat pyproject.toml; cat setup.py
     - name: Build
       shell: bash -l {0}
