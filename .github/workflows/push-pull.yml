@@ -15,3 +15,4 @@ jobs:
       - uses: pyiron/actions/cached-miniforge@update_env_setup
         with:
           python-version: '3.11'
+          cache-number: 1
