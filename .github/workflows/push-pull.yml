@@ -11,6 +11,7 @@ jobs:
   pyiron:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: pyiron/actions/cached-miniforge@update_env_setup
         with:
           runner-name: ${{ runner.name }}
