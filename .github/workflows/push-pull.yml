@@ -14,5 +14,4 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pyiron/actions/cached-miniforge@update_env_setup
         with:
-          runner-name: ${{ runner.name }}
           python-version: '3.11'
