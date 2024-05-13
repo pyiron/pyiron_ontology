@@ -7,7 +7,7 @@ on:
 
 jobs:
   pyiron:
-    uses: pyiron/actions/.github/workflows/pyproject-release.yml@use_cached_miniforge
+    uses: pyiron/actions/.github/workflows/pyproject-release.yml@update_used_action_versions
     secrets: inherit
     with:
       semantic-upper-bound: 'minor'
