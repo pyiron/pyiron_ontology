@@ -10,7 +10,8 @@ on:
 jobs:
   pyiron:
     runs-on: ubuntu-latest
-    uses: pyiron/actions/cached-miniforge@update_env_setup
-    with:
-      runner-name: ${{ runner.name }}
-      python-version: '3.11'
+    steps:
+      - uses: pyiron/actions/cached-miniforge@update_env_setup
+        with:
+          runner-name: ${{ runner.name }}
+          python-version: '3.11'
