@@ -9,10 +9,8 @@ on:
 
 jobs:
   pyiron:
-    uses: pyiron/actions/.github/workflows/push-pull.yml@actions-2.0.7
-    secrets: inherit
+    runs-on: ubuntu-latest
+    uses: pyiron/actions/cached-miniforge@update_env_setup
     with:
-      docs-env-files: .ci_support/environment.yml .ci_support/environment-docs.yml
-      notebooks-env-files: .ci_support/environment.yml .ci_support/environment-pyiron_atomistics.yml .ci_support/environment-lammps.yml
-      tests-env-files: .ci_support/environment.yml .ci_support/environment-pyiron_atomistics.yml
-      alternate-tests-env-files: .ci_support/lower_bound.yml
+      runner-name: ${{ runner.name }}
+      python-version: '3.11'
