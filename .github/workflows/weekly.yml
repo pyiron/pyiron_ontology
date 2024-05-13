@@ -8,5 +8,5 @@ on:
 
 jobs:
   codeql:
-    uses: pyiron/actions/.github/workflows/codeql.yml@actions-2.0.7
+    uses: pyiron/actions/.github/workflows/codeql.yml@use_cached_miniforge
     secrets: inherit
