@@ -25,5 +25,5 @@ if [ -d "${HOME}/pyiron_ontology" ]; then
             ${HOME}/LICENSE \
             ${HOME}/MANIFEST.in \
             ${HOME}/pyproject.toml \
-            ${HOME}/setup.py \
+            ${HOME}/setup.py
 fi
