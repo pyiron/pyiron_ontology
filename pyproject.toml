@@ -30,7 +30,7 @@ dependencies = [
     "numpy==1.26.4",
     "owlready2==0.46",
     "pandas==2.2.2",
-    "pint==0.23",
+    "pint==0.24",
 ]
 dynamic = [ "version",]
 authors = [
