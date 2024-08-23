@@ -30,7 +30,7 @@ dependencies = [
     "numpy==1.26.4",
     "owlready2==0.46",
     "pandas==2.2.2",
-    "pint==0.23",
+    "pint==0.24.3",
 ]
 dynamic = [ "version",]
 authors = [
@@ -57,3 +57,8 @@ include = [ "pyiron_ontology*",]
 
 [tool.setuptools.dynamic.version]
 attr = "pyiron_ontology.__version__"
+
+[project.optional-dependencies]
+tests = [
+    "pyiron_atomistics==0.6.10",
+]
