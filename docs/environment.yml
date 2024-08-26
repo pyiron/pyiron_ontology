@@ -7,9 +7,9 @@ dependencies:
 - sphinx-gallery
 - sphinx-rtd-theme
 - versioneer
-- numpy =1.26.4
+- numpy =2.1.0
 - openjdk
 - owlready2 =0.46
 - pandas =2.2.2
-- pint =0.23
+- pint =0.24.3
 - sphinxcontrib-mermaid

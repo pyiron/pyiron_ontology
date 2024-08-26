@@ -1,11 +1,11 @@
 channels:
 - conda-forge
 dependencies:
-- numpy =1.26.4
+- numpy =2.1.0
 - openjdk
 - owlready2 =0.46
 - pandas =2.2.2
-- pint =0.23
-- pyiron_atomistics =0.5.4
-- pyiron-data =0.0.29
-- lammps
+- pint =0.24.3
+- pyiron_atomistics ==0.6.10
+- pyiron-data ==0.0.30
+- lammps ==2024.06.27
