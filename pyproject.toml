@@ -60,5 +60,5 @@ attr = "pyiron_ontology.__version__"
 
 [project.optional-dependencies]
 tests = [
-    "pyiron_atomistics==0.6.10",
+    "pyiron_atomistics==0.6.11",
 ]
