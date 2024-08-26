@@ -62,3 +62,7 @@ attr = "pyiron_ontology.__version__"
 tests = [
     "pyiron_atomistics==0.6.11",
 ]
+notebooks = [
+    "pyiron_atomistics==0.6.11",
+    "lammps==2024.06.27",
+]
