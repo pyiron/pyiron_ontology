@@ -2,4 +2,4 @@ channels:
   - conda-forge
 dependencies:
   - pyiron_atomistics =0.6.19
-  - pyiron-data =0.0.29
+  - pyiron-data =0.0.30
