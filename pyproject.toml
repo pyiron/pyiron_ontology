@@ -28,7 +28,7 @@ classifiers = [
 ]
 dependencies = [
     "numpy==1.26.4",
-    "owlready2==0.46",
+    "owlready2==0.47",
     "pandas==2.2.3",
     "pint==0.23",
 ]
