@@ -4,7 +4,7 @@ dependencies:
 - numpy =1.26.4
 - openjdk
 - owlready2 =0.47
-- pandas =2.2.2
+- pandas =2.2.3
 - pint =0.24.4
 - pyiron_atomistics =0.6.19
 - pyiron-data =0.0.29
