@@ -5,4 +5,4 @@ dependencies:
 - openjdk
 - owlready2 =0.47
 - pandas =2.2.3
-- pint =0.23
+- pint =0.24.4
