@@ -6,6 +6,6 @@ dependencies:
 - owlready2 =0.46
 - pandas =2.2.2
 - pint =0.24.4
-- pyiron_atomistics =0.5.4
+- pyiron_atomistics =0.6.19
 - pyiron-data =0.0.29
 - lammps =2024.02.07=*_openmpi_*
