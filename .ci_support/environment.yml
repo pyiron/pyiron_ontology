@@ -6,4 +6,5 @@ dependencies:
 - owlready2 =0.47
 - pandas =2.2.3
 - pint =0.24.4
-- semantikon =0.0.5
+- semantikon =0.0.6
+- pyiron_workflow =0.11.2
