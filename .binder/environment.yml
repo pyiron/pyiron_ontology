@@ -8,6 +8,7 @@ dependencies:
 - pint =0.24.4
 - semantikon =0.0.6
 - pyiron_workflow =0.11.2
+- rdflib =7.1.1
 - pyiron_atomistics =0.6.19
 - pyiron-data =0.0.30
 - lammps =2024.02.07=*_openmpi_*
