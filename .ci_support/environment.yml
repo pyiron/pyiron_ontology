@@ -8,3 +8,4 @@ dependencies:
 - pint =0.24.4
 - semantikon =0.0.6
 - pyiron_workflow =0.11.2
+- rdflib =7.1.1
