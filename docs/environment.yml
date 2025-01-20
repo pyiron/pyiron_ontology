@@ -15,4 +15,5 @@ dependencies:
 - semantikon =0.0.8
 - pyiron_workflow =0.11.2
 - rdflib =7.1.1
+- owlrl =7.1.2
 - sphinxcontrib-mermaid

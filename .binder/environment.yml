@@ -9,6 +9,7 @@ dependencies:
 - semantikon =0.0.8
 - pyiron_workflow =0.11.2
 - rdflib =7.1.1
+- owlrl =7.1.2
 - pyiron_atomistics =0.6.19
 - pyiron-data =0.0.30
 - lammps =2024.02.07=*_openmpi_*
