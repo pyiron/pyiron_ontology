@@ -178,6 +178,26 @@ class TestParser(unittest.TestCase):
         with self.assertRaises(AttributeError):
             _ = PNS.ahoy
 
+    def test_parsing_without_running(self):
+        wf = Workflow("correct_analysis")
+        wf.addition = add(a=1.0, b=2.0)
+        data = get_inputs_and_outputs(wf.addition)
+        self.assertFalse("value" in data["outputs"])
+        graph = get_triples(data)
+        self.assertEqual(
+            len(list(graph.triples((None, RDF.value, None)))),
+            2,
+            msg="There should be only values for a and b, but not for the output",
+        )
+        wf.run()
+        data = get_inputs_and_outputs(wf.addition)
+        graph = get_triples(data)
+        self.assertEqual(
+            len(list(graph.triples((None, RDF.value, None)))),
+            3,
+            msg="There should be values for a, b and the output",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
