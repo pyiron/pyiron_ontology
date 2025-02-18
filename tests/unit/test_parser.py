@@ -1,11 +1,12 @@
 import unittest
 from owlrl import DeductiveClosure, OWLRL_Semantics
 from rdflib import Graph, OWL, RDF, RDFS, Literal, URIRef
-from pyiron_ontology.parser import (
-    get_inputs_and_outputs,
-    parse_workflow,
+from pyiron_ontology.parser import export_to_dict, parse_workflow
+from semantikon.ontology import (
+    PNS,
+    validate_values,
+    get_knowledge_graph,
 )
-from semantikon.ontology import PNS, _inherit_properties, get_triples, validate_values
 from pyiron_workflow import Workflow
 from semantikon.typing import u
 from dataclasses import dataclass
@@ -49,6 +50,13 @@ def multiply(a: float, b: float) -> u(
     return a * b
 
 
+@Workflow.wrap.as_macro_node("result")
+def operation(macro=None, a: float = 1.0, b: float = 1.0) -> float:
+    macro.addition = add(a=a, b=b)
+    macro.multiply = multiply(a=macro.addition, b=b)
+    return macro.multiply
+
+
 @Workflow.wrap.as_function_node("result")
 def correct_analysis(
     a: u(
@@ -82,9 +90,10 @@ def multiple_outputs(a: int = 1, b: int = 2) -> tuple[int, int]:
 
 class TestParser(unittest.TestCase):
     def test_parser(self):
-        c = calculate_speed()
-        output_dict = get_inputs_and_outputs(c)
-        for label in ["inputs", "outputs", "function", "label"]:
+        wf = Workflow("speed")
+        wf.c = calculate_speed()
+        output_dict = export_to_dict(wf)
+        for label in ["inputs", "outputs", "nodes", "data_edges", "label"]:
             self.assertIn(label, output_dict)
 
     def test_units_with_sparql(self):
@@ -110,32 +119,35 @@ class TestParser(unittest.TestCase):
         self.assertEqual(sorted(result_list), [2.0, 5.0, 10.0])
 
     def test_triples(self):
-        speed = calculate_speed()
-        data = get_inputs_and_outputs(speed)
-        graph = get_triples(data=data)
+        wf = Workflow("speed")
+        wf.speed = calculate_speed()
+        graph = parse_workflow(wf)
         subj = URIRef("http://example.org/subject")
         obj = URIRef("http://example.org/object")
-        label = URIRef("calculate_speed.outputs.speed")
-        self.assertGreater(
-            len(list(graph.triples((None, PNS.hasUnits, URIRef("meter/second"))))), 0
+        label = URIRef("speed.speed.outputs.speed")
+        self.assertIn(
+            (None, PNS.hasUnits, URIRef("meter/second")),
+            graph,
+            msg=graph.serialize(format="turtle")
         )
-        ex_triple = (None, EX.somehowRelatedTo, URIRef("calculate_speed.inputs.time"))
-        self.assertEqual(
-            len(list(graph.triples(ex_triple))),
-            1,
+        ex_triple = (
+            None,
+            EX.somehowRelatedTo,
+            URIRef("speed.speed.inputs.time"),
+        )
+        self.assertIn(
+            ex_triple,
+            graph,
             msg=f"Triple {ex_triple} not found {graph.serialize(format='turtle')}",
         )
-        self.assertEqual(
-            len(list(graph.triples((EX.subject, EX.predicate, EX.object)))), 1
-        )
-        self.assertEqual(len(list(graph.triples((subj, EX.predicate, label)))), 1)
-        self.assertEqual(len(list(graph.triples((label, EX.predicate, obj)))), 1)
+        self.assertIn((subj, EX.predicate, obj), graph)
+        self.assertIn((subj, EX.predicate, label), graph)
+        self.assertIn((label, EX.predicate, obj), graph)
 
     def test_correct_analysis(self):
         def get_graph(wf):
-            graph = parse_workflow(wf)
-            _inherit_properties(graph)
-            DeductiveClosure(OWLRL_Semantics).expand(graph)
+            data = export_to_dict(wf)
+            graph = get_knowledge_graph(data)
             return graph
 
         wf = Workflow("correct_analysis")
@@ -143,25 +155,31 @@ class TestParser(unittest.TestCase):
         wf.multiply = multiply(a=wf.addition, b=3.0)
         wf.analysis = correct_analysis(a=wf.multiply)
         graph = get_graph(wf)
+        # Not needed in semantikon 0.0.13
+        DeductiveClosure(OWLRL_Semantics).expand(graph)
         self.assertEqual(len(validate_values(graph)), 0)
         wf = Workflow("wrong_analysis")
         wf.addition = add(a=1.0, b=2.0)
         wf.multiply = multiply(a=wf.addition, b=3.0)
         wf.analysis = wrong_analysis(a=wf.multiply)
         graph = get_graph(wf)
+        # Not needed in semantikon 0.0.13
+        DeductiveClosure(OWLRL_Semantics).expand(graph)
         self.assertEqual(len(validate_values(graph)), 1)
 
     def test_multiple_outputs(self):
-        node = multiple_outputs()
-        node.run()
-        data = get_inputs_and_outputs(node)
-        self.assertEqual(data["outputs"]["a"]["value"], 1)
-        self.assertEqual(data["outputs"]["b"]["value"], 2)
+        wf = Workflow("multiple_outputs")
+        wf.node = multiple_outputs()
+        wf.node.run()
+        data = export_to_dict(wf)
+        self.assertEqual(data["outputs"]["node__a"]["value"], 1)
+        self.assertEqual(data["outputs"]["node__b"]["value"], 2)
 
     def test_parse_workflow(self):
         wf = Workflow("correct_analysis")
         wf.addition = add(a=1.0, b=2.0)
-        graph = parse_workflow(wf)
+        data = export_to_dict(wf)
+        graph = get_knowledge_graph(data)
         tag = "correct_analysis.addition.inputs.a"
         self.assertEqual(
             len(list(graph.triples((URIRef(tag), RDFS.label, Literal(tag))))),
@@ -172,40 +190,42 @@ class TestParser(unittest.TestCase):
             in list(graph.objects(URIRef("correct_analysis.addition"), RDF.type))
         )
 
-    def test_macro(self):
-        @Workflow.wrap.as_macro_node
-        def operation(macro=None):
-            macro.add = add(a=1.0, b=2.0)
-            macro.multiply = multiply(a=macro.add, b=3.0)
-            return macro.multiply
-
-        wf = Workflow("macro")
-        wf.macro = operation()
-        self.assertRaises(NotImplementedError, get_inputs_and_outputs, wf.macro)
-
     def test_namespace(self):
         self.assertEqual(PNS.hasUnits, URIRef("http://pyiron.org/ontology/hasUnits"))
         with self.assertRaises(AttributeError):
             _ = PNS.ahoy
 
     def test_parsing_without_running(self):
-        wf = Workflow("correct_analysis")
+        wf = Workflow("test")
         wf.addition = add(a=1.0, b=2.0)
-        data = get_inputs_and_outputs(wf.addition)
-        self.assertFalse("value" in data["outputs"])
-        graph = get_triples(data)
+        data = export_to_dict(wf)
+        self.assertFalse("value" in data["outputs"]["addition__result"])
+        graph = get_knowledge_graph(data)
         self.assertEqual(
             len(list(graph.triples((None, RDF.value, None)))),
             2,
             msg="There should be only values for a and b, but not for the output",
         )
         wf.run()
-        data = get_inputs_and_outputs(wf.addition)
-        graph = get_triples(data)
+        data = export_to_dict(wf)
+        graph = get_knowledge_graph(data)
         self.assertEqual(
             len(list(graph.triples((None, RDF.value, None)))),
             3,
             msg="There should be values for a, b and the output",
+        )
+
+    def test_macro(self):
+        wf = Workflow("operation")
+        wf.node = operation(a=1.0, b=2.0)
+        wf.run()
+        data = export_to_dict(wf)
+        self.assertEqual(
+            set(data.keys()), {"data_edges", "inputs", "label", "nodes", "outputs"}
+        )
+        self.assertEqual(
+            data["inputs"]["node__b"],
+            {"default": 1.0, "value": 2.0, "type_hint": float},
         )
 
 
@@ -241,7 +261,8 @@ class TestDataclass(unittest.TestCase):
         inp.parameters.a = 1
         wf.node = run_md(inp)
         wf.run()
-        graph = parse_workflow(wf)
+        data = export_to_dict(wf)
+        graph = get_knowledge_graph(data)
         i_txt = "my_wf.node.inputs.inp"
         o_txt = "my_wf.node.outputs.out"
         triples = (
