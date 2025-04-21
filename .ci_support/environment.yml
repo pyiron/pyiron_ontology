@@ -1,7 +1,7 @@
 channels:
 - conda-forge
 dependencies:
-- numpy =1.26.4
+- numpy =2.0.2
 - openjdk
 - owlready2 =0.47
 - pandas =2.2.3
