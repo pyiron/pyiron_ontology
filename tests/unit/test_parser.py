@@ -1,17 +1,17 @@
 import unittest
+from dataclasses import dataclass
+
 from owlrl import DeductiveClosure, OWLRL_Semantics
-from rdflib import Graph, OWL, RDF, RDFS, Literal, URIRef
-from pyiron_ontology.parser import export_to_dict, parse_workflow
+from pyiron_workflow import Workflow
+from rdflib import OWL, RDF, RDFS, Graph, Literal, Namespace, URIRef
 from semantikon.ontology import (
     PNS,
-    validate_values,
     get_knowledge_graph,
+    validate_values,
 )
-from pyiron_workflow import Workflow
 from semantikon.typing import u
-from dataclasses import dataclass
-from rdflib import Namespace
 
+from pyiron_ontology.parser import export_to_dict, parse_workflow
 
 EX = Namespace("http://example.org/")
 

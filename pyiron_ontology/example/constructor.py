@@ -8,9 +8,9 @@ tests.
 
 from __future__ import annotations
 
-from pyiron_ontology.constructor import Constructor
-
 import owlready2 as owl
+
+from pyiron_ontology.constructor import Constructor
 
 
 class ExampleOntology(Constructor):
