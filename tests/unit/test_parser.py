@@ -65,7 +65,7 @@ def correct_analysis(
             (OWL.onProperty, EX.HasOperation),
             (OWL.someValuesFrom, EX.Addition),
         ),
-    )
+    ),
 ) -> float:
     return a
 
@@ -78,7 +78,7 @@ def wrong_analysis(
             (OWL.onProperty, EX.HasOperation),
             (OWL.someValuesFrom, EX.Division),
         ),
-    )
+    ),
 ) -> float:
     return a
 
@@ -128,7 +128,7 @@ class TestParser(unittest.TestCase):
         self.assertIn(
             (None, PNS.hasUnits, URIRef("meter/second")),
             graph,
-            msg=graph.serialize(format="turtle")
+            msg=graph.serialize(format="turtle"),
         )
         ex_triple = (
             None,
