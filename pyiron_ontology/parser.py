@@ -1,7 +1,7 @@
 from semantikon.converter import parse_input_args, parse_output_args
-from semantikon.ontology import get_knowledge_graph, PNS
+from semantikon.ontology import get_knowledge_graph, SNS
 from rdflib import Graph
-from pyiron_workflow import NOT_DATA, Workflow, Macro
+from pyiron_workflow.api import NOT_DATA, Macro, Workflow
 from pyiron_workflow.node import Node
 from pyiron_workflow.nodes.composite import Composite
 from pyiron_workflow.channels import Channel
@@ -153,7 +153,7 @@ def parse_workflow(
     with_default: bool = True,
     graph: Graph | None = None,
     inherit_properties: bool = True,
-    ontology=PNS,
+    ontology=SNS,
     append_missing_items: bool = True,
 ) -> Graph:
     """
