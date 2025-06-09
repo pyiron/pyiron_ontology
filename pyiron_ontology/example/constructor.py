@@ -27,7 +27,7 @@ class ExampleOntology(Constructor):
     At the domain knowledge level (i.e. the `Generic` things we define) we show how to
     achieve mutual exclusion by use of disjoint classes and instantiating individuals.
 
-    Terminology goes: I:Input:IM:Middle:MO:Output:O, with letters and numbers to
+    Terminology goes: I:Input:InpMid:Middle:MidOut:Output:O, with letters and numbers to
     distinguish siblings/inheritance.
     """
 
@@ -38,169 +38,169 @@ class ExampleOntology(Constructor):
         onto = self.onto
         with onto:
 
-            class I(onto.Generic):
+            class Inp(onto.Generic):
                 pass
 
-            class I1(I):
+            class Inp1(Inp):
                 pass
 
-            class I2(I):
+            class Inp2(Inp):
                 pass
 
-            owl.AllDisjoint([I1, I2])
+            owl.AllDisjoint([Inp1, Inp2])
 
-            class IM(onto.Generic):
+            class InpMid(onto.Generic):
                 pass
 
-            class IMOptional(onto.Generic):
+            class InpMidOptional(onto.Generic):
                 pass
 
-            class MO(onto.Generic):
+            class MidOut(onto.Generic):
                 pass
 
-            class MO1(MO):
+            class MidOut1(MidOut):
                 pass
 
-            class MO2(MO):
+            class MidOut2(MidOut):
                 pass
 
-            class MO2A(MO2):
+            class MidOut2A(MidOut2):
                 pass
 
-            class MO2B(MO2):
+            class MidOut2B(MidOut2):
                 pass
 
-            owl.AllDisjoint([MO1, MO2])
+            owl.AllDisjoint([MidOut1, MidOut2])
 
-            class MOUnused(onto.Generic):
+            class MidOutUnused(onto.Generic):
                 pass
 
-            class O(onto.Generic):
+            class Out(onto.Generic):
                 pass
 
-            owl.AllDisjoint([O, MO, MOUnused, IMOptional, IM, I])
+            owl.AllDisjoint([Out, MidOut, MidOutUnused, InpMidOptional, InpMid, Inp])
 
         input1 = onto.Function("input1")
         input1_inp = onto.Input(
             name="input1_inp",
             mandatory_input_of=input1,
-            generic=I1(),
+            generic=Inp1(),
         )
         input1_out = onto.Output(
             name="input1_out",
             output_of=input1,
-            generic=IM(),
+            generic=InpMid(),
         )
 
         input2 = onto.Function("input2")
         input2_inp = onto.Input(
             name="input2_inp",
             mandatory_input_of=input2,
-            generic=I2(),
+            generic=Inp2(),
         )
         input2_out = onto.Output(
             name="input2_out",
             output_of=input2,
-            generic=IM(),
+            generic=InpMid(),
         )
 
         middle1 = onto.Function("middle1")
         middle1_inp1 = onto.Input(
             name="middle1_inp1",
             mandatory_input_of=middle1,
-            generic=IM(),
-            transitive_requirements=[I()],
+            generic=InpMid(),
+            transitive_requirements=[Inp()],
         )
         middle1_inp2 = onto.Input(
             name="middle1_inp2",
             optional_input_of=middle1,
-            generic=IMOptional(),
+            generic=InpMidOptional(),
         )
         middle1_out1 = onto.Output(
             name="middle1_out1",
             output_of=middle1,
-            generic=MO1(),
+            generic=MidOut1(),
         )
         middle1_out2 = onto.Output(
             name="middle1_out2",
             output_of=middle1,
-            generic=MOUnused(),
+            generic=MidOutUnused(),
         )
 
         middle2 = onto.Function("middle2")
         middle2_inp1 = onto.Input(
             name="middle2_inp1",
             mandatory_input_of=middle2,
-            generic=IM(),
-            transitive_requirements=[I()],
+            generic=InpMid(),
+            transitive_requirements=[Inp()],
         )
         middle2_inp2 = onto.Input(
             name="middle2_inp2",
             optional_input_of=middle2,
-            generic=IMOptional(),
+            generic=InpMidOptional(),
         )
         middle2_out1 = onto.Output(
             name="middle2_out1",
             output_of=middle2,
-            generic=MO2B(),
+            generic=MidOut2B(),
         )
         middle2_out2 = onto.Output(
             name="middle2_out2",
             output_of=middle2,
-            generic=MOUnused(),
+            generic=MidOutUnused(),
         )
 
         output1 = onto.Function("output1")  # Allows all paths
         output1_inp = onto.Input(
             name="output1_inp",
             mandatory_input_of=output1,
-            generic=MO(),
+            generic=MidOut(),
         )
         output1_out = onto.Output(
             name="output1_out",
             output_of=output1,
-            generic=O(),
+            generic=Out(),
         )
 
         output2 = onto.Function("output2")  # Must pass through middle1
         output2_inp = onto.Input(
             name="output2_inp",
             mandatory_input_of=output2,
-            generic=MO1(),
+            generic=MidOut1(),
         )
         output2_out = onto.Output(
             name="output2_out",
             output_of=output2,
-            generic=O(),
+            generic=Out(),
         )
 
         output3 = onto.Function("output3")  # Must end at input1
         output3_inp = onto.Input(
             name="output3_inp",
             mandatory_input_of=output3,
-            generic=MO(),
-            requirements=[I1()],
+            generic=MidOut(),
+            requirements=[Inp1()],
         )
         output3_out = onto.Output(
             name="output3_out",
             output_of=output3,
-            generic=O(),
+            generic=Out(),
         )
 
         output4 = onto.Function("output4")  # Only the path middle2 -> input2
         output4_inp = onto.Input(
             name="output4_inp",
             mandatory_input_of=output4,
-            generic=MO2(),  # Finds middle2_out1;
+            generic=MidOut2(),  # Finds middle2_out1;
             # But it only finds _more specific_ output, if these generics are swapped,
             # it finds nothing.
             # Is this really desirable, or do we want anything
-            requirements=[I2()],
+            requirements=[Inp2()],
         )
         output4_out = onto.Output(
             name="output4_out",
             output_of=output4,
-            generic=O(),
+            generic=Out(),
         )
 
         # I don't yet test dual inheritance in this example!!!
