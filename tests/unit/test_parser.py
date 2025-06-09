@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 from owlrl import DeductiveClosure, OWLRL_Semantics
 from pyiron_workflow import Workflow
-from rdflib import OWL, RDF, RDFS, Graph, Literal, Namespace, URIRef
+from rdflib import OWL, RDF, RDFS, Literal, Namespace, URIRef
 from semantikon.ontology import (
     PNS,
     get_knowledge_graph,
