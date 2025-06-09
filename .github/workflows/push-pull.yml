@@ -17,3 +17,6 @@ jobs:
       notebooks-env-files: .ci_support/environment.yml .ci_support/environment-pyiron_atomistics.yml .ci_support/environment-lammps.yml
       tests-env-files: .ci_support/environment.yml .ci_support/environment-pyiron_atomistics.yml
       alternate-tests-env-files: .ci_support/lower_bound.yml
+      do-codecov: true
+      do-codacy: false
+      do-coveralls: false
