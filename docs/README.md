@@ -2,8 +2,7 @@
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/pyiron/pyiron_ontology/HEAD?labpath=example.ipynb)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/ad1c641a3b1d433485a03432bf4364d5)](https://app.codacy.com/gh/pyiron/pyiron_ontology/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![Coverage Status](https://coveralls.io/repos/github/pyiron/pyiron_ontology/badge.svg?branch=main)](https://coveralls.io/github/pyiron/pyiron_ontology?branch=main)
+[![Coverage](https://codecov.io/gh/pyiron/pyiron_ontology/graph/badge.svg)](https://codecov.io/gh/pyiron/pyiron_ontology)
 
 [![Anaconda](https://anaconda.org/conda-forge/pyiron_ontology/badges/version.svg)](https://anaconda.org/conda-forge/pyiron_ontology)
 [![Last Updated](https://anaconda.org/conda-forge/pyiron_ontology/badges/latest_release_date.svg
