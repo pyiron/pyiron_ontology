@@ -40,6 +40,13 @@ authors = [
 [project.license]
 file = "LICENSE"
 
+[project.optional-dependencies]
+parser = [
+    "pyiron_workflow==0.13.2",
+    "rdflib==7.1.1",
+    "semantikon==0.0.16",
+]
+
 [project.urls]
 Homepage = "https://github.com/pyiron/pyiron_ontology"
 Documentation = "https://pyiron-ontology.readthedocs.io"
