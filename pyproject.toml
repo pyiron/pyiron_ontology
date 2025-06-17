@@ -43,7 +43,7 @@ file = "LICENSE"
 parser = [
     "pyiron_workflow==0.13.2",
     "rdflib==7.1.1",
-    "semantikon==0.0.16",
+    "semantikon==0.0.17",
 ]
 
 [project.urls]
