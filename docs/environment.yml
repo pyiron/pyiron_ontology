@@ -12,7 +12,7 @@ dependencies:
 - owlready2 =0.47
 - pandas =2.2.3
 - pint =0.24.4
-- semantikon =0.0.16
+- semantikon =0.0.17
 - pyiron_workflow =0.13.0
 - rdflib =7.1.1
 - owlrl =7.1.2
