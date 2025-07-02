@@ -7,12 +7,13 @@ A constructor for building the atomistics ontology from python classes.
 
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 import pandas as pd
 
 if TYPE_CHECKING:
     import pyiron_atomistics
+
     from pyiron_ontology.atomistics.constructor import AtomisticsOntology
 
     onto = AtomisticsOntology().onto

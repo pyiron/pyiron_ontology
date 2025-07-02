@@ -24,13 +24,17 @@ class TestExample(unittest.TestCase):
         # Now pass downstream requirements as well
         self.assertSetEqual(
             i1,
-            set(self.onto.middle1_inp1.get_sources(
-                additional_requirements=self.onto.output3_inp.requirements
-            ))
+            set(
+                self.onto.middle1_inp1.get_sources(
+                    additional_requirements=self.onto.output3_inp.requirements
+                )
+            ),
         )
         self.assertSetEqual(
             i2,
-            set(self.onto.middle2_inp1.get_sources(
-                additional_requirements=self.onto.output4_inp.requirements
-            ))
+            set(
+                self.onto.middle2_inp1.get_sources(
+                    additional_requirements=self.onto.output4_inp.requirements
+                )
+            ),
         )

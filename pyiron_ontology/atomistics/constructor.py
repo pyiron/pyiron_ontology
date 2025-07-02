@@ -7,9 +7,9 @@ A constructor for building the atomistics ontology from python classes.
 
 from __future__ import annotations
 
-from pyiron_ontology.constructor import Constructor
-
 import owlready2 as owl
+
+from pyiron_ontology.constructor import Constructor
 
 
 class AtomisticsOntology(Constructor):

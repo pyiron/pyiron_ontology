@@ -55,5 +55,12 @@ tag_prefix = "pyiron_ontology-"
 [tool.setuptools.packages.find]
 include = [ "pyiron_ontology*",]
 
+[tool.ruff]
+exclude = ["docs", "notebooks", "setup.py", "_version.py"]
+
+[tool.ruff.lint.per-file-ignores]
+"constructor.py" = ["F841"]  # Ignore unused declarations in constructor -- we construct ontologies this way
+
+
 [tool.setuptools.dynamic.version]
 attr = "pyiron_ontology.__version__"
