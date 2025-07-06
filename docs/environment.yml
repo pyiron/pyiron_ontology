@@ -13,7 +13,7 @@ dependencies:
 - pandas =2.2.3
 - pint =0.24.4
 - semantikon =0.0.19
-- pyiron_workflow =0.13.0
+- pyiron_workflow =0.13.2
 - rdflib =7.1.1
 - owlrl =7.1.2
 - sphinxcontrib-mermaid
