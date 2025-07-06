@@ -8,7 +8,7 @@ dependencies:
 - pint =0.24
 - pyiron_atomistics =0.6.19
 - pyiron-data =0.0.26
-- semantikon =0.0.12
-- pyiron_workflow =0.12.0
+- semantikon =0.0.19
+- pyiron_workflow =0.13.0
 - rdflib =7.1.1
 - owlrl =7.1.2
