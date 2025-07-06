@@ -9,7 +9,7 @@ dependencies:
 - versioneer
 - numpy =1.26.4
 - openjdk
-- owlready2 =0.47
+- owlready2 =0.48
 - pandas =2.2.3
 - pint =0.24.4
 - semantikon =0.0.19
