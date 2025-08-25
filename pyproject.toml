@@ -28,7 +28,7 @@ classifiers = [
 dependencies = [
     "numpy==1.26.4",
     "owlready2==0.48",
-    "pandas==2.2.3",
+    "pandas==2.3.2",
     "pint==0.24.4",
 ]
 dynamic = [ "version",]
