@@ -4,7 +4,7 @@ dependencies:
 - numpy =1.26.4
 - openjdk
 - owlready2 =0.48
-- pandas =2.2.3
+- pandas =2.3.2
 - pint =0.24.4
 - semantikon =0.0.21
 - pyiron_workflow =0.13.3
